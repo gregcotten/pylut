@@ -149,10 +149,14 @@ class LUT:
 	"""
 	A class that represents a 3D LUT on a 3D numpy array. The idea is that the modifications are non-volatile, meaning that every modification method returns a new LUT object.
 	"""
-	def __init__(self, lattice):
+	def __init__(self, lattice, name = "Untitled LUT"):
 		self.lattice = lattice
 		"""
 		Numpy 3D array representing the 3D LUT.
+		"""
+		self.name = name
+		"""
+		Every LUT has a name!
 		"""
 
 	def LatticeSize(self):
@@ -363,7 +367,7 @@ class LUT:
 			for g in xrange(cubeSize):
 				for b in xrange(cubeSize):
 					identityLattice[r, g, b] = Color(indices01[r], indices01[g], indices01[b])
-		return LUT(identityLattice)
+		return LUT(identityLattice, name = "Identity"+str(cubeSize))
 
 	@staticmethod
 	def FromLustre3DLFile(lutFilePath):
@@ -403,7 +407,7 @@ class LUT:
 				lattice[redIndex, greenIndex, blueIndex] = Color(redValue, greenValue, blueValue)
 				currentCubeIndex += 1
 
-		return LUT(lattice)
+		return LUT(lattice, name = os.path.basename(lutFilePath))
 
 	@staticmethod
 	def FromNuke3DLFile(lutFilePath):
@@ -444,7 +448,7 @@ class LUT:
 
 				lattice[redIndex, greenIndex, blueIndex] = Color(redValue, greenValue, blueValue)
 				currentCubeIndex += 1
-		return LUT(lattice)
+		return LUT(lattice, name = os.path.basename(lutFilePath))
 
 	@staticmethod
 	def FromCubeFile(cubeFilePath):
@@ -479,12 +483,12 @@ class LUT:
 				lattice[redIndex, greenIndex, blueIndex] = Color(redValue, greenValue, blueValue)
 				currentCubeIndex += 1
 
-		return LUT(lattice)
+		return LUT(lattice, name = os.path.basename(cubeFilePath))
 
 	def AddColorToEachPoint(self, color):
 		"""
-    	Add a Color value to every lattice point on the cube.
-    	"""
+		Add a Color value to every lattice point on the cube.
+		"""
 		cubeSize = self.LatticeSize()
 		newLattice = EmptyLatticeOfSize(cubeSize)
 		for r in xrange(cubeSize):
@@ -495,8 +499,8 @@ class LUT:
 
 	def SubtractFromEachPoint(self, color):
 		"""
-    	Subtract a Color value to every lattice point on the cube.
-    	"""
+		Subtract a Color value to every lattice point on the cube.
+		"""
 		cubeSize = self.LatticeSize()
 		newLattice = EmptyLatticeOfSize(cubeSize)
 		for r in xrange(cubeSize):
@@ -507,8 +511,8 @@ class LUT:
 
 	def MultiplyEachPoint(self, color):
 		"""
-    	Multiply by a Color value or float for every lattice point on the cube.
-    	"""
+		Multiply by a Color value or float for every lattice point on the cube.
+		"""
 		cubeSize = self.LatticeSize()
 		newLattice = EmptyLatticeOfSize(cubeSize)
 		for r in xrange(cubeSize):
@@ -543,3 +547,60 @@ class LUT:
 			raise NameError("Lattice Sizes not equivalent")
 
 		return LUT(self.lattice * other.lattice)
+
+	def PlotAsCube(self):
+		"""
+		Plot a lutfile as a cube using matplotlib. Stolen from https://github.com/mikrosimage/ColorPipe-tools/tree/master/plotThatLut.
+		Warning: SLOW
+		"""
+		
+		try:
+			import matplotlib
+			# matplotlib : general plot
+			from matplotlib.pyplot import title, figure
+			# matplotlib : for 3D plot
+			# mplot3d has to be imported for 3d projection
+			import mpl_toolkits.mplot3d
+			from matplotlib.colors import rgb2hex
+		except ImportError:
+			print "matplotlib not installed. Run: sudo pip install matplotlib"
+			return
+
+		# init vars
+		cubeSize = self.LatticeSize()
+		input_range = xrange(0, cubeSize)
+		max_value = cubeSize - 1.0
+		red_values = []
+		green_values = []
+		blue_values = []
+		colors = []
+		# process color values
+		for r in input_range:
+			for g in input_range:
+				for b in input_range:
+					# get a value between [0..1]
+					norm_r = r/max_value
+					norm_g = g/max_value
+					norm_b = b/max_value
+					# apply correction
+					res = self.ColorAtRGB01(norm_r, norm_g, norm_b)
+					# append values
+					red_values.append(res.r)
+					green_values.append(res.g)
+					blue_values.append(res.b)
+					# append corresponding color
+					colors.append(rgb2hex([norm_r, norm_g, norm_b]))
+		# init plot
+		fig = figure()
+		fig.canvas.set_window_title('Plot That 3D LUT')
+		ax = fig.add_subplot(111, projection='3d')
+		ax.set_xlabel('Red')
+		ax.set_ylabel('Green')
+		ax.set_zlabel('Blue')
+		ax.set_xlim(min(red_values), max(red_values))
+		ax.set_ylim(min(green_values), max(green_values))
+		ax.set_zlim(min(blue_values), max(blue_values))
+		title(self.name)
+		# plot 3D values
+		ax.scatter(red_values, green_values, blue_values, c=colors, marker="o")
+		matplotlib.pyplot.show()
