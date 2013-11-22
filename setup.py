@@ -9,9 +9,10 @@ setup(
     scripts=['bin/basic_example.py'],
     url='http://pypi.python.org/pypi/PyLUT/',
     license='LICENSE.txt',
-    description='Builds, modifies, and converts 3D LUTs from popular .cube and .3dl formats.',
+    description='Builds, modifies, visualizes, and converts 3D LUTs from popular .cube and .3dl formats.',
     long_description=open('README.txt').read(),
     install_requires=[
-        "numpy"
+        "numpy",
+        "matplotlib"
     ],
 )

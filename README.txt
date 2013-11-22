@@ -1,7 +1,7 @@
 pylut
 =====
 
-Builds and modifies 3D LUTs. Source available at https://github.com/gregcotten/pylut. 
+Builds, modifies, visualizes, and converts 3D LUTs from popular .cube and .3dl formats. Source available at https://github.com/gregcotten/pylut. 
 
 Usage
 -----

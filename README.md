@@ -1,6 +1,6 @@
 # pylut
 
-Builds, modifies, and converts 3D LUTs from popular .cube and .3dl formats.
+Builds, modifies, visualizes, and converts 3D LUTs from popular .cube and .3dl formats.
 
 ## Installation
 
@@ -36,6 +36,14 @@ All sorts of great things can happen!
 
 	lut3 = lut3.Resize(33)
 	lut3.ToNuke3DLFile("/path/to/destination.3dl")
+
+## Special Notes
+
+In order to run
+	
+	lut.PlotAsCube()
+
+You need to either be running OSX or have PyQt4 or PyGTK installed in order to visualize the cube.
 
 
 ## The Future
