@@ -6,6 +6,10 @@ Builds, modifies, and converts 3D LUTs from popular .cube and .3dl formats.
 
 	sudo pip install pylut
 
+And to upgrade:
+
+	sudo pip install --upgrade --no-deps pylut
+
 ## Documentation
 	
 Very mediocre docs viewable at: http://pythonhosted.org/pylut/
