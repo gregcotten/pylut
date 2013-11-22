@@ -6,6 +6,10 @@ Builds and modifies 3D LUTs.
 
 	sudo pip install pylut
 
+## Documentation
+	
+	Very mediocre docs at: http://pythonhosted.org/pylut/
+
 ## Usage
 
 All sorts of great things can happen!

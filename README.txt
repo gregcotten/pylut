@@ -1,7 +1,7 @@
 pylut
 =====
 
-Builds and modifies 3D LUTs.
+Builds and modifies 3D LUTs. Source available at https://github.com/gregcotten/pylut. 
 
 Usage
 -----
