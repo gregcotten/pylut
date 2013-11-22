@@ -8,7 +8,7 @@ Builds and modifies 3D LUTs.
 
 ## Documentation
 	
-	Very mediocre docs at: http://pythonhosted.org/pylut/
+Very mediocre docs at: http://pythonhosted.org/pylut/
 
 ## Usage
 
