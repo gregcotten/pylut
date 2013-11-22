@@ -54,10 +54,17 @@ def Clamp(value, min, max):
 	return value
 
 class Color:
+	"""
+	RGB floating point 0-1 representation of a color.
+	Access channel data by color.r, color.g, or color.b. 
+	"""
 	def __init__(self, r, g, b):
 		self.SetRGB(r,g,b)
 
 	def SetRGB(self, r, g, b):
+		"""
+		Sets RGB value of the Color - input values are clamped between 0 and 1.
+		"""
 		self.r = Clamp(float(r), 0, 1)
 		self.g = Clamp(float(g), 0, 1)
 		self.b = Clamp(float(b), 0, 1)
@@ -65,37 +72,57 @@ class Color:
 			print "Warning: (" + str(r) + ", " + str(g) + ", " + str(b) + ") out of range and clamped to " + self
 
 	@staticmethod
-	def FromInteger(r, g, b, bitdepth):
-		return Color(float(r)/float(2**bitdepth - 1), float(g)/float(2**bitdepth - 1), float(b)/float(2**bitdepth - 1))
+	def FromRGBInteger(r, g, b, bitdepth):
+		"""
+		Creates Color from 3 integer values and a bit depth.
+		"""
+		maxBits = 2**bitdepth - 1
+		return Color(RemapIntTo01(r, maxBits), RemapIntTo01(g, maxBits), RemapIntTo01(b, maxBits))
 
 	@staticmethod
 	def FromArray(array):
+		"""
+		Creates Color from a list of 3 floats.
+		"""
 		return Color(array[0], array[1], array[2])
 
 	def ToArray(self):
+		"""
+		Creates representation of self with a RGB float list.
+		"""
 		return [self.r, self.g, self.b]
 
-	def Clamp(self, min, max):
+	def ClampRGB(self, min, max):
+		"""
+		Returns RGB clamped color.
+		"""
 		return Color(Clamp(self.r, min, max), Clamp(self.g, min, max), Clamp(self.b, min, max))
 
 	def ClampRed(self, min, max):
+		"""
+		Returns red clamped color.
+		"""
 		if min > max:
 			raise NameError("Invalid Clamp Values")
 		return Color(Clamp(self.r, min, max), self.g, self.b)
 
 	def ClampGreen(self, min, max):
+		"""
+		Returns green clamped color.
+		"""
 		if min > max:
 			raise NameError("Invalid Clamp Values")
 		return Color(self.r, Clamp(self.g, min, max), self.b)
 
 	def ClampBlue(self, min, max):
+		"""
+		Returns blue clamped color.
+		"""
 		if min > max:
 			raise NameError("Invalid Clamp Values")
 		return Color(self.r, self.g, Clamp(self.b, min, max))
 	
 	def __add__(self, color):
-		if "Color" not in color.__class__.__name__:
-			return Color(self.r + color, self.g + color, self.b + color)
 		return Color(self.r + color.r, self.g + color.g, self.b + color.b)
 
 
@@ -110,20 +137,31 @@ class Color:
 	
 	def __str__(self):
 		return "(" + str(self.r) + ", " + str(self.g) + ", " + str(self.b) + ")"
+	
 	def FormattedAsFloat(self, format = '{:1.6f}'):
 		return format.format(self.r) + " " + format.format(self.g) + " " + format.format(self.b)
+	
 	def FormattedAsInteger(self, bitdepth):
 		rjustValue = len(str(2**bitdepth - 1)) + 1
 		return str(Remap01ToInt(self.r, bitdepth)).rjust(rjustValue) + " " + str(Remap01ToInt(self.g, bitdepth)).rjust(rjustValue) + " " + str(Remap01ToInt(self.b, bitdepth)).rjust(rjustValue)
 
 class LUT:
+	"""
+	A class that represents a 3D LUT on a 3D numpy array. The idea is that the modifications are non-volatile, meaning that every modification method returns a new LUT object.
+	"""
 	def __init__(self, lattice):
 		self.lattice = lattice
+		"""
+		Numpy 3D array representing the 3D LUT.
+		"""
 
 	def LatticeSize(self):
 		return self.lattice.shape[0]
 
 	def Resize(self, newCubeSize):
+		"""
+		Scales the lattice to a new cube size.
+		"""
 		newLattice = EmptyLatticeOfSize(newCubeSize)
 		ratio = float(self.LatticeSize() - 1.0) / float(newCubeSize-1.0)
 		for x in xrange(newCubeSize):
@@ -133,6 +171,9 @@ class LUT:
 		return LUT(newLattice)
 		
 	def CombineWithLUT(self, otherLUT):
+		"""
+		Combines LUT with another LUT.
+		"""
 		if self.LatticeSize() is not otherLUT.LatticeSize():
 			raise NameError("Lattice Sizes not equivalent")
 		
@@ -153,7 +194,7 @@ class LUT:
 		for x in xrange(cubeSize):
 			for y in xrange(cubeSize):
 				for z in xrange(cubeSize):
-					newLattice[x, y, z] = self.ColorAtLatticePoint(x, y, z).Clamp(min, max)
+					newLattice[x, y, z] = self.ColorAtLatticePoint(x, y, z).ClampRGB(min, max)
 		return LUT(newLattice)
 
 	def ClampRed(self, min, max):
@@ -249,15 +290,24 @@ class LUT:
 
 
 	def ColorAtRGB01(self, r, g, b):
+		"""
+		Returns what a particular float r, g, b value should be transformed to when piped through the LUT.
+		"""
 		cubeSize = self.LatticeSize()
 		return self.ColorAtInterpolatedLatticePoint(r * (cubeSize-1), g * (cubeSize-1), b * (cubeSize-1))
 
 	def ColorAtRGBInt(self, r, g, b, bitdepth):
+		"""
+		Returns what a particular integer r, g, b value (at a particular bit depth) should be transformed to when piped through the LUT.
+		"""
 		maximumBits = 2**bitdepth - 1
 		return self.ColorAtRGB01(RemapIntTo01(r, maximumBits), RemapIntTo01(g, maximumBits), RemapIntTo01(b, maximumBits))
 
 	#integer input from 0 to cubeSize-1
 	def ColorAtLatticePoint(self, redPoint, greenPoint, bluePoint):
+		"""
+		Returns a color at a specified lattice point - this value is pulled from the actual LUT file and is not interpolated.
+		"""
 		cubeSize = self.LatticeSize()
 		if redPoint > cubeSize-1 or greenPoint > cubeSize-1 or bluePoint > cubeSize-1:
 			raise NameError("Point Out of Bounds: (" + str(redPoint) + ", " + str(greenPoint) + ", " + str(bluePoint) + ")")
@@ -266,6 +316,9 @@ class LUT:
 
 	#float input from 0 to cubeSize-1
 	def ColorAtInterpolatedLatticePoint(self, redPoint, greenPoint, bluePoint):
+		"""
+		Gets the interpolated color at an interpolated lattice point.
+		"""
 		cubeSize = self.LatticeSize()
 
 		if 0 < redPoint > cubeSize-1 or 0 < greenPoint > cubeSize-1 or 0 < bluePoint > cubeSize-1:
@@ -301,6 +354,9 @@ class LUT:
 
 	@staticmethod
 	def FromIdentity(cubeSize):
+		"""
+		Creates an indentity LUT of specified size.
+		"""
 		identityLattice = EmptyLatticeOfSize(cubeSize)
 		indices01 = Indices01(cubeSize)
 		for r in xrange(cubeSize):
@@ -425,7 +481,10 @@ class LUT:
 
 		return LUT(lattice)
 
-	def AddToEachPoint(self, color):
+	def AddColorToEachPoint(self, color):
+		"""
+    	Add a Color value to every lattice point on the cube.
+    	"""
 		cubeSize = self.LatticeSize()
 		newLattice = EmptyLatticeOfSize(cubeSize)
 		for r in xrange(cubeSize):
@@ -435,6 +494,9 @@ class LUT:
 		return LUT(newLattice)
 
 	def SubtractFromEachPoint(self, color):
+		"""
+    	Subtract a Color value to every lattice point on the cube.
+    	"""
 		cubeSize = self.LatticeSize()
 		newLattice = EmptyLatticeOfSize(cubeSize)
 		for r in xrange(cubeSize):
@@ -444,6 +506,9 @@ class LUT:
 		return LUT(newLattice)
 
 	def MultiplyEachPoint(self, color):
+		"""
+    	Multiply by a Color value or float for every lattice point on the cube.
+    	"""
 		cubeSize = self.LatticeSize()
 		newLattice = EmptyLatticeOfSize(cubeSize)
 		for r in xrange(cubeSize):
@@ -454,10 +519,6 @@ class LUT:
 
 
 	def __add__(self, other):
-		className = other.__class__.__name__
-		if "Color" in className:
-			return self.AddToEachPoint(other)
-
 		if self.LatticeSize() is not other.LatticeSize():
 			raise NameError("Lattice Sizes not equivalent")
 
