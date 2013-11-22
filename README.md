@@ -1,6 +1,6 @@
 # pylut
 
-Builds and modifies 3D LUTs.
+Builds, modifies, and converts 3D LUTs from popular .cube and .3dl formats.
 
 ## Installation
 
@@ -8,7 +8,7 @@ Builds and modifies 3D LUTs.
 
 ## Documentation
 	
-Very mediocre docs at: http://pythonhosted.org/pylut/
+Very mediocre docs viewable at: http://pythonhosted.org/pylut/
 
 ## Usage
 
