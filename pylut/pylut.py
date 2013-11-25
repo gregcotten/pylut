@@ -30,7 +30,7 @@ def Remap01ToInt(val, bitdepth):
 	return int(val * (2**bitdepth - 1))
 
 def LerpColor(beginning, end, value01):
-	return Color.FromArray(Lerp3D(beginning.ToArray(), end.ToArray(), value01))
+	return Color.FromFloatArray(Lerp3D(beginning.ToFloatArray(), end.ToFloatArray(), value01))
 
 def Lerp3D(beginning, end, value01):
 	if value01 < 0 or value01 > 1:
@@ -61,6 +61,9 @@ class Color:
 	def __init__(self, r, g, b):
 		self.SetRGB(r,g,b)
 
+	"""
+	SetRGB(r, g, b) clamps RGB values to 0-1.
+	"""
 	def SetRGB(self, r, g, b):
 		"""
 		Sets RGB value of the Color - input values are clamped between 0 and 1.
@@ -71,6 +74,9 @@ class Color:
 		if 0 > r > 1 or 0 > g > 1 or 0 > b > 1:
 			print "Warning: (" + str(r) + ", " + str(g) + ", " + str(b) + ") out of range and clamped to " + self
 
+	"""
+	Instantiates a floating point color from RGB integers at a bitdepth.
+	"""
 	@staticmethod
 	def FromRGBInteger(r, g, b, bitdepth):
 		"""
@@ -79,14 +85,20 @@ class Color:
 		maxBits = 2**bitdepth - 1
 		return Color(RemapIntTo01(r, maxBits), RemapIntTo01(g, maxBits), RemapIntTo01(b, maxBits))
 
+	"""
+	Instantiates a floating point color from a list of 3 RGB floats.
+	"""
 	@staticmethod
-	def FromArray(array):
+	def FromFloatArray(array):
 		"""
 		Creates Color from a list of 3 floats.
 		"""
 		return Color(array[0], array[1], array[2])
 
-	def ToArray(self):
+	"""
+	Creates a list of 3 floating point RGB values from the floating point color.
+	"""
+	def ToFloatArray(self):
 		"""
 		Creates representation of self with a RGB float list.
 		"""
@@ -172,7 +184,7 @@ class LUT:
 			for y in xrange(newCubeSize):
 				for z in xrange(newCubeSize):
 					newLattice[x, y, z] = self.ColorAtInterpolatedLatticePoint(x*ratio, y*ratio, z*ratio)
-		return LUT(newLattice)
+		return LUT(newLattice, name = self.name + "_Resized"+str(newCubeSize))
 		
 	def CombineWithLUT(self, otherLUT):
 		"""
@@ -193,6 +205,9 @@ class LUT:
 		return LUT(newLattice)
 
 	def ClampRGB(self, min, max):
+		"""
+		Returns a new RGB clamped LUT.
+		"""
 		cubeSize = self.LatticeSize()
 		newLattice = EmptyLatticeOfSize(cubeSize)
 		for x in xrange(cubeSize):
@@ -202,6 +217,9 @@ class LUT:
 		return LUT(newLattice)
 
 	def ClampRed(self, min, max):
+		"""
+		Returns a red clamped LUT.
+		"""
 		cubeSize = self.LatticeSize()
 		newLattice = EmptyLatticeOfSize(cubeSize)
 		for x in xrange(cubeSize):
@@ -211,6 +229,9 @@ class LUT:
 		return LUT(newLattice)
 
 	def ClampGreen(self, min, max):
+		"""
+		Returns a green clamped LUT.
+		"""
 		cubeSize = self.LatticeSize()
 		newLattice = EmptyLatticeOfSize(cubeSize)
 		for x in xrange(cubeSize):
@@ -220,6 +241,9 @@ class LUT:
 		return LUT(newLattice)
 
 	def ClampBlue(self, min, max):
+		"""
+		Returns a blue clamped LUT.
+		"""
 		cubeSize = self.LatticeSize()
 		newLattice = EmptyLatticeOfSize(cubeSize)
 		for x in xrange(cubeSize):
@@ -229,6 +253,9 @@ class LUT:
 		return LUT(newLattice)
 
 	def _LatticeTo3DLString(self, bitdepth):
+		"""
+		Used for internal creating of 3DL files.
+		"""
 		string = ""
 		cubeSize = self.LatticeSize()
 		for currentCubeIndex in range(0, cubeSize**3):
@@ -497,7 +524,7 @@ class LUT:
 					newLattice[r, g, b] = self.lattice[r, g, b] + color
 		return LUT(newLattice)
 
-	def SubtractFromEachPoint(self, color):
+	def SubtractColorFromEachPoint(self, color):
 		"""
 		Subtract a Color value to every lattice point on the cube.
 		"""
@@ -531,7 +558,7 @@ class LUT:
 	def __sub__(self, other):
 		className = other.__class__.__name__
 		if "Color" in className:
-			return self.SubtractFromEachPoint(other)
+			return self.SubtractColorFromEachPoint(other)
 
 		if self.LatticeSize() is not other.LatticeSize():
 			raise NameError("Lattice Sizes not equivalent")
@@ -548,10 +575,9 @@ class LUT:
 
 		return LUT(self.lattice * other.lattice)
 
-	def PlotAsCube(self):
+	def Plot(self):
 		"""
-		Plot a lutfile as a cube using matplotlib. Stolen from https://github.com/mikrosimage/ColorPipe-tools/tree/master/plotThatLut.
-		Warning: SLOW
+		Plot a LUT as a 3D RGB cube using matplotlib. Stolen from https://github.com/mikrosimage/ColorPipe-tools/tree/master/plotThatLut.
 		"""
 		
 		try:
@@ -566,8 +592,16 @@ class LUT:
 			print "matplotlib not installed. Run: sudo pip install matplotlib"
 			return
 
+		#for performance reasons lattice size must be 9 or less
+		lut = None
+		if self.LatticeSize() > 9:
+			lut = self.Resize(9)
+		else:
+			lut = self
+
+
 		# init vars
-		cubeSize = self.LatticeSize()
+		cubeSize = lut.LatticeSize()
 		input_range = xrange(0, cubeSize)
 		max_value = cubeSize - 1.0
 		red_values = []
@@ -583,7 +617,7 @@ class LUT:
 					norm_g = g/max_value
 					norm_b = b/max_value
 					# apply correction
-					res = self.ColorAtRGB01(norm_r, norm_g, norm_b)
+					res = lut.ColorAtRGB01(norm_r, norm_g, norm_b)
 					# append values
 					red_values.append(res.r)
 					green_values.append(res.g)
@@ -592,7 +626,7 @@ class LUT:
 					colors.append(rgb2hex([norm_r, norm_g, norm_b]))
 		# init plot
 		fig = figure()
-		fig.canvas.set_window_title('Plot That 3D LUT')
+		fig.canvas.set_window_title('pylut Plotter')
 		ax = fig.add_subplot(111, projection='3d')
 		ax.set_xlabel('Red')
 		ax.set_ylabel('Green')
