@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='pylut',
-    version='1.2.0',
+    version='1.3.0',
     author='Greg Cotten',
     author_email='gcgc90@gmail.com',
     packages=['pylut'],

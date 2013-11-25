@@ -1,0 +1,3595 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>		<html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>		<html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+
+      <title>pylut API documentation</title>
+      <meta name="description" content="">
+
+  
+  <style type="text/css">
+  
+/*! normalize.css v1.1.1 | MIT License | git.io/normalize */
+
+/* ==========================================================================
+   HTML5 display definitions
+   ========================================================================== */
+
+/**
+ * Correct `block` display not defined in IE 6/7/8/9 and Firefox 3.
+ */
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+nav,
+section,
+summary {
+    display: block;
+}
+
+/**
+ * Correct `inline-block` display not defined in IE 6/7/8/9 and Firefox 3.
+ */
+
+audio,
+canvas,
+video {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+}
+
+/**
+ * Prevent modern browsers from displaying `audio` without controls.
+ * Remove excess height in iOS 5 devices.
+ */
+
+audio:not([controls]) {
+    display: none;
+    height: 0;
+}
+
+/**
+ * Address styling not present in IE 7/8/9, Firefox 3, and Safari 4.
+ * Known issue: no IE 6 support.
+ */
+
+[hidden] {
+    display: none;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+/**
+ * 1. Prevent system color scheme's background color being used in Firefox, IE,
+ *    and Opera.
+ * 2. Prevent system color scheme's text color being used in Firefox, IE, and
+ *    Opera.
+ * 3. Correct text resizing oddly in IE 6/7 when body `font-size` is set using
+ *    `em` units.
+ * 4. Prevent iOS text size adjust after orientation change, without disabling
+ *    user zoom.
+ */
+
+html {
+    background: #fff; /* 1 */
+    color: #000; /* 2 */
+    font-size: 100%; /* 3 */
+    -webkit-text-size-adjust: 100%; /* 4 */
+    -ms-text-size-adjust: 100%; /* 4 */
+}
+
+/**
+ * Address `font-family` inconsistency between `textarea` and other form
+ * elements.
+ */
+
+html,
+button,
+input,
+select,
+textarea {
+    font-family: sans-serif;
+}
+
+/**
+ * Address margins handled incorrectly in IE 6/7.
+ */
+
+body {
+    margin: 0;
+}
+
+/* ==========================================================================
+   Links
+   ========================================================================== */
+
+/**
+ * Address `outline` inconsistency between Chrome and other browsers.
+ */
+
+a:focus {
+    outline: thin dotted;
+}
+
+/**
+ * Improve readability when focused and also mouse hovered in all browsers.
+ */
+
+a:active,
+a:hover {
+    outline: 0;
+}
+
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+
+/**
+ * Address font sizes and margins set differently in IE 6/7.
+ * Address font sizes within `section` and `article` in Firefox 4+, Safari 5,
+ * and Chrome.
+ */
+
+h1 {
+    font-size: 2em;
+    margin: 0.67em 0;
+}
+
+h2 {
+    font-size: 1.5em;
+    margin: 0.83em 0;
+}
+
+h3 {
+    font-size: 1.17em;
+    margin: 1em 0;
+}
+
+h4 {
+    font-size: 1em;
+    margin: 1.33em 0;
+}
+
+h5 {
+    font-size: 0.83em;
+    margin: 1.67em 0;
+}
+
+h6 {
+    font-size: 0.67em;
+    margin: 2.33em 0;
+}
+
+/**
+ * Address styling not present in IE 7/8/9, Safari 5, and Chrome.
+ */
+
+abbr[title] {
+    border-bottom: 1px dotted;
+}
+
+/**
+ * Address style set to `bolder` in Firefox 3+, Safari 4/5, and Chrome.
+ */
+
+b,
+strong {
+    font-weight: bold;
+}
+
+blockquote {
+    margin: 1em 40px;
+}
+
+/**
+ * Address styling not present in Safari 5 and Chrome.
+ */
+
+dfn {
+    font-style: italic;
+}
+
+/**
+ * Address differences between Firefox and other browsers.
+ * Known issue: no IE 6/7 normalization.
+ */
+
+hr {
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    height: 0;
+}
+
+/**
+ * Address styling not present in IE 6/7/8/9.
+ */
+
+mark {
+    background: #ff0;
+    color: #000;
+}
+
+/**
+ * Address margins set differently in IE 6/7.
+ */
+
+p,
+pre {
+    margin: 1em 0;
+}
+
+/**
+ * Correct font family set oddly in IE 6, Safari 4/5, and Chrome.
+ */
+
+code,
+kbd,
+pre,
+samp {
+    font-family: monospace, serif;
+    _font-family: 'courier new', monospace;
+    font-size: 1em;
+}
+
+/**
+ * Improve readability of pre-formatted text in all browsers.
+ */
+
+pre {
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/**
+ * Address CSS quotes not supported in IE 6/7.
+ */
+
+q {
+    quotes: none;
+}
+
+/**
+ * Address `quotes` property not supported in Safari 4.
+ */
+
+q:before,
+q:after {
+    content: '';
+    content: none;
+}
+
+/**
+ * Address inconsistent and variable font size in all browsers.
+ */
+
+small {
+    font-size: 80%;
+}
+
+/**
+ * Prevent `sub` and `sup` affecting `line-height` in all browsers.
+ */
+
+sub,
+sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+
+sup {
+    top: -0.5em;
+}
+
+sub {
+    bottom: -0.25em;
+}
+
+/* ==========================================================================
+   Lists
+   ========================================================================== */
+
+/**
+ * Address margins set differently in IE 6/7.
+ */
+
+dl,
+menu,
+ol,
+ul {
+    margin: 1em 0;
+}
+
+dd {
+    margin: 0 0 0 40px;
+}
+
+/**
+ * Address paddings set differently in IE 6/7.
+ */
+
+menu,
+ol,
+ul {
+    padding: 0 0 0 40px;
+}
+
+/**
+ * Correct list images handled incorrectly in IE 7.
+ */
+
+nav ul,
+nav ol {
+    list-style: none;
+    list-style-image: none;
+}
+
+/* ==========================================================================
+   Embedded content
+   ========================================================================== */
+
+/**
+ * 1. Remove border when inside `a` element in IE 6/7/8/9 and Firefox 3.
+ * 2. Improve image quality when scaled in IE 7.
+ */
+
+img {
+    border: 0; /* 1 */
+    -ms-interpolation-mode: bicubic; /* 2 */
+}
+
+/**
+ * Correct overflow displayed oddly in IE 9.
+ */
+
+svg:not(:root) {
+    overflow: hidden;
+}
+
+/* ==========================================================================
+   Figures
+   ========================================================================== */
+
+/**
+ * Address margin not present in IE 6/7/8/9, Safari 5, and Opera 11.
+ */
+
+figure {
+    margin: 0;
+}
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+
+/**
+ * Correct margin displayed oddly in IE 6/7.
+ */
+
+form {
+    margin: 0;
+}
+
+/**
+ * Define consistent border, margin, and padding.
+ */
+
+fieldset {
+    border: 1px solid #c0c0c0;
+    margin: 0 2px;
+    padding: 0.35em 0.625em 0.75em;
+}
+
+/**
+ * 1. Correct color not being inherited in IE 6/7/8/9.
+ * 2. Correct text not wrapping in Firefox 3.
+ * 3. Correct alignment displayed oddly in IE 6/7.
+ */
+
+legend {
+    border: 0; /* 1 */
+    padding: 0;
+    white-space: normal; /* 2 */
+    *margin-left: -7px; /* 3 */
+}
+
+/**
+ * 1. Correct font size not being inherited in all browsers.
+ * 2. Address margins set differently in IE 6/7, Firefox 3+, Safari 5,
+ *    and Chrome.
+ * 3. Improve appearance and consistency in all browsers.
+ */
+
+button,
+input,
+select,
+textarea {
+    font-size: 100%; /* 1 */
+    margin: 0; /* 2 */
+    vertical-align: baseline; /* 3 */
+    *vertical-align: middle; /* 3 */
+}
+
+/**
+ * Address Firefox 3+ setting `line-height` on `input` using `!important` in
+ * the UA stylesheet.
+ */
+
+button,
+input {
+    line-height: normal;
+}
+
+/**
+ * Address inconsistent `text-transform` inheritance for `button` and `select`.
+ * All other form control elements do not inherit `text-transform` values.
+ * Correct `button` style inheritance in Chrome, Safari 5+, and IE 6+.
+ * Correct `select` style inheritance in Firefox 4+ and Opera.
+ */
+
+button,
+select {
+    text-transform: none;
+}
+
+/**
+ * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
+ *    and `video` controls.
+ * 2. Correct inability to style clickable `input` types in iOS.
+ * 3. Improve usability and consistency of cursor style between image-type
+ *    `input` and others.
+ * 4. Remove inner spacing in IE 7 without affecting normal text inputs.
+ *    Known issue: inner spacing remains in IE 6.
+ */
+
+button,
+html input[type="button"], /* 1 */
+input[type="reset"],
+input[type="submit"] {
+    -webkit-appearance: button; /* 2 */
+    cursor: pointer; /* 3 */
+    *overflow: visible;  /* 4 */
+}
+
+/**
+ * Re-set default cursor for disabled elements.
+ */
+
+button[disabled],
+html input[disabled] {
+    cursor: default;
+}
+
+/**
+ * 1. Address box sizing set to content-box in IE 8/9.
+ * 2. Remove excess padding in IE 8/9.
+ * 3. Remove excess padding in IE 7.
+ *    Known issue: excess padding remains in IE 6.
+ */
+
+input[type="checkbox"],
+input[type="radio"] {
+    box-sizing: border-box; /* 1 */
+    padding: 0; /* 2 */
+    *height: 13px; /* 3 */
+    *width: 13px; /* 3 */
+}
+
+/**
+ * 1. Address `appearance` set to `searchfield` in Safari 5 and Chrome.
+ * 2. Address `box-sizing` set to `border-box` in Safari 5 and Chrome
+ *    (include `-moz` to future-proof).
+ */
+
+input[type="search"] {
+    -webkit-appearance: textfield; /* 1 */
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box; /* 2 */
+    box-sizing: content-box;
+}
+
+/**
+ * Remove inner padding and search cancel button in Safari 5 and Chrome
+ * on OS X.
+ */
+
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+}
+
+/**
+ * Remove inner padding and border in Firefox 3+.
+ */
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+/**
+ * 1. Remove default vertical scrollbar in IE 6/7/8/9.
+ * 2. Improve readability and alignment in all browsers.
+ */
+
+textarea {
+    overflow: auto; /* 1 */
+    vertical-align: top; /* 2 */
+}
+
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+
+/**
+ * Remove most spacing between table cells.
+ */
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+  </style>
+
+  <style type="text/css">
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #ddd;
+    height: 100%;
+  }
+
+  #container {
+    width: 840px;
+    background-color: #fdfdfd;
+    color: #111;
+    margin: 0 auto;
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
+    padding: 10px 25px;
+    min-height: 100%;
+  }
+
+  #nav {
+    font-size: 130%;
+    margin: 0 0 15px 0;
+  }
+
+  #top {
+    display: block;
+    position: fixed;
+    top: 5px;
+    left: 5px;
+    font-size: 140%;
+  }
+
+  h1 {
+    margin: 0 0 10px 0;
+  }
+
+  h2 {
+    margin: 25px 0 10px 0;
+  }
+
+  h3 {
+    margin: 25px 0 10px 0;
+  }
+
+  h4 {
+    margin: 0;
+    font-size: 105%;
+  }
+
+  a {
+    color: #058;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: #e08524;
+  }
+
+  p {
+    line-height: 1.35em;
+  }
+
+  pre, code, .mono, .name {
+    font-family: "Ubuntu Mono", "Cousine", "DejaVu Sans Mono", monospace;
+  }
+
+  .ident {
+    color: #900;
+  }
+
+  code {
+    background: #e8e8e8;
+  } 
+
+  pre {
+    background: #e8e8e8;
+    padding: 6px;
+    margin: 0 30px;
+  }
+
+  .codehilite {
+    margin: 0 30px 10px 30px;
+  }
+
+    .codehilite pre {
+      margin: 0;
+    }
+
+  table#module-list {
+    font-size: 110%;
+  }
+
+    table#module-list tr td:first-child {
+      padding-right: 10px;
+      white-space: nowrap;
+    }
+
+    table#module-list td {
+      vertical-align: top;
+      padding-bottom: 8px;
+    }
+
+      table#module-list td p {
+        margin: 0 0 7px 0;
+      }
+
+  .def {
+    display: table;
+  }
+
+    .def p {
+      display: table-cell;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .def p:first-child {
+      white-space: nowrap;
+    }
+
+    .def p:last-child {
+      width: 100%;
+    }
+
+  ul#index {
+    padding: 0;
+    margin: 0;
+  }
+
+    ul#index .class_name {
+      /* font-size: 110%; */
+      font-weight: bold;
+    }
+
+    ul#index li {
+      margin-bottom: 18px;
+    }
+
+      ul#index ul li {
+        margin-bottom: 8px;
+      }
+
+    ul#index, ul#index ul {
+      list-style-type: none;
+    }
+
+    ul#index ul {
+      margin: 0 0 10px 20px;
+      padding: 0;
+    }
+
+  .column_list {
+    width: 100%;
+    display: inline-block;
+    margin-left: 20px;
+  }
+
+  .column_list:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    height: 0;
+    content: " ";
+    clear: both;
+  }
+
+    .column_list ul {
+      float: left;
+      text-align: left;
+      width: 32%;
+      margin: 0 !important;
+    }
+
+  .item {
+    margin: 0 0 25px 0;
+  }
+
+    .item .class {
+      margin: 0 0 25px 30px;
+    }
+
+      .item .class ul.class_list {
+        margin: 0 0 20px 0;
+      }
+
+    .item .name {
+      background: #e8e8e8;
+      padding: 4px;
+      margin: 0 0 8px 0;
+      font-size: 110%;
+      font-weight: bold;
+    }
+
+    .item .empty_desc {
+      margin: 0 0 5px 0;
+      padding: 0;
+    }
+
+    .item .inheritance {
+      margin: 3px 0 10px 0;
+      padding: 0 8px;
+    }
+
+    .item .inherited {
+      color: #666;
+    }
+
+    .item .desc {
+      padding: 0 8px;
+      margin: 0;
+    }
+
+      .item .desc p {
+        margin: 0 0 10px 0;
+      }
+
+    .source_cont {
+      margin: 10px 8px 0 8px;
+      padding: 0;
+    }
+
+    .source_link {
+      font-weight: bold;
+    }
+
+    .source {
+      display: none;
+      max-height: 600px;
+      overflow-y: scroll;
+      margin-bottom: 15px;
+    }
+
+      .source .codehilite {
+        margin: 0;
+      }
+
+  .desc h1, .desc h2, .desc h3 {
+    font-size: 100% !important;
+  }
+
+  /*****************************/
+
+  </style>
+
+
+  <style type="text/css">
+  
+/* ==========================================================================
+   EXAMPLE Media Queries for Responsive Design.
+   These examples override the primary ('mobile first') styles.
+   Modify as content requires.
+   ========================================================================== */
+
+@media only screen and (min-width: 35em) {
+    /* Style adjustments for viewports that meet the condition */
+}
+
+@media print,
+       (-o-min-device-pixel-ratio: 5/4),
+       (-webkit-min-device-pixel-ratio: 1.25),
+       (min-resolution: 120dpi) {
+    /* Style adjustments for high resolution devices */
+}
+
+/* ==========================================================================
+   Print styles.
+   Inlined to avoid required HTTP connection: h5bp.com/r
+   ========================================================================== */
+
+@media print {
+    * {
+        background: transparent !important;
+        color: #000 !important; /* Black prints faster: h5bp.com/s */
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+    abbr[title]:after {
+        content: " (" attr(title) ")";
+    }
+
+    /*
+     * Don't show links for images, or javascript/internal links
+     */
+
+    .ir a:after,
+    a[href^="javascript:"]:after,
+    a[href^="#"]:after {
+        content: "";
+    }
+
+    pre,
+    blockquote {
+        border: 1px solid #999;
+        page-break-inside: avoid;
+    }
+
+    thead {
+        display: table-header-group; /* h5bp.com/t */
+    }
+
+    tr,
+    img {
+        page-break-inside: avoid;
+    }
+
+    img {
+        max-width: 100% !important;
+    }
+
+    @page {
+        margin: 0.5cm;
+    }
+
+    p,
+    h2,
+    h3 {
+        orphans: 3;
+        widows: 3;
+    }
+
+    h2,
+    h3 {
+        page-break-after: avoid;
+    }
+}
+
+  </style>
+
+  <script type="text/javascript">
+    function toggle(id, $link) {
+      $node = document.getElementById(id);
+      if (!$node)
+        return;
+      if (!$node.style.display || $node.style.display == 'none') {
+        $node.style.display = 'block';
+        $link.innerHTML = 'Hide source.';
+      } else {
+        $node.style.display = 'none';
+        $link.innerHTML = 'Show source.';
+      }
+    }
+  </script>
+</head>
+<body>
+<a href="#" id="top">Top</a>
+
+<div id="container">
+
+    
+  
+
+  
+
+
+  <h1>Module pylut</h1>
+  
+  
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut', this);">Show source.</a></p>
+    <div id="source-pylut" class="source">
+      <pre><code>#MIT License
+#Authored by Greg Cotten
+
+
+import os
+import math
+import numpy as np
+
+def EmptyLatticeOfSize(cubeSize):
+	return np.zeros((cubeSize, cubeSize, cubeSize), object)
+
+def Indices01(cubeSize):
+	indices = []
+	ratio = 1.0/float(cubeSize-1)
+	for i in xrange(cubeSize):
+		indices.append(float(i) * ratio)
+	return indices
+
+def Indices(cubeSize, bitdepth):
+	indices = []
+	for i in Indices01(cubeSize):
+		indices.append(i * (2**bitdepth - 1))
+	return indices
+
+
+def RemapIntTo01(val, maxVal):
+	return (float(val)/float(maxVal))
+
+def Remap01ToInt(val, bitdepth):
+	return int(val * (2**bitdepth - 1))
+
+def LerpColor(beginning, end, value01):
+	return Color.FromFloatArray(Lerp3D(beginning.ToFloatArray(), end.ToFloatArray(), value01))
+
+def Lerp3D(beginning, end, value01):
+	if value01 < 0 or value01 > 1:
+		raise NameError("Improper Lerp")
+	return [Lerp1D(beginning[0], end[0], value01), Lerp1D(beginning[1], end[1], value01), Lerp1D(beginning[2], end[2], value01)]
+
+def Lerp1D(beginning, end, value01):
+	if value01 < 0 or value01 > 1:
+		raise NameError("Improper Lerp")
+
+	range = float(end) - float(beginning)
+	return float(beginning) + float(range) * float(value01)
+
+def Clamp(value, min, max):
+	if min > max:
+		raise NameError("Invalid Clamp Values")
+	if value < min:
+		return float(min)
+	if value > max:
+		return float(max)
+	return value
+
+class Color:
+	"""
+	RGB floating point 0-1 representation of a color.
+	Access channel data by color.r, color.g, or color.b. 
+	"""
+	def __init__(self, r, g, b):
+		self.SetRGB(r,g,b)
+
+	"""
+	SetRGB(r, g, b) clamps RGB values to 0-1.
+	"""
+	def SetRGB(self, r, g, b):
+		"""
+		Sets RGB value of the Color - input values are clamped between 0 and 1.
+		"""
+		self.r = Clamp(float(r), 0, 1)
+		self.g = Clamp(float(g), 0, 1)
+		self.b = Clamp(float(b), 0, 1)
+		if 0 > r > 1 or 0 > g > 1 or 0 > b > 1:
+			print "Warning: (" + str(r) + ", " + str(g) + ", " + str(b) + ") out of range and clamped to " + self
+
+	"""
+	Instantiates a floating point color from RGB integers at a bitdepth.
+	"""
+	@staticmethod
+	def FromRGBInteger(r, g, b, bitdepth):
+		"""
+		Creates Color from 3 integer values and a bit depth.
+		"""
+		maxBits = 2**bitdepth - 1
+		return Color(RemapIntTo01(r, maxBits), RemapIntTo01(g, maxBits), RemapIntTo01(b, maxBits))
+
+	"""
+	Instantiates a floating point color from a list of 3 RGB floats.
+	"""
+	@staticmethod
+	def FromFloatArray(array):
+		"""
+		Creates Color from a list of 3 floats.
+		"""
+		return Color(array[0], array[1], array[2])
+
+	"""
+	Creates a list of 3 floating point RGB values from the floating point color.
+	"""
+	def ToFloatArray(self):
+		"""
+		Creates representation of self with a RGB float list.
+		"""
+		return [self.r, self.g, self.b]
+
+	def ClampRGB(self, min, max):
+		"""
+		Returns RGB clamped color.
+		"""
+		return Color(Clamp(self.r, min, max), Clamp(self.g, min, max), Clamp(self.b, min, max))
+
+	def ClampRed(self, min, max):
+		"""
+		Returns red clamped color.
+		"""
+		if min > max:
+			raise NameError("Invalid Clamp Values")
+		return Color(Clamp(self.r, min, max), self.g, self.b)
+
+	def ClampGreen(self, min, max):
+		"""
+		Returns green clamped color.
+		"""
+		if min > max:
+			raise NameError("Invalid Clamp Values")
+		return Color(self.r, Clamp(self.g, min, max), self.b)
+
+	def ClampBlue(self, min, max):
+		"""
+		Returns blue clamped color.
+		"""
+		if min > max:
+			raise NameError("Invalid Clamp Values")
+		return Color(self.r, self.g, Clamp(self.b, min, max))
+	
+	def __add__(self, color):
+		return Color(self.r + color.r, self.g + color.g, self.b + color.b)
+
+
+	def __sub__(self, color):
+		return Color(self.r - color.r, self.g - color.g, self.b - color.b)
+	
+	def __mul__(self, color):
+		if "Color" not in color.__class__.__name__:
+			mult = float(color)
+			return Color(self.r * mult, self.g * mult, self.b * mult)
+		return Color(self.r * color.r, self.g * color.g, self.b * color.b)
+	
+	def __str__(self):
+		return "(" + str(self.r) + ", " + str(self.g) + ", " + str(self.b) + ")"
+	
+	def FormattedAsFloat(self, format = '{:1.6f}'):
+		return format.format(self.r) + " " + format.format(self.g) + " " + format.format(self.b)
+	
+	def FormattedAsInteger(self, bitdepth):
+		rjustValue = len(str(2**bitdepth - 1)) + 1
+		return str(Remap01ToInt(self.r, bitdepth)).rjust(rjustValue) + " " + str(Remap01ToInt(self.g, bitdepth)).rjust(rjustValue) + " " + str(Remap01ToInt(self.b, bitdepth)).rjust(rjustValue)
+
+class LUT:
+	"""
+	A class that represents a 3D LUT on a 3D numpy array. The idea is that the modifications are non-volatile, meaning that every modification method returns a new LUT object.
+	"""
+	def __init__(self, lattice, name = "Untitled LUT"):
+		self.lattice = lattice
+		"""
+		Numpy 3D array representing the 3D LUT.
+		"""
+		self.name = name
+		"""
+		Every LUT has a name!
+		"""
+
+	def LatticeSize(self):
+		return self.lattice.shape[0]
+
+	def Resize(self, newCubeSize):
+		"""
+		Scales the lattice to a new cube size.
+		"""
+		newLattice = EmptyLatticeOfSize(newCubeSize)
+		ratio = float(self.LatticeSize() - 1.0) / float(newCubeSize-1.0)
+		for x in xrange(newCubeSize):
+			for y in xrange(newCubeSize):
+				for z in xrange(newCubeSize):
+					newLattice[x, y, z] = self.ColorAtInterpolatedLatticePoint(x*ratio, y*ratio, z*ratio)
+		return LUT(newLattice, name = self.name + "_Resized"+str(newCubeSize))
+		
+	def CombineWithLUT(self, otherLUT):
+		"""
+		Combines LUT with another LUT.
+		"""
+		if self.LatticeSize() is not otherLUT.LatticeSize():
+			raise NameError("Lattice Sizes not equivalent")
+		
+		
+		cubeSize = self.LatticeSize()
+		newLattice = EmptyLatticeOfSize(cubeSize)
+		
+		for x in xrange(cubeSize):
+			for y in xrange(cubeSize):
+				for z in xrange(cubeSize):
+					selfLatticePoint = self.lattice[x, y, z]
+					newLattice[x, y, z] = otherLUT.ColorAtInterpolatedLatticePoint(selfLatticePoint.r * (cubeSize-1), selfLatticePoint.g * (cubeSize-1), selfLatticePoint.b * (cubeSize-1))
+		return LUT(newLattice)
+
+	def ClampRGB(self, min, max):
+		"""
+		Returns a new RGB clamped LUT.
+		"""
+		cubeSize = self.LatticeSize()
+		newLattice = EmptyLatticeOfSize(cubeSize)
+		for x in xrange(cubeSize):
+			for y in xrange(cubeSize):
+				for z in xrange(cubeSize):
+					newLattice[x, y, z] = self.ColorAtLatticePoint(x, y, z).ClampRGB(min, max)
+		return LUT(newLattice)
+
+	def ClampRed(self, min, max):
+		"""
+		Returns a red clamped LUT.
+		"""
+		cubeSize = self.LatticeSize()
+		newLattice = EmptyLatticeOfSize(cubeSize)
+		for x in xrange(cubeSize):
+			for y in xrange(cubeSize):
+				for z in xrange(cubeSize):
+					newLattice[x, y, z] = self.ColorAtLatticePoint(x, y, z).ClampRed(min, max)
+		return LUT(newLattice)
+
+	def ClampGreen(self, min, max):
+		"""
+		Returns a green clamped LUT.
+		"""
+		cubeSize = self.LatticeSize()
+		newLattice = EmptyLatticeOfSize(cubeSize)
+		for x in xrange(cubeSize):
+			for y in xrange(cubeSize):
+				for z in xrange(cubeSize):
+					newLattice[x, y, z] = self.ColorAtLatticePoint(x, y, z).ClampGreen(min, max)
+		return LUT(newLattice)
+
+	def ClampBlue(self, min, max):
+		"""
+		Returns a blue clamped LUT.
+		"""
+		cubeSize = self.LatticeSize()
+		newLattice = EmptyLatticeOfSize(cubeSize)
+		for x in xrange(cubeSize):
+			for y in xrange(cubeSize):
+				for z in xrange(cubeSize):
+					newLattice[x, y, z] = self.ColorAtLatticePoint(x, y, z).ClampBlue(min, max)
+		return LUT(newLattice)
+
+	def _LatticeTo3DLString(self, bitdepth):
+		"""
+		Used for internal creating of 3DL files.
+		"""
+		string = ""
+		cubeSize = self.LatticeSize()
+		for currentCubeIndex in range(0, cubeSize**3):
+			redIndex = currentCubeIndex / (cubeSize*cubeSize)
+			greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
+			blueIndex = currentCubeIndex % cubeSize
+
+			latticePointColor = self.lattice[redIndex, greenIndex, blueIndex]
+			
+			string += latticePointColor.FormattedAsInteger(bitdepth) + "\n"
+		
+		return string
+
+	
+	def ToLustre3DLFile(self, fileOutPath, bitdepth = 12):
+		cubeSize = self.LatticeSize()
+		inputDepth = math.log(cubeSize-1, 2)
+
+		if int(inputDepth) != inputDepth:
+			raise NameError("Invalid cube size for 3DL. Cube size must be 2^x + 1")
+
+		lutFile = open(fileOutPath, 'w')
+
+		lutFile.write("3DMESH\n")
+		lutFile.write("Mesh " + str(int(inputDepth)) + " " + str(bitdepth) + "\n")
+		lutFile.write(Indices(10) + "\n\n")
+		
+		lutFile.write(self._LatticeTo3DLString(bitdepth))
+
+		lutFile.write("\n#Tokens required by applications - do not edit\nLUT8\ngamma 1.0")
+
+		lutFile.close()
+
+	def ToNuke3DLFile(self, fileOutPath, bitdepth = 16):
+		cubeSize = self.LatticeSize()
+
+		lutFile = open(fileOutPath, 'w')
+
+		lutFile.write(' '.join([str(int(x)) for x in Indices(cubeSize, bitdepth)]) + "\n")
+
+		lutFile.write(self._LatticeTo3DLString(bitdepth))
+
+		lutFile.close()
+	
+	def ToCubeFile(self, cubeFileOutPath):
+		cubeSize = self.LatticeSize()
+		cubeFile = open(cubeFileOutPath, 'w')
+		cubeFile.write("LUT_3D_SIZE " + str(cubeSize) + "\n")
+		
+		for currentCubeIndex in range(0, cubeSize**3):
+			redIndex = currentCubeIndex % cubeSize
+			greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
+			blueIndex = currentCubeIndex / (cubeSize*cubeSize)
+
+			latticePointColor = self.lattice[redIndex, greenIndex, blueIndex]
+			
+			cubeFile.write( latticePointColor.FormattedAsFloat() )
+			
+			if(currentCubeIndex != cubeSize**3 - 1):
+				cubeFile.write("\n")
+
+		cubeFile.close()
+
+
+	def ColorAtRGB01(self, r, g, b):
+		"""
+		Returns what a particular float r, g, b value should be transformed to when piped through the LUT.
+		"""
+		cubeSize = self.LatticeSize()
+		return self.ColorAtInterpolatedLatticePoint(r * (cubeSize-1), g * (cubeSize-1), b * (cubeSize-1))
+
+	def ColorAtRGBInt(self, r, g, b, bitdepth):
+		"""
+		Returns what a particular integer r, g, b value (at a particular bit depth) should be transformed to when piped through the LUT.
+		"""
+		maximumBits = 2**bitdepth - 1
+		return self.ColorAtRGB01(RemapIntTo01(r, maximumBits), RemapIntTo01(g, maximumBits), RemapIntTo01(b, maximumBits))
+
+	#integer input from 0 to cubeSize-1
+	def ColorAtLatticePoint(self, redPoint, greenPoint, bluePoint):
+		"""
+		Returns a color at a specified lattice point - this value is pulled from the actual LUT file and is not interpolated.
+		"""
+		cubeSize = self.LatticeSize()
+		if redPoint > cubeSize-1 or greenPoint > cubeSize-1 or bluePoint > cubeSize-1:
+			raise NameError("Point Out of Bounds: (" + str(redPoint) + ", " + str(greenPoint) + ", " + str(bluePoint) + ")")
+
+		return self.lattice[redPoint, greenPoint, bluePoint]
+
+	#float input from 0 to cubeSize-1
+	def ColorAtInterpolatedLatticePoint(self, redPoint, greenPoint, bluePoint):
+		"""
+		Gets the interpolated color at an interpolated lattice point.
+		"""
+		cubeSize = self.LatticeSize()
+
+		if 0 < redPoint > cubeSize-1 or 0 < greenPoint > cubeSize-1 or 0 < bluePoint > cubeSize-1:
+			raise NameError("Point Out of Bounds")
+
+		lowerRedPoint = Clamp(int(math.floor(redPoint)), 0, cubeSize-1)
+		upperRedPoint = Clamp(lowerRedPoint + 1, 0, cubeSize-1)
+
+		lowerGreenPoint = Clamp(int(math.floor(greenPoint)), 0, cubeSize-1)
+		upperGreenPoint = Clamp(lowerGreenPoint + 1, 0, cubeSize-1)
+
+		lowerBluePoint = Clamp(int(math.floor(bluePoint)), 0, cubeSize-1)
+		upperBluePoint = Clamp(lowerBluePoint + 1, 0, cubeSize-1)
+
+		C000 = self.ColorAtLatticePoint(lowerRedPoint, lowerGreenPoint, lowerBluePoint)
+		C010 = self.ColorAtLatticePoint(lowerRedPoint, lowerGreenPoint, upperBluePoint)
+		C100 = self.ColorAtLatticePoint(upperRedPoint, lowerGreenPoint, lowerBluePoint)
+		C001 = self.ColorAtLatticePoint(lowerRedPoint, upperGreenPoint, lowerBluePoint)
+		C110 = self.ColorAtLatticePoint(upperRedPoint, lowerGreenPoint, upperBluePoint)
+		C111 = self.ColorAtLatticePoint(upperRedPoint, upperGreenPoint, upperBluePoint)
+		C101 = self.ColorAtLatticePoint(upperRedPoint, upperGreenPoint, lowerBluePoint)
+		C011 = self.ColorAtLatticePoint(lowerRedPoint, upperGreenPoint, upperBluePoint)
+
+		C00  = LerpColor(C000, C100, 1.0 - (upperRedPoint - redPoint))
+		C10  = LerpColor(C010, C110, 1.0 - (upperRedPoint - redPoint))
+		C01  = LerpColor(C001, C101, 1.0 - (upperRedPoint - redPoint))
+		C11  = LerpColor(C011, C111, 1.0 - (upperRedPoint - redPoint))
+
+		C1 = LerpColor(C01, C11, 1.0 - (upperBluePoint - bluePoint))
+		C0 = LerpColor(C00, C10, 1.0 - (upperBluePoint - bluePoint))
+
+		return LerpColor(C0, C1, 1.0 - (upperGreenPoint - greenPoint))
+
+	@staticmethod
+	def FromIdentity(cubeSize):
+		"""
+		Creates an indentity LUT of specified size.
+		"""
+		identityLattice = EmptyLatticeOfSize(cubeSize)
+		indices01 = Indices01(cubeSize)
+		for r in xrange(cubeSize):
+			for g in xrange(cubeSize):
+				for b in xrange(cubeSize):
+					identityLattice[r, g, b] = Color(indices01[r], indices01[g], indices01[b])
+		return LUT(identityLattice, name = "Identity"+str(cubeSize))
+
+	@staticmethod
+	def FromLustre3DLFile(lutFilePath):
+		lutFile = open(lutFilePath, 'rU')
+		lutFileLines = lutFile.readlines()
+		lutFile.close()
+
+		meshLineIndex = 0
+		cubeSize = -1
+
+		for line in lutFileLines:
+			if "Mesh" in line:
+				inputDepth = int(line.split()[1])
+				outputDepth = int(line.split()[2])
+				cubeSize = 2**inputDepth + 1
+				break
+			meshLineIndex += 1
+
+		if cubeSize == -1:
+			raise NameError("Invalid .3dl file.")
+
+		maximumBits = 2**outputDepth - 1
+		lattice = EmptyLatticeOfSize(cubeSize)
+		currentCubeIndex = 0
+		
+		for line in lutFileLines[meshLineIndex+1:]:
+			if len(line) > 0 and len(line.split()) == 3 and "#" not in line:
+				#valid cube line
+				redValue = RemapIntTo01(line.split()[0], maximumBits)
+				greenValue = RemapIntTo01(line.split()[1], maximumBits)
+				blueValue = RemapIntTo01(line.split()[2], maximumBits)
+
+				redIndex = currentCubeIndex / (cubeSize*cubeSize)
+				greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
+				blueIndex = currentCubeIndex % cubeSize
+
+				lattice[redIndex, greenIndex, blueIndex] = Color(redValue, greenValue, blueValue)
+				currentCubeIndex += 1
+
+		return LUT(lattice, name = os.path.basename(lutFilePath))
+
+	@staticmethod
+	def FromNuke3DLFile(lutFilePath):
+		lutFile = open(lutFilePath, 'rU')
+		lutFileLines = lutFile.readlines()
+		lutFile.close()
+
+		meshLineIndex = 0
+		cubeSize = -1
+		lineSkip = 0
+
+		for line in lutFileLines:
+			if "#" in line or line == "\n":
+				meshLineIndex += 1
+	
+		outputDepth = int(math.log(int(lutFileLines[meshLineIndex].split()[-1])+1,2))
+		cubeSize = len(lutFileLines[meshLineIndex].split())
+		
+	
+		if cubeSize == -1:
+			raise NameError("Invalid .3dl file.")
+
+		lattice = EmptyLatticeOfSize(cubeSize)
+		currentCubeIndex = 0
+
+		# for line in lutFileLines[meshLineIndex+1:]:
+		for line in lutFileLines[meshLineIndex+1:]:
+			# print line
+			if len(line) > 0 and len(line.split()) == 3 and "#" not in line:
+				#valid cube line
+				redValue = RemapIntTo01(line.split()[0], 2**outputDepth - 1)
+				greenValue = RemapIntTo01(line.split()[1], 2**outputDepth - 1)
+				blueValue = RemapIntTo01(line.split()[2], 2**outputDepth - 1)
+
+				redIndex = currentCubeIndex / (cubeSize*cubeSize)
+				greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
+				blueIndex = currentCubeIndex % cubeSize
+
+				lattice[redIndex, greenIndex, blueIndex] = Color(redValue, greenValue, blueValue)
+				currentCubeIndex += 1
+		return LUT(lattice, name = os.path.basename(lutFilePath))
+
+	@staticmethod
+	def FromCubeFile(cubeFilePath):
+		cubeFile = open(cubeFilePath, 'rU')
+		cubeFileLines = cubeFile.readlines()
+		cubeFile.close()
+
+		cubeSizeLineIndex = 0
+		cubeSize = -1
+
+		for line in cubeFileLines:
+			if "LUT_3D_SIZE" in line:
+				cubeSize = int(line.split()[1])
+				break
+			cubeSizeLineIndex += 1
+		if cubeSize == -1:
+			raise NameError("Invalid .cube file.")
+
+		lattice = EmptyLatticeOfSize(cubeSize)
+		currentCubeIndex = 0
+		for line in cubeFileLines[cubeSizeLineIndex+1:]:
+			if len(line) > 0 and len(line.split()) == 3 and "#" not in line:
+				#valid cube line
+				redValue = float(line.split()[0])
+				greenValue = float(line.split()[1])
+				blueValue = float(line.split()[2])
+
+				redIndex = currentCubeIndex % cubeSize
+				greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
+				blueIndex = currentCubeIndex / (cubeSize*cubeSize)
+
+				lattice[redIndex, greenIndex, blueIndex] = Color(redValue, greenValue, blueValue)
+				currentCubeIndex += 1
+
+		return LUT(lattice, name = os.path.basename(cubeFilePath))
+
+	def AddColorToEachPoint(self, color):
+		"""
+		Add a Color value to every lattice point on the cube.
+		"""
+		cubeSize = self.LatticeSize()
+		newLattice = EmptyLatticeOfSize(cubeSize)
+		for r in xrange(cubeSize):
+			for g in xrange(cubeSize):
+				for b in xrange(cubeSize):
+					newLattice[r, g, b] = self.lattice[r, g, b] + color
+		return LUT(newLattice)
+
+	def SubtractColorFromEachPoint(self, color):
+		"""
+		Subtract a Color value to every lattice point on the cube.
+		"""
+		cubeSize = self.LatticeSize()
+		newLattice = EmptyLatticeOfSize(cubeSize)
+		for r in xrange(cubeSize):
+			for g in xrange(cubeSize):
+				for b in xrange(cubeSize):
+					newLattice[r, g, b] = self.lattice[r, g, b] - color
+		return LUT(newLattice)
+
+	def MultiplyEachPoint(self, color):
+		"""
+		Multiply by a Color value or float for every lattice point on the cube.
+		"""
+		cubeSize = self.LatticeSize()
+		newLattice = EmptyLatticeOfSize(cubeSize)
+		for r in xrange(cubeSize):
+			for g in xrange(cubeSize):
+				for b in xrange(cubeSize):
+					newLattice[r, g, b] = self.lattice[r, g, b] * color
+		return LUT(newLattice)
+
+
+	def __add__(self, other):
+		if self.LatticeSize() is not other.LatticeSize():
+			raise NameError("Lattice Sizes not equivalent")
+
+		return LUT(self.lattice + other.lattice)
+
+	def __sub__(self, other):
+		className = other.__class__.__name__
+		if "Color" in className:
+			return self.SubtractColorFromEachPoint(other)
+
+		if self.LatticeSize() is not other.LatticeSize():
+			raise NameError("Lattice Sizes not equivalent")
+
+		return LUT(self.lattice - other.lattice)
+
+	def __mul__(self, other):
+		className = other.__class__.__name__
+		if "Color" in className or "float" in className:
+			return self.MultiplyEachPoint(other)
+
+		if self.LatticeSize() is not other.LatticeSize():
+			raise NameError("Lattice Sizes not equivalent")
+
+		return LUT(self.lattice * other.lattice)
+
+	def Plot(self):
+		"""
+		Plot a LUT as a 3D RGB cube using matplotlib. Stolen from https://github.com/mikrosimage/ColorPipe-tools/tree/master/plotThatLut.
+		"""
+		
+		try:
+			import matplotlib
+			# matplotlib : general plot
+			from matplotlib.pyplot import title, figure
+			# matplotlib : for 3D plot
+			# mplot3d has to be imported for 3d projection
+			import mpl_toolkits.mplot3d
+			from matplotlib.colors import rgb2hex
+		except ImportError:
+			print "matplotlib not installed. Run: sudo pip install matplotlib"
+			return
+
+		#for performance reasons lattice size must be 9 or less
+		lut = None
+		if self.LatticeSize() > 9:
+			lut = self.Resize(9)
+		else:
+			lut = self
+
+
+		# init vars
+		cubeSize = lut.LatticeSize()
+		input_range = xrange(0, cubeSize)
+		max_value = cubeSize - 1.0
+		red_values = []
+		green_values = []
+		blue_values = []
+		colors = []
+		# process color values
+		for r in input_range:
+			for g in input_range:
+				for b in input_range:
+					# get a value between [0..1]
+					norm_r = r/max_value
+					norm_g = g/max_value
+					norm_b = b/max_value
+					# apply correction
+					res = lut.ColorAtRGB01(norm_r, norm_g, norm_b)
+					# append values
+					red_values.append(res.r)
+					green_values.append(res.g)
+					blue_values.append(res.b)
+					# append corresponding color
+					colors.append(rgb2hex([norm_r, norm_g, norm_b]))
+		# init plot
+		fig = figure()
+		fig.canvas.set_window_title('pylut Plotter')
+		ax = fig.add_subplot(111, projection='3d')
+		ax.set_xlabel('Red')
+		ax.set_ylabel('Green')
+		ax.set_zlabel('Blue')
+		ax.set_xlim(min(red_values), max(red_values))
+		ax.set_ylim(min(green_values), max(green_values))
+		ax.set_zlim(min(blue_values), max(blue_values))
+		title(self.name)
+		# plot 3D values
+		ax.scatter(red_values, green_values, blue_values, c=colors, marker="o")
+		matplotlib.pyplot.show()
+</code></pre>
+    </div>
+
+  <hr>
+
+  <h2>Index</h2>
+
+  <ul id="index">
+
+    <li><h4><a href="#header-functions">Functions</a></h4>
+      
+  
+  <div class="column_list">
+      <ul>
+          <li class="mono"><a href="#pylut.Clamp">Clamp</a></li>
+          <li class="mono"><a href="#pylut.EmptyLatticeOfSize">EmptyLatticeOfSize</a></li>
+          <li class="mono"><a href="#pylut.Indices">Indices</a></li>
+      </ul>
+      <ul>
+          <li class="mono"><a href="#pylut.Indices01">Indices01</a></li>
+          <li class="mono"><a href="#pylut.Lerp1D">Lerp1D</a></li>
+          <li class="mono"><a href="#pylut.Lerp3D">Lerp3D</a></li>
+      </ul>
+      <ul>
+          <li class="mono"><a href="#pylut.LerpColor">LerpColor</a></li>
+          <li class="mono"><a href="#pylut.Remap01ToInt">Remap01ToInt</a></li>
+          <li class="mono"><a href="#pylut.RemapIntTo01">RemapIntTo01</a></li>
+      </ul>
+  </div>
+
+    </li>
+
+    <li><h4><a href="#header-classes">Classes</a></h4>
+      <ul>
+          <li class="mono">
+            <span class="class_name"><a href="#pylut.Color">Color</a></span>
+            
+              
+  
+  <div class="column_list">
+      <ul>
+          <li class="mono"><a href="#pylut.Color.FromFloatArray">FromFloatArray</a></li>
+          <li class="mono"><a href="#pylut.Color.FromRGBInteger">FromRGBInteger</a></li>
+          <li class="mono"><a href="#pylut.Color.__init__">__init__</a></li>
+          <li class="mono"><a href="#pylut.Color.ClampBlue">ClampBlue</a></li>
+      </ul>
+      <ul>
+          <li class="mono"><a href="#pylut.Color.ClampGreen">ClampGreen</a></li>
+          <li class="mono"><a href="#pylut.Color.ClampRGB">ClampRGB</a></li>
+          <li class="mono"><a href="#pylut.Color.ClampRed">ClampRed</a></li>
+          <li class="mono"><a href="#pylut.Color.FormattedAsFloat">FormattedAsFloat</a></li>
+      </ul>
+      <ul>
+          <li class="mono"><a href="#pylut.Color.FormattedAsInteger">FormattedAsInteger</a></li>
+          <li class="mono"><a href="#pylut.Color.SetRGB">SetRGB</a></li>
+          <li class="mono"><a href="#pylut.Color.ToFloatArray">ToFloatArray</a></li>
+      </ul>
+  </div>
+
+          </li>
+          <li class="mono">
+            <span class="class_name"><a href="#pylut.LUT">LUT</a></span>
+            
+              
+  
+  <div class="column_list">
+      <ul>
+          <li class="mono"><a href="#pylut.LUT.FromCubeFile">FromCubeFile</a></li>
+          <li class="mono"><a href="#pylut.LUT.FromIdentity">FromIdentity</a></li>
+          <li class="mono"><a href="#pylut.LUT.FromLustre3DLFile">FromLustre3DLFile</a></li>
+          <li class="mono"><a href="#pylut.LUT.FromNuke3DLFile">FromNuke3DLFile</a></li>
+          <li class="mono"><a href="#pylut.LUT.__init__">__init__</a></li>
+          <li class="mono"><a href="#pylut.LUT.AddColorToEachPoint">AddColorToEachPoint</a></li>
+          <li class="mono"><a href="#pylut.LUT.ClampBlue">ClampBlue</a></li>
+          <li class="mono"><a href="#pylut.LUT.ClampGreen">ClampGreen</a></li>
+      </ul>
+      <ul>
+          <li class="mono"><a href="#pylut.LUT.ClampRGB">ClampRGB</a></li>
+          <li class="mono"><a href="#pylut.LUT.ClampRed">ClampRed</a></li>
+          <li class="mono"><a href="#pylut.LUT.ColorAtInterpolatedLatticePoint">ColorAtInterpolatedLatticePoint</a></li>
+          <li class="mono"><a href="#pylut.LUT.ColorAtLatticePoint">ColorAtLatticePoint</a></li>
+          <li class="mono"><a href="#pylut.LUT.ColorAtRGB01">ColorAtRGB01</a></li>
+          <li class="mono"><a href="#pylut.LUT.ColorAtRGBInt">ColorAtRGBInt</a></li>
+          <li class="mono"><a href="#pylut.LUT.CombineWithLUT">CombineWithLUT</a></li>
+          <li class="mono"><a href="#pylut.LUT.LatticeSize">LatticeSize</a></li>
+      </ul>
+      <ul>
+          <li class="mono"><a href="#pylut.LUT.MultiplyEachPoint">MultiplyEachPoint</a></li>
+          <li class="mono"><a href="#pylut.LUT.Plot">Plot</a></li>
+          <li class="mono"><a href="#pylut.LUT.Resize">Resize</a></li>
+          <li class="mono"><a href="#pylut.LUT.SubtractColorFromEachPoint">SubtractColorFromEachPoint</a></li>
+          <li class="mono"><a href="#pylut.LUT.ToCubeFile">ToCubeFile</a></li>
+          <li class="mono"><a href="#pylut.LUT.ToLustre3DLFile">ToLustre3DLFile</a></li>
+          <li class="mono"><a href="#pylut.LUT.ToNuke3DLFile">ToNuke3DLFile</a></li>
+      </ul>
+  </div>
+
+          </li>
+      </ul>
+    </li>
+
+  </ul>
+
+
+  <h2 id="header-functions">Functions</h2>
+      
+    <div class="item">
+      <div class="name def" id="pylut.Clamp">
+        <p>def <span class="ident">Clamp</span>(</p><p>value, min, max)</p>
+      </div>
+      
+
+      
+  
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.Clamp', this);">Show source.</a></p>
+    <div id="source-pylut.Clamp" class="source">
+      <pre><code>def Clamp(value, min, max):
+	if min > max:
+		raise NameError("Invalid Clamp Values")
+	if value < min:
+		return float(min)
+	if value > max:
+		return float(max)
+	return value
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+      
+    <div class="item">
+      <div class="name def" id="pylut.EmptyLatticeOfSize">
+        <p>def <span class="ident">EmptyLatticeOfSize</span>(</p><p>cubeSize)</p>
+      </div>
+      
+
+      
+  
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.EmptyLatticeOfSize', this);">Show source.</a></p>
+    <div id="source-pylut.EmptyLatticeOfSize" class="source">
+      <pre><code>def EmptyLatticeOfSize(cubeSize):
+	return np.zeros((cubeSize, cubeSize, cubeSize), object)
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+      
+    <div class="item">
+      <div class="name def" id="pylut.Indices">
+        <p>def <span class="ident">Indices</span>(</p><p>cubeSize, bitdepth)</p>
+      </div>
+      
+
+      
+  
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.Indices', this);">Show source.</a></p>
+    <div id="source-pylut.Indices" class="source">
+      <pre><code>def Indices(cubeSize, bitdepth):
+	indices = []
+	for i in Indices01(cubeSize):
+		indices.append(i * (2**bitdepth - 1))
+	return indices
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+      
+    <div class="item">
+      <div class="name def" id="pylut.Indices01">
+        <p>def <span class="ident">Indices01</span>(</p><p>cubeSize)</p>
+      </div>
+      
+
+      
+  
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.Indices01', this);">Show source.</a></p>
+    <div id="source-pylut.Indices01" class="source">
+      <pre><code>def Indices01(cubeSize):
+	indices = []
+	ratio = 1.0/float(cubeSize-1)
+	for i in xrange(cubeSize):
+		indices.append(float(i) * ratio)
+	return indices
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+      
+    <div class="item">
+      <div class="name def" id="pylut.Lerp1D">
+        <p>def <span class="ident">Lerp1D</span>(</p><p>beginning, end, value01)</p>
+      </div>
+      
+
+      
+  
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.Lerp1D', this);">Show source.</a></p>
+    <div id="source-pylut.Lerp1D" class="source">
+      <pre><code>def Lerp1D(beginning, end, value01):
+	if value01 < 0 or value01 > 1:
+		raise NameError("Improper Lerp")
+
+	range = float(end) - float(beginning)
+	return float(beginning) + float(range) * float(value01)
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+      
+    <div class="item">
+      <div class="name def" id="pylut.Lerp3D">
+        <p>def <span class="ident">Lerp3D</span>(</p><p>beginning, end, value01)</p>
+      </div>
+      
+
+      
+  
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.Lerp3D', this);">Show source.</a></p>
+    <div id="source-pylut.Lerp3D" class="source">
+      <pre><code>def Lerp3D(beginning, end, value01):
+	if value01 < 0 or value01 > 1:
+		raise NameError("Improper Lerp")
+	return [Lerp1D(beginning[0], end[0], value01), Lerp1D(beginning[1], end[1], value01), Lerp1D(beginning[2], end[2], value01)]
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+      
+    <div class="item">
+      <div class="name def" id="pylut.LerpColor">
+        <p>def <span class="ident">LerpColor</span>(</p><p>beginning, end, value01)</p>
+      </div>
+      
+
+      
+  
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LerpColor', this);">Show source.</a></p>
+    <div id="source-pylut.LerpColor" class="source">
+      <pre><code>def LerpColor(beginning, end, value01):
+	return Color.FromFloatArray(Lerp3D(beginning.ToFloatArray(), end.ToFloatArray(), value01))
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+      
+    <div class="item">
+      <div class="name def" id="pylut.Remap01ToInt">
+        <p>def <span class="ident">Remap01ToInt</span>(</p><p>val, bitdepth)</p>
+      </div>
+      
+
+      
+  
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.Remap01ToInt', this);">Show source.</a></p>
+    <div id="source-pylut.Remap01ToInt" class="source">
+      <pre><code>def Remap01ToInt(val, bitdepth):
+	return int(val * (2**bitdepth - 1))
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+      
+    <div class="item">
+      <div class="name def" id="pylut.RemapIntTo01">
+        <p>def <span class="ident">RemapIntTo01</span>(</p><p>val, maxVal)</p>
+      </div>
+      
+
+      
+  
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.RemapIntTo01', this);">Show source.</a></p>
+    <div id="source-pylut.RemapIntTo01" class="source">
+      <pre><code>def RemapIntTo01(val, maxVal):
+	return (float(val)/float(maxVal))
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+
+  <h2 id="header-classes">Classes</h2>
+      
+      <div class="item">
+        <p id="pylut.Color" class="name">class <span class="ident">Color</span></p>
+        
+  
+      <div class="desc"><p>RGB floating point 0-1 representation of a color.
+Access channel data by color.r, color.g, or color.b.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.Color', this);">Show source.</a></p>
+    <div id="source-pylut.Color" class="source">
+      <pre><code>class Color:
+	"""
+	RGB floating point 0-1 representation of a color.
+	Access channel data by color.r, color.g, or color.b. 
+	"""
+	def __init__(self, r, g, b):
+		self.SetRGB(r,g,b)
+
+	"""
+	SetRGB(r, g, b) clamps RGB values to 0-1.
+	"""
+	def SetRGB(self, r, g, b):
+		"""
+		Sets RGB value of the Color - input values are clamped between 0 and 1.
+		"""
+		self.r = Clamp(float(r), 0, 1)
+		self.g = Clamp(float(g), 0, 1)
+		self.b = Clamp(float(b), 0, 1)
+		if 0 > r > 1 or 0 > g > 1 or 0 > b > 1:
+			print "Warning: (" + str(r) + ", " + str(g) + ", " + str(b) + ") out of range and clamped to " + self
+
+	"""
+	Instantiates a floating point color from RGB integers at a bitdepth.
+	"""
+	@staticmethod
+	def FromRGBInteger(r, g, b, bitdepth):
+		"""
+		Creates Color from 3 integer values and a bit depth.
+		"""
+		maxBits = 2**bitdepth - 1
+		return Color(RemapIntTo01(r, maxBits), RemapIntTo01(g, maxBits), RemapIntTo01(b, maxBits))
+
+	"""
+	Instantiates a floating point color from a list of 3 RGB floats.
+	"""
+	@staticmethod
+	def FromFloatArray(array):
+		"""
+		Creates Color from a list of 3 floats.
+		"""
+		return Color(array[0], array[1], array[2])
+
+	"""
+	Creates a list of 3 floating point RGB values from the floating point color.
+	"""
+	def ToFloatArray(self):
+		"""
+		Creates representation of self with a RGB float list.
+		"""
+		return [self.r, self.g, self.b]
+
+	def ClampRGB(self, min, max):
+		"""
+		Returns RGB clamped color.
+		"""
+		return Color(Clamp(self.r, min, max), Clamp(self.g, min, max), Clamp(self.b, min, max))
+
+	def ClampRed(self, min, max):
+		"""
+		Returns red clamped color.
+		"""
+		if min > max:
+			raise NameError("Invalid Clamp Values")
+		return Color(Clamp(self.r, min, max), self.g, self.b)
+
+	def ClampGreen(self, min, max):
+		"""
+		Returns green clamped color.
+		"""
+		if min > max:
+			raise NameError("Invalid Clamp Values")
+		return Color(self.r, Clamp(self.g, min, max), self.b)
+
+	def ClampBlue(self, min, max):
+		"""
+		Returns blue clamped color.
+		"""
+		if min > max:
+			raise NameError("Invalid Clamp Values")
+		return Color(self.r, self.g, Clamp(self.b, min, max))
+	
+	def __add__(self, color):
+		return Color(self.r + color.r, self.g + color.g, self.b + color.b)
+
+
+	def __sub__(self, color):
+		return Color(self.r - color.r, self.g - color.g, self.b - color.b)
+	
+	def __mul__(self, color):
+		if "Color" not in color.__class__.__name__:
+			mult = float(color)
+			return Color(self.r * mult, self.g * mult, self.b * mult)
+		return Color(self.r * color.r, self.g * color.g, self.b * color.b)
+	
+	def __str__(self):
+		return "(" + str(self.r) + ", " + str(self.g) + ", " + str(self.b) + ")"
+	
+	def FormattedAsFloat(self, format = '{:1.6f}'):
+		return format.format(self.r) + " " + format.format(self.g) + " " + format.format(self.b)
+	
+	def FormattedAsInteger(self, bitdepth):
+		rjustValue = len(str(2**bitdepth - 1)) + 1
+		return str(Remap01ToInt(self.r, bitdepth)).rjust(rjustValue) + " " + str(Remap01ToInt(self.g, bitdepth)).rjust(rjustValue) + " " + str(Remap01ToInt(self.b, bitdepth)).rjust(rjustValue)
+</code></pre>
+    </div>
+</div>
+
+
+        <div class="class">
+              <h4>Ancestors (in MRO)</h4>
+              <ul class="class_list">
+                <li><a href="#pylut.Color">Color</a></li>
+              </ul>
+              <h4>Static methods</h4>
+                  
+    <div class="item">
+      <div class="name def" id="pylut.Color.FromFloatArray">
+        <p>def <span class="ident">FromFloatArray</span>(</p><p>array)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Creates Color from a list of 3 floats.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.Color.FromFloatArray', this);">Show source.</a></p>
+    <div id="source-pylut.Color.FromFloatArray" class="source">
+      <pre><code>@staticmethod
+def FromFloatArray(array):
+	"""
+	Creates Color from a list of 3 floats.
+	"""
+	return Color(array[0], array[1], array[2])
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.Color.FromRGBInteger">
+        <p>def <span class="ident">FromRGBInteger</span>(</p><p>r, g, b, bitdepth)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Creates Color from 3 integer values and a bit depth.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.Color.FromRGBInteger', this);">Show source.</a></p>
+    <div id="source-pylut.Color.FromRGBInteger" class="source">
+      <pre><code>@staticmethod
+def FromRGBInteger(r, g, b, bitdepth):
+	"""
+	Creates Color from 3 integer values and a bit depth.
+	"""
+	maxBits = 2**bitdepth - 1
+	return Color(RemapIntTo01(r, maxBits), RemapIntTo01(g, maxBits), RemapIntTo01(b, maxBits))
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+              <h4>Methods</h4>
+                  
+    <div class="item">
+      <div class="name def" id="pylut.Color.__init__">
+        <p>def <span class="ident">__init__</span>(</p><p>self, r, g, b)</p>
+      </div>
+      
+
+      
+  
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.Color.__init__', this);">Show source.</a></p>
+    <div id="source-pylut.Color.__init__" class="source">
+      <pre><code>def __init__(self, r, g, b):
+	self.SetRGB(r,g,b)
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.Color.ClampBlue">
+        <p>def <span class="ident">ClampBlue</span>(</p><p>self, min, max)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Returns blue clamped color.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.Color.ClampBlue', this);">Show source.</a></p>
+    <div id="source-pylut.Color.ClampBlue" class="source">
+      <pre><code>def ClampBlue(self, min, max):
+	"""
+	Returns blue clamped color.
+	"""
+	if min > max:
+		raise NameError("Invalid Clamp Values")
+	return Color(self.r, self.g, Clamp(self.b, min, max))
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.Color.ClampGreen">
+        <p>def <span class="ident">ClampGreen</span>(</p><p>self, min, max)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Returns green clamped color.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.Color.ClampGreen', this);">Show source.</a></p>
+    <div id="source-pylut.Color.ClampGreen" class="source">
+      <pre><code>def ClampGreen(self, min, max):
+	"""
+	Returns green clamped color.
+	"""
+	if min > max:
+		raise NameError("Invalid Clamp Values")
+	return Color(self.r, Clamp(self.g, min, max), self.b)
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.Color.ClampRGB">
+        <p>def <span class="ident">ClampRGB</span>(</p><p>self, min, max)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Returns RGB clamped color.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.Color.ClampRGB', this);">Show source.</a></p>
+    <div id="source-pylut.Color.ClampRGB" class="source">
+      <pre><code>def ClampRGB(self, min, max):
+	"""
+	Returns RGB clamped color.
+	"""
+	return Color(Clamp(self.r, min, max), Clamp(self.g, min, max), Clamp(self.b, min, max))
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.Color.ClampRed">
+        <p>def <span class="ident">ClampRed</span>(</p><p>self, min, max)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Returns red clamped color.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.Color.ClampRed', this);">Show source.</a></p>
+    <div id="source-pylut.Color.ClampRed" class="source">
+      <pre><code>def ClampRed(self, min, max):
+	"""
+	Returns red clamped color.
+	"""
+	if min > max:
+		raise NameError("Invalid Clamp Values")
+	return Color(Clamp(self.r, min, max), self.g, self.b)
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.Color.FormattedAsFloat">
+        <p>def <span class="ident">FormattedAsFloat</span>(</p><p>self, format='{:1.6f}')</p>
+      </div>
+      
+
+      
+  
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.Color.FormattedAsFloat', this);">Show source.</a></p>
+    <div id="source-pylut.Color.FormattedAsFloat" class="source">
+      <pre><code>def FormattedAsFloat(self, format = '{:1.6f}'):
+	return format.format(self.r) + " " + format.format(self.g) + " " + format.format(self.b)
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.Color.FormattedAsInteger">
+        <p>def <span class="ident">FormattedAsInteger</span>(</p><p>self, bitdepth)</p>
+      </div>
+      
+
+      
+  
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.Color.FormattedAsInteger', this);">Show source.</a></p>
+    <div id="source-pylut.Color.FormattedAsInteger" class="source">
+      <pre><code>def FormattedAsInteger(self, bitdepth):
+	rjustValue = len(str(2**bitdepth - 1)) + 1
+	return str(Remap01ToInt(self.r, bitdepth)).rjust(rjustValue) + " " + str(Remap01ToInt(self.g, bitdepth)).rjust(rjustValue) + " " + str(Remap01ToInt(self.b, bitdepth)).rjust(rjustValue)
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.Color.SetRGB">
+        <p>def <span class="ident">SetRGB</span>(</p><p>self, r, g, b)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Sets RGB value of the Color - input values are clamped between 0 and 1.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.Color.SetRGB', this);">Show source.</a></p>
+    <div id="source-pylut.Color.SetRGB" class="source">
+      <pre><code>def SetRGB(self, r, g, b):
+	"""
+	Sets RGB value of the Color - input values are clamped between 0 and 1.
+	"""
+	self.r = Clamp(float(r), 0, 1)
+	self.g = Clamp(float(g), 0, 1)
+	self.b = Clamp(float(b), 0, 1)
+	if 0 > r > 1 or 0 > g > 1 or 0 > b > 1:
+		print "Warning: (" + str(r) + ", " + str(g) + ", " + str(b) + ") out of range and clamped to " + self
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.Color.ToFloatArray">
+        <p>def <span class="ident">ToFloatArray</span>(</p><p>self)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Creates representation of self with a RGB float list.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.Color.ToFloatArray', this);">Show source.</a></p>
+    <div id="source-pylut.Color.ToFloatArray" class="source">
+      <pre><code>def ToFloatArray(self):
+	"""
+	Creates representation of self with a RGB float list.
+	"""
+	return [self.r, self.g, self.b]
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+        </div>
+      </div>
+      
+      <div class="item">
+        <p id="pylut.LUT" class="name">class <span class="ident">LUT</span></p>
+        
+  
+      <div class="desc"><p>A class that represents a 3D LUT on a 3D numpy array. The idea is that the modifications are non-volatile, meaning that every modification method returns a new LUT object.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT', this);">Show source.</a></p>
+    <div id="source-pylut.LUT" class="source">
+      <pre><code>class LUT:
+	"""
+	A class that represents a 3D LUT on a 3D numpy array. The idea is that the modifications are non-volatile, meaning that every modification method returns a new LUT object.
+	"""
+	def __init__(self, lattice, name = "Untitled LUT"):
+		self.lattice = lattice
+		"""
+		Numpy 3D array representing the 3D LUT.
+		"""
+		self.name = name
+		"""
+		Every LUT has a name!
+		"""
+
+	def LatticeSize(self):
+		return self.lattice.shape[0]
+
+	def Resize(self, newCubeSize):
+		"""
+		Scales the lattice to a new cube size.
+		"""
+		newLattice = EmptyLatticeOfSize(newCubeSize)
+		ratio = float(self.LatticeSize() - 1.0) / float(newCubeSize-1.0)
+		for x in xrange(newCubeSize):
+			for y in xrange(newCubeSize):
+				for z in xrange(newCubeSize):
+					newLattice[x, y, z] = self.ColorAtInterpolatedLatticePoint(x*ratio, y*ratio, z*ratio)
+		return LUT(newLattice, name = self.name + "_Resized"+str(newCubeSize))
+		
+	def CombineWithLUT(self, otherLUT):
+		"""
+		Combines LUT with another LUT.
+		"""
+		if self.LatticeSize() is not otherLUT.LatticeSize():
+			raise NameError("Lattice Sizes not equivalent")
+		
+		
+		cubeSize = self.LatticeSize()
+		newLattice = EmptyLatticeOfSize(cubeSize)
+		
+		for x in xrange(cubeSize):
+			for y in xrange(cubeSize):
+				for z in xrange(cubeSize):
+					selfLatticePoint = self.lattice[x, y, z]
+					newLattice[x, y, z] = otherLUT.ColorAtInterpolatedLatticePoint(selfLatticePoint.r * (cubeSize-1), selfLatticePoint.g * (cubeSize-1), selfLatticePoint.b * (cubeSize-1))
+		return LUT(newLattice)
+
+	def ClampRGB(self, min, max):
+		"""
+		Returns a new RGB clamped LUT.
+		"""
+		cubeSize = self.LatticeSize()
+		newLattice = EmptyLatticeOfSize(cubeSize)
+		for x in xrange(cubeSize):
+			for y in xrange(cubeSize):
+				for z in xrange(cubeSize):
+					newLattice[x, y, z] = self.ColorAtLatticePoint(x, y, z).ClampRGB(min, max)
+		return LUT(newLattice)
+
+	def ClampRed(self, min, max):
+		"""
+		Returns a red clamped LUT.
+		"""
+		cubeSize = self.LatticeSize()
+		newLattice = EmptyLatticeOfSize(cubeSize)
+		for x in xrange(cubeSize):
+			for y in xrange(cubeSize):
+				for z in xrange(cubeSize):
+					newLattice[x, y, z] = self.ColorAtLatticePoint(x, y, z).ClampRed(min, max)
+		return LUT(newLattice)
+
+	def ClampGreen(self, min, max):
+		"""
+		Returns a green clamped LUT.
+		"""
+		cubeSize = self.LatticeSize()
+		newLattice = EmptyLatticeOfSize(cubeSize)
+		for x in xrange(cubeSize):
+			for y in xrange(cubeSize):
+				for z in xrange(cubeSize):
+					newLattice[x, y, z] = self.ColorAtLatticePoint(x, y, z).ClampGreen(min, max)
+		return LUT(newLattice)
+
+	def ClampBlue(self, min, max):
+		"""
+		Returns a blue clamped LUT.
+		"""
+		cubeSize = self.LatticeSize()
+		newLattice = EmptyLatticeOfSize(cubeSize)
+		for x in xrange(cubeSize):
+			for y in xrange(cubeSize):
+				for z in xrange(cubeSize):
+					newLattice[x, y, z] = self.ColorAtLatticePoint(x, y, z).ClampBlue(min, max)
+		return LUT(newLattice)
+
+	def _LatticeTo3DLString(self, bitdepth):
+		"""
+		Used for internal creating of 3DL files.
+		"""
+		string = ""
+		cubeSize = self.LatticeSize()
+		for currentCubeIndex in range(0, cubeSize**3):
+			redIndex = currentCubeIndex / (cubeSize*cubeSize)
+			greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
+			blueIndex = currentCubeIndex % cubeSize
+
+			latticePointColor = self.lattice[redIndex, greenIndex, blueIndex]
+			
+			string += latticePointColor.FormattedAsInteger(bitdepth) + "\n"
+		
+		return string
+
+	
+	def ToLustre3DLFile(self, fileOutPath, bitdepth = 12):
+		cubeSize = self.LatticeSize()
+		inputDepth = math.log(cubeSize-1, 2)
+
+		if int(inputDepth) != inputDepth:
+			raise NameError("Invalid cube size for 3DL. Cube size must be 2^x + 1")
+
+		lutFile = open(fileOutPath, 'w')
+
+		lutFile.write("3DMESH\n")
+		lutFile.write("Mesh " + str(int(inputDepth)) + " " + str(bitdepth) + "\n")
+		lutFile.write(Indices(10) + "\n\n")
+		
+		lutFile.write(self._LatticeTo3DLString(bitdepth))
+
+		lutFile.write("\n#Tokens required by applications - do not edit\nLUT8\ngamma 1.0")
+
+		lutFile.close()
+
+	def ToNuke3DLFile(self, fileOutPath, bitdepth = 16):
+		cubeSize = self.LatticeSize()
+
+		lutFile = open(fileOutPath, 'w')
+
+		lutFile.write(' '.join([str(int(x)) for x in Indices(cubeSize, bitdepth)]) + "\n")
+
+		lutFile.write(self._LatticeTo3DLString(bitdepth))
+
+		lutFile.close()
+	
+	def ToCubeFile(self, cubeFileOutPath):
+		cubeSize = self.LatticeSize()
+		cubeFile = open(cubeFileOutPath, 'w')
+		cubeFile.write("LUT_3D_SIZE " + str(cubeSize) + "\n")
+		
+		for currentCubeIndex in range(0, cubeSize**3):
+			redIndex = currentCubeIndex % cubeSize
+			greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
+			blueIndex = currentCubeIndex / (cubeSize*cubeSize)
+
+			latticePointColor = self.lattice[redIndex, greenIndex, blueIndex]
+			
+			cubeFile.write( latticePointColor.FormattedAsFloat() )
+			
+			if(currentCubeIndex != cubeSize**3 - 1):
+				cubeFile.write("\n")
+
+		cubeFile.close()
+
+
+	def ColorAtRGB01(self, r, g, b):
+		"""
+		Returns what a particular float r, g, b value should be transformed to when piped through the LUT.
+		"""
+		cubeSize = self.LatticeSize()
+		return self.ColorAtInterpolatedLatticePoint(r * (cubeSize-1), g * (cubeSize-1), b * (cubeSize-1))
+
+	def ColorAtRGBInt(self, r, g, b, bitdepth):
+		"""
+		Returns what a particular integer r, g, b value (at a particular bit depth) should be transformed to when piped through the LUT.
+		"""
+		maximumBits = 2**bitdepth - 1
+		return self.ColorAtRGB01(RemapIntTo01(r, maximumBits), RemapIntTo01(g, maximumBits), RemapIntTo01(b, maximumBits))
+
+	#integer input from 0 to cubeSize-1
+	def ColorAtLatticePoint(self, redPoint, greenPoint, bluePoint):
+		"""
+		Returns a color at a specified lattice point - this value is pulled from the actual LUT file and is not interpolated.
+		"""
+		cubeSize = self.LatticeSize()
+		if redPoint > cubeSize-1 or greenPoint > cubeSize-1 or bluePoint > cubeSize-1:
+			raise NameError("Point Out of Bounds: (" + str(redPoint) + ", " + str(greenPoint) + ", " + str(bluePoint) + ")")
+
+		return self.lattice[redPoint, greenPoint, bluePoint]
+
+	#float input from 0 to cubeSize-1
+	def ColorAtInterpolatedLatticePoint(self, redPoint, greenPoint, bluePoint):
+		"""
+		Gets the interpolated color at an interpolated lattice point.
+		"""
+		cubeSize = self.LatticeSize()
+
+		if 0 < redPoint > cubeSize-1 or 0 < greenPoint > cubeSize-1 or 0 < bluePoint > cubeSize-1:
+			raise NameError("Point Out of Bounds")
+
+		lowerRedPoint = Clamp(int(math.floor(redPoint)), 0, cubeSize-1)
+		upperRedPoint = Clamp(lowerRedPoint + 1, 0, cubeSize-1)
+
+		lowerGreenPoint = Clamp(int(math.floor(greenPoint)), 0, cubeSize-1)
+		upperGreenPoint = Clamp(lowerGreenPoint + 1, 0, cubeSize-1)
+
+		lowerBluePoint = Clamp(int(math.floor(bluePoint)), 0, cubeSize-1)
+		upperBluePoint = Clamp(lowerBluePoint + 1, 0, cubeSize-1)
+
+		C000 = self.ColorAtLatticePoint(lowerRedPoint, lowerGreenPoint, lowerBluePoint)
+		C010 = self.ColorAtLatticePoint(lowerRedPoint, lowerGreenPoint, upperBluePoint)
+		C100 = self.ColorAtLatticePoint(upperRedPoint, lowerGreenPoint, lowerBluePoint)
+		C001 = self.ColorAtLatticePoint(lowerRedPoint, upperGreenPoint, lowerBluePoint)
+		C110 = self.ColorAtLatticePoint(upperRedPoint, lowerGreenPoint, upperBluePoint)
+		C111 = self.ColorAtLatticePoint(upperRedPoint, upperGreenPoint, upperBluePoint)
+		C101 = self.ColorAtLatticePoint(upperRedPoint, upperGreenPoint, lowerBluePoint)
+		C011 = self.ColorAtLatticePoint(lowerRedPoint, upperGreenPoint, upperBluePoint)
+
+		C00  = LerpColor(C000, C100, 1.0 - (upperRedPoint - redPoint))
+		C10  = LerpColor(C010, C110, 1.0 - (upperRedPoint - redPoint))
+		C01  = LerpColor(C001, C101, 1.0 - (upperRedPoint - redPoint))
+		C11  = LerpColor(C011, C111, 1.0 - (upperRedPoint - redPoint))
+
+		C1 = LerpColor(C01, C11, 1.0 - (upperBluePoint - bluePoint))
+		C0 = LerpColor(C00, C10, 1.0 - (upperBluePoint - bluePoint))
+
+		return LerpColor(C0, C1, 1.0 - (upperGreenPoint - greenPoint))
+
+	@staticmethod
+	def FromIdentity(cubeSize):
+		"""
+		Creates an indentity LUT of specified size.
+		"""
+		identityLattice = EmptyLatticeOfSize(cubeSize)
+		indices01 = Indices01(cubeSize)
+		for r in xrange(cubeSize):
+			for g in xrange(cubeSize):
+				for b in xrange(cubeSize):
+					identityLattice[r, g, b] = Color(indices01[r], indices01[g], indices01[b])
+		return LUT(identityLattice, name = "Identity"+str(cubeSize))
+
+	@staticmethod
+	def FromLustre3DLFile(lutFilePath):
+		lutFile = open(lutFilePath, 'rU')
+		lutFileLines = lutFile.readlines()
+		lutFile.close()
+
+		meshLineIndex = 0
+		cubeSize = -1
+
+		for line in lutFileLines:
+			if "Mesh" in line:
+				inputDepth = int(line.split()[1])
+				outputDepth = int(line.split()[2])
+				cubeSize = 2**inputDepth + 1
+				break
+			meshLineIndex += 1
+
+		if cubeSize == -1:
+			raise NameError("Invalid .3dl file.")
+
+		maximumBits = 2**outputDepth - 1
+		lattice = EmptyLatticeOfSize(cubeSize)
+		currentCubeIndex = 0
+		
+		for line in lutFileLines[meshLineIndex+1:]:
+			if len(line) > 0 and len(line.split()) == 3 and "#" not in line:
+				#valid cube line
+				redValue = RemapIntTo01(line.split()[0], maximumBits)
+				greenValue = RemapIntTo01(line.split()[1], maximumBits)
+				blueValue = RemapIntTo01(line.split()[2], maximumBits)
+
+				redIndex = currentCubeIndex / (cubeSize*cubeSize)
+				greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
+				blueIndex = currentCubeIndex % cubeSize
+
+				lattice[redIndex, greenIndex, blueIndex] = Color(redValue, greenValue, blueValue)
+				currentCubeIndex += 1
+
+		return LUT(lattice, name = os.path.basename(lutFilePath))
+
+	@staticmethod
+	def FromNuke3DLFile(lutFilePath):
+		lutFile = open(lutFilePath, 'rU')
+		lutFileLines = lutFile.readlines()
+		lutFile.close()
+
+		meshLineIndex = 0
+		cubeSize = -1
+		lineSkip = 0
+
+		for line in lutFileLines:
+			if "#" in line or line == "\n":
+				meshLineIndex += 1
+	
+		outputDepth = int(math.log(int(lutFileLines[meshLineIndex].split()[-1])+1,2))
+		cubeSize = len(lutFileLines[meshLineIndex].split())
+		
+	
+		if cubeSize == -1:
+			raise NameError("Invalid .3dl file.")
+
+		lattice = EmptyLatticeOfSize(cubeSize)
+		currentCubeIndex = 0
+
+		# for line in lutFileLines[meshLineIndex+1:]:
+		for line in lutFileLines[meshLineIndex+1:]:
+			# print line
+			if len(line) > 0 and len(line.split()) == 3 and "#" not in line:
+				#valid cube line
+				redValue = RemapIntTo01(line.split()[0], 2**outputDepth - 1)
+				greenValue = RemapIntTo01(line.split()[1], 2**outputDepth - 1)
+				blueValue = RemapIntTo01(line.split()[2], 2**outputDepth - 1)
+
+				redIndex = currentCubeIndex / (cubeSize*cubeSize)
+				greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
+				blueIndex = currentCubeIndex % cubeSize
+
+				lattice[redIndex, greenIndex, blueIndex] = Color(redValue, greenValue, blueValue)
+				currentCubeIndex += 1
+		return LUT(lattice, name = os.path.basename(lutFilePath))
+
+	@staticmethod
+	def FromCubeFile(cubeFilePath):
+		cubeFile = open(cubeFilePath, 'rU')
+		cubeFileLines = cubeFile.readlines()
+		cubeFile.close()
+
+		cubeSizeLineIndex = 0
+		cubeSize = -1
+
+		for line in cubeFileLines:
+			if "LUT_3D_SIZE" in line:
+				cubeSize = int(line.split()[1])
+				break
+			cubeSizeLineIndex += 1
+		if cubeSize == -1:
+			raise NameError("Invalid .cube file.")
+
+		lattice = EmptyLatticeOfSize(cubeSize)
+		currentCubeIndex = 0
+		for line in cubeFileLines[cubeSizeLineIndex+1:]:
+			if len(line) > 0 and len(line.split()) == 3 and "#" not in line:
+				#valid cube line
+				redValue = float(line.split()[0])
+				greenValue = float(line.split()[1])
+				blueValue = float(line.split()[2])
+
+				redIndex = currentCubeIndex % cubeSize
+				greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
+				blueIndex = currentCubeIndex / (cubeSize*cubeSize)
+
+				lattice[redIndex, greenIndex, blueIndex] = Color(redValue, greenValue, blueValue)
+				currentCubeIndex += 1
+
+		return LUT(lattice, name = os.path.basename(cubeFilePath))
+
+	def AddColorToEachPoint(self, color):
+		"""
+		Add a Color value to every lattice point on the cube.
+		"""
+		cubeSize = self.LatticeSize()
+		newLattice = EmptyLatticeOfSize(cubeSize)
+		for r in xrange(cubeSize):
+			for g in xrange(cubeSize):
+				for b in xrange(cubeSize):
+					newLattice[r, g, b] = self.lattice[r, g, b] + color
+		return LUT(newLattice)
+
+	def SubtractColorFromEachPoint(self, color):
+		"""
+		Subtract a Color value to every lattice point on the cube.
+		"""
+		cubeSize = self.LatticeSize()
+		newLattice = EmptyLatticeOfSize(cubeSize)
+		for r in xrange(cubeSize):
+			for g in xrange(cubeSize):
+				for b in xrange(cubeSize):
+					newLattice[r, g, b] = self.lattice[r, g, b] - color
+		return LUT(newLattice)
+
+	def MultiplyEachPoint(self, color):
+		"""
+		Multiply by a Color value or float for every lattice point on the cube.
+		"""
+		cubeSize = self.LatticeSize()
+		newLattice = EmptyLatticeOfSize(cubeSize)
+		for r in xrange(cubeSize):
+			for g in xrange(cubeSize):
+				for b in xrange(cubeSize):
+					newLattice[r, g, b] = self.lattice[r, g, b] * color
+		return LUT(newLattice)
+
+
+	def __add__(self, other):
+		if self.LatticeSize() is not other.LatticeSize():
+			raise NameError("Lattice Sizes not equivalent")
+
+		return LUT(self.lattice + other.lattice)
+
+	def __sub__(self, other):
+		className = other.__class__.__name__
+		if "Color" in className:
+			return self.SubtractColorFromEachPoint(other)
+
+		if self.LatticeSize() is not other.LatticeSize():
+			raise NameError("Lattice Sizes not equivalent")
+
+		return LUT(self.lattice - other.lattice)
+
+	def __mul__(self, other):
+		className = other.__class__.__name__
+		if "Color" in className or "float" in className:
+			return self.MultiplyEachPoint(other)
+
+		if self.LatticeSize() is not other.LatticeSize():
+			raise NameError("Lattice Sizes not equivalent")
+
+		return LUT(self.lattice * other.lattice)
+
+	def Plot(self):
+		"""
+		Plot a LUT as a 3D RGB cube using matplotlib. Stolen from https://github.com/mikrosimage/ColorPipe-tools/tree/master/plotThatLut.
+		"""
+		
+		try:
+			import matplotlib
+			# matplotlib : general plot
+			from matplotlib.pyplot import title, figure
+			# matplotlib : for 3D plot
+			# mplot3d has to be imported for 3d projection
+			import mpl_toolkits.mplot3d
+			from matplotlib.colors import rgb2hex
+		except ImportError:
+			print "matplotlib not installed. Run: sudo pip install matplotlib"
+			return
+
+		#for performance reasons lattice size must be 9 or less
+		lut = None
+		if self.LatticeSize() > 9:
+			lut = self.Resize(9)
+		else:
+			lut = self
+
+
+		# init vars
+		cubeSize = lut.LatticeSize()
+		input_range = xrange(0, cubeSize)
+		max_value = cubeSize - 1.0
+		red_values = []
+		green_values = []
+		blue_values = []
+		colors = []
+		# process color values
+		for r in input_range:
+			for g in input_range:
+				for b in input_range:
+					# get a value between [0..1]
+					norm_r = r/max_value
+					norm_g = g/max_value
+					norm_b = b/max_value
+					# apply correction
+					res = lut.ColorAtRGB01(norm_r, norm_g, norm_b)
+					# append values
+					red_values.append(res.r)
+					green_values.append(res.g)
+					blue_values.append(res.b)
+					# append corresponding color
+					colors.append(rgb2hex([norm_r, norm_g, norm_b]))
+		# init plot
+		fig = figure()
+		fig.canvas.set_window_title('pylut Plotter')
+		ax = fig.add_subplot(111, projection='3d')
+		ax.set_xlabel('Red')
+		ax.set_ylabel('Green')
+		ax.set_zlabel('Blue')
+		ax.set_xlim(min(red_values), max(red_values))
+		ax.set_ylim(min(green_values), max(green_values))
+		ax.set_zlim(min(blue_values), max(blue_values))
+		title(self.name)
+		# plot 3D values
+		ax.scatter(red_values, green_values, blue_values, c=colors, marker="o")
+		matplotlib.pyplot.show()
+</code></pre>
+    </div>
+</div>
+
+
+        <div class="class">
+              <h4>Ancestors (in MRO)</h4>
+              <ul class="class_list">
+                <li><a href="#pylut.LUT">LUT</a></li>
+              </ul>
+              <h4>Static methods</h4>
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.FromCubeFile">
+        <p>def <span class="ident">FromCubeFile</span>(</p><p>cubeFilePath)</p>
+      </div>
+      
+
+      
+  
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.FromCubeFile', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.FromCubeFile" class="source">
+      <pre><code>@staticmethod
+def FromCubeFile(cubeFilePath):
+	cubeFile = open(cubeFilePath, 'rU')
+	cubeFileLines = cubeFile.readlines()
+	cubeFile.close()
+	cubeSizeLineIndex = 0
+	cubeSize = -1
+	for line in cubeFileLines:
+		if "LUT_3D_SIZE" in line:
+			cubeSize = int(line.split()[1])
+			break
+		cubeSizeLineIndex += 1
+	if cubeSize == -1:
+		raise NameError("Invalid .cube file.")
+	lattice = EmptyLatticeOfSize(cubeSize)
+	currentCubeIndex = 0
+	for line in cubeFileLines[cubeSizeLineIndex+1:]:
+		if len(line) > 0 and len(line.split()) == 3 and "#" not in line:
+			#valid cube line
+			redValue = float(line.split()[0])
+			greenValue = float(line.split()[1])
+			blueValue = float(line.split()[2])
+			redIndex = currentCubeIndex % cubeSize
+			greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
+			blueIndex = currentCubeIndex / (cubeSize*cubeSize)
+			lattice[redIndex, greenIndex, blueIndex] = Color(redValue, greenValue, blueValue)
+			currentCubeIndex += 1
+	return LUT(lattice, name = os.path.basename(cubeFilePath))
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.FromIdentity">
+        <p>def <span class="ident">FromIdentity</span>(</p><p>cubeSize)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Creates an indentity LUT of specified size.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.FromIdentity', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.FromIdentity" class="source">
+      <pre><code>@staticmethod
+def FromIdentity(cubeSize):
+	"""
+	Creates an indentity LUT of specified size.
+	"""
+	identityLattice = EmptyLatticeOfSize(cubeSize)
+	indices01 = Indices01(cubeSize)
+	for r in xrange(cubeSize):
+		for g in xrange(cubeSize):
+			for b in xrange(cubeSize):
+				identityLattice[r, g, b] = Color(indices01[r], indices01[g], indices01[b])
+	return LUT(identityLattice, name = "Identity"+str(cubeSize))
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.FromLustre3DLFile">
+        <p>def <span class="ident">FromLustre3DLFile</span>(</p><p>lutFilePath)</p>
+      </div>
+      
+
+      
+  
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.FromLustre3DLFile', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.FromLustre3DLFile" class="source">
+      <pre><code>@staticmethod
+def FromLustre3DLFile(lutFilePath):
+	lutFile = open(lutFilePath, 'rU')
+	lutFileLines = lutFile.readlines()
+	lutFile.close()
+	meshLineIndex = 0
+	cubeSize = -1
+	for line in lutFileLines:
+		if "Mesh" in line:
+			inputDepth = int(line.split()[1])
+			outputDepth = int(line.split()[2])
+			cubeSize = 2**inputDepth + 1
+			break
+		meshLineIndex += 1
+	if cubeSize == -1:
+		raise NameError("Invalid .3dl file.")
+	maximumBits = 2**outputDepth - 1
+	lattice = EmptyLatticeOfSize(cubeSize)
+	currentCubeIndex = 0
+	
+	for line in lutFileLines[meshLineIndex+1:]:
+		if len(line) > 0 and len(line.split()) == 3 and "#" not in line:
+			#valid cube line
+			redValue = RemapIntTo01(line.split()[0], maximumBits)
+			greenValue = RemapIntTo01(line.split()[1], maximumBits)
+			blueValue = RemapIntTo01(line.split()[2], maximumBits)
+			redIndex = currentCubeIndex / (cubeSize*cubeSize)
+			greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
+			blueIndex = currentCubeIndex % cubeSize
+			lattice[redIndex, greenIndex, blueIndex] = Color(redValue, greenValue, blueValue)
+			currentCubeIndex += 1
+	return LUT(lattice, name = os.path.basename(lutFilePath))
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.FromNuke3DLFile">
+        <p>def <span class="ident">FromNuke3DLFile</span>(</p><p>lutFilePath)</p>
+      </div>
+      
+
+      
+  
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.FromNuke3DLFile', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.FromNuke3DLFile" class="source">
+      <pre><code>@staticmethod
+def FromNuke3DLFile(lutFilePath):
+	lutFile = open(lutFilePath, 'rU')
+	lutFileLines = lutFile.readlines()
+	lutFile.close()
+	meshLineIndex = 0
+	cubeSize = -1
+	lineSkip = 0
+	for line in lutFileLines:
+		if "#" in line or line == "\n":
+			meshLineIndex += 1
+
+	outputDepth = int(math.log(int(lutFileLines[meshLineIndex].split()[-1])+1,2))
+	cubeSize = len(lutFileLines[meshLineIndex].split())
+	
+
+	if cubeSize == -1:
+		raise NameError("Invalid .3dl file.")
+	lattice = EmptyLatticeOfSize(cubeSize)
+	currentCubeIndex = 0
+	# for line in lutFileLines[meshLineIndex+1:]:
+	for line in lutFileLines[meshLineIndex+1:]:
+		# print line
+		if len(line) > 0 and len(line.split()) == 3 and "#" not in line:
+			#valid cube line
+			redValue = RemapIntTo01(line.split()[0], 2**outputDepth - 1)
+			greenValue = RemapIntTo01(line.split()[1], 2**outputDepth - 1)
+			blueValue = RemapIntTo01(line.split()[2], 2**outputDepth - 1)
+			redIndex = currentCubeIndex / (cubeSize*cubeSize)
+			greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
+			blueIndex = currentCubeIndex % cubeSize
+			lattice[redIndex, greenIndex, blueIndex] = Color(redValue, greenValue, blueValue)
+			currentCubeIndex += 1
+	return LUT(lattice, name = os.path.basename(lutFilePath))
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+              <h4>Instance variables</h4>
+                  <div class="item">
+                    <p id="pylut.LUT.lattice" class="name">var <span class="ident">lattice</span></p>
+                    
+
+                    
+  
+      <div class="desc"><p>Numpy 3D array representing the 3D LUT.</p></div>
+    <div class="source_cont">
+</div>
+
+                  </div>
+                  <div class="item">
+                    <p id="pylut.LUT.name" class="name">var <span class="ident">name</span></p>
+                    
+
+                    
+  
+      <div class="desc"><p>Every LUT has a name!</p></div>
+    <div class="source_cont">
+</div>
+
+                  </div>
+              <h4>Methods</h4>
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.__init__">
+        <p>def <span class="ident">__init__</span>(</p><p>self, lattice, name='Untitled LUT')</p>
+      </div>
+      
+
+      
+  
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.__init__', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.__init__" class="source">
+      <pre><code>def __init__(self, lattice, name = "Untitled LUT"):
+	self.lattice = lattice
+	"""
+	Numpy 3D array representing the 3D LUT.
+	"""
+	self.name = name
+	"""
+	Every LUT has a name!
+	"""
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.AddColorToEachPoint">
+        <p>def <span class="ident">AddColorToEachPoint</span>(</p><p>self, color)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Add a Color value to every lattice point on the cube.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.AddColorToEachPoint', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.AddColorToEachPoint" class="source">
+      <pre><code>def AddColorToEachPoint(self, color):
+	"""
+	Add a Color value to every lattice point on the cube.
+	"""
+	cubeSize = self.LatticeSize()
+	newLattice = EmptyLatticeOfSize(cubeSize)
+	for r in xrange(cubeSize):
+		for g in xrange(cubeSize):
+			for b in xrange(cubeSize):
+				newLattice[r, g, b] = self.lattice[r, g, b] + color
+	return LUT(newLattice)
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.ClampBlue">
+        <p>def <span class="ident">ClampBlue</span>(</p><p>self, min, max)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Returns a blue clamped LUT.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.ClampBlue', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.ClampBlue" class="source">
+      <pre><code>def ClampBlue(self, min, max):
+	"""
+	Returns a blue clamped LUT.
+	"""
+	cubeSize = self.LatticeSize()
+	newLattice = EmptyLatticeOfSize(cubeSize)
+	for x in xrange(cubeSize):
+		for y in xrange(cubeSize):
+			for z in xrange(cubeSize):
+				newLattice[x, y, z] = self.ColorAtLatticePoint(x, y, z).ClampBlue(min, max)
+	return LUT(newLattice)
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.ClampGreen">
+        <p>def <span class="ident">ClampGreen</span>(</p><p>self, min, max)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Returns a green clamped LUT.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.ClampGreen', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.ClampGreen" class="source">
+      <pre><code>def ClampGreen(self, min, max):
+	"""
+	Returns a green clamped LUT.
+	"""
+	cubeSize = self.LatticeSize()
+	newLattice = EmptyLatticeOfSize(cubeSize)
+	for x in xrange(cubeSize):
+		for y in xrange(cubeSize):
+			for z in xrange(cubeSize):
+				newLattice[x, y, z] = self.ColorAtLatticePoint(x, y, z).ClampGreen(min, max)
+	return LUT(newLattice)
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.ClampRGB">
+        <p>def <span class="ident">ClampRGB</span>(</p><p>self, min, max)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Returns a new RGB clamped LUT.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.ClampRGB', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.ClampRGB" class="source">
+      <pre><code>def ClampRGB(self, min, max):
+	"""
+	Returns a new RGB clamped LUT.
+	"""
+	cubeSize = self.LatticeSize()
+	newLattice = EmptyLatticeOfSize(cubeSize)
+	for x in xrange(cubeSize):
+		for y in xrange(cubeSize):
+			for z in xrange(cubeSize):
+				newLattice[x, y, z] = self.ColorAtLatticePoint(x, y, z).ClampRGB(min, max)
+	return LUT(newLattice)
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.ClampRed">
+        <p>def <span class="ident">ClampRed</span>(</p><p>self, min, max)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Returns a red clamped LUT.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.ClampRed', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.ClampRed" class="source">
+      <pre><code>def ClampRed(self, min, max):
+	"""
+	Returns a red clamped LUT.
+	"""
+	cubeSize = self.LatticeSize()
+	newLattice = EmptyLatticeOfSize(cubeSize)
+	for x in xrange(cubeSize):
+		for y in xrange(cubeSize):
+			for z in xrange(cubeSize):
+				newLattice[x, y, z] = self.ColorAtLatticePoint(x, y, z).ClampRed(min, max)
+	return LUT(newLattice)
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.ColorAtInterpolatedLatticePoint">
+        <p>def <span class="ident">ColorAtInterpolatedLatticePoint</span>(</p><p>self, redPoint, greenPoint, bluePoint)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Gets the interpolated color at an interpolated lattice point.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.ColorAtInterpolatedLatticePoint', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.ColorAtInterpolatedLatticePoint" class="source">
+      <pre><code>def ColorAtInterpolatedLatticePoint(self, redPoint, greenPoint, bluePoint):
+	"""
+	Gets the interpolated color at an interpolated lattice point.
+	"""
+	cubeSize = self.LatticeSize()
+	if 0 < redPoint > cubeSize-1 or 0 < greenPoint > cubeSize-1 or 0 < bluePoint > cubeSize-1:
+		raise NameError("Point Out of Bounds")
+	lowerRedPoint = Clamp(int(math.floor(redPoint)), 0, cubeSize-1)
+	upperRedPoint = Clamp(lowerRedPoint + 1, 0, cubeSize-1)
+	lowerGreenPoint = Clamp(int(math.floor(greenPoint)), 0, cubeSize-1)
+	upperGreenPoint = Clamp(lowerGreenPoint + 1, 0, cubeSize-1)
+	lowerBluePoint = Clamp(int(math.floor(bluePoint)), 0, cubeSize-1)
+	upperBluePoint = Clamp(lowerBluePoint + 1, 0, cubeSize-1)
+	C000 = self.ColorAtLatticePoint(lowerRedPoint, lowerGreenPoint, lowerBluePoint)
+	C010 = self.ColorAtLatticePoint(lowerRedPoint, lowerGreenPoint, upperBluePoint)
+	C100 = self.ColorAtLatticePoint(upperRedPoint, lowerGreenPoint, lowerBluePoint)
+	C001 = self.ColorAtLatticePoint(lowerRedPoint, upperGreenPoint, lowerBluePoint)
+	C110 = self.ColorAtLatticePoint(upperRedPoint, lowerGreenPoint, upperBluePoint)
+	C111 = self.ColorAtLatticePoint(upperRedPoint, upperGreenPoint, upperBluePoint)
+	C101 = self.ColorAtLatticePoint(upperRedPoint, upperGreenPoint, lowerBluePoint)
+	C011 = self.ColorAtLatticePoint(lowerRedPoint, upperGreenPoint, upperBluePoint)
+	C00  = LerpColor(C000, C100, 1.0 - (upperRedPoint - redPoint))
+	C10  = LerpColor(C010, C110, 1.0 - (upperRedPoint - redPoint))
+	C01  = LerpColor(C001, C101, 1.0 - (upperRedPoint - redPoint))
+	C11  = LerpColor(C011, C111, 1.0 - (upperRedPoint - redPoint))
+	C1 = LerpColor(C01, C11, 1.0 - (upperBluePoint - bluePoint))
+	C0 = LerpColor(C00, C10, 1.0 - (upperBluePoint - bluePoint))
+	return LerpColor(C0, C1, 1.0 - (upperGreenPoint - greenPoint))
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.ColorAtLatticePoint">
+        <p>def <span class="ident">ColorAtLatticePoint</span>(</p><p>self, redPoint, greenPoint, bluePoint)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Returns a color at a specified lattice point - this value is pulled from the actual LUT file and is not interpolated.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.ColorAtLatticePoint', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.ColorAtLatticePoint" class="source">
+      <pre><code>def ColorAtLatticePoint(self, redPoint, greenPoint, bluePoint):
+	"""
+	Returns a color at a specified lattice point - this value is pulled from the actual LUT file and is not interpolated.
+	"""
+	cubeSize = self.LatticeSize()
+	if redPoint > cubeSize-1 or greenPoint > cubeSize-1 or bluePoint > cubeSize-1:
+		raise NameError("Point Out of Bounds: (" + str(redPoint) + ", " + str(greenPoint) + ", " + str(bluePoint) + ")")
+	return self.lattice[redPoint, greenPoint, bluePoint]
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.ColorAtRGB01">
+        <p>def <span class="ident">ColorAtRGB01</span>(</p><p>self, r, g, b)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Returns what a particular float r, g, b value should be transformed to when piped through the LUT.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.ColorAtRGB01', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.ColorAtRGB01" class="source">
+      <pre><code>def ColorAtRGB01(self, r, g, b):
+	"""
+	Returns what a particular float r, g, b value should be transformed to when piped through the LUT.
+	"""
+	cubeSize = self.LatticeSize()
+	return self.ColorAtInterpolatedLatticePoint(r * (cubeSize-1), g * (cubeSize-1), b * (cubeSize-1))
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.ColorAtRGBInt">
+        <p>def <span class="ident">ColorAtRGBInt</span>(</p><p>self, r, g, b, bitdepth)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Returns what a particular integer r, g, b value (at a particular bit depth) should be transformed to when piped through the LUT.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.ColorAtRGBInt', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.ColorAtRGBInt" class="source">
+      <pre><code>def ColorAtRGBInt(self, r, g, b, bitdepth):
+	"""
+	Returns what a particular integer r, g, b value (at a particular bit depth) should be transformed to when piped through the LUT.
+	"""
+	maximumBits = 2**bitdepth - 1
+	return self.ColorAtRGB01(RemapIntTo01(r, maximumBits), RemapIntTo01(g, maximumBits), RemapIntTo01(b, maximumBits))
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.CombineWithLUT">
+        <p>def <span class="ident">CombineWithLUT</span>(</p><p>self, otherLUT)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Combines LUT with another LUT.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.CombineWithLUT', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.CombineWithLUT" class="source">
+      <pre><code>def CombineWithLUT(self, otherLUT):
+	"""
+	Combines LUT with another LUT.
+	"""
+	if self.LatticeSize() is not otherLUT.LatticeSize():
+		raise NameError("Lattice Sizes not equivalent")
+	
+	
+	cubeSize = self.LatticeSize()
+	newLattice = EmptyLatticeOfSize(cubeSize)
+	
+	for x in xrange(cubeSize):
+		for y in xrange(cubeSize):
+			for z in xrange(cubeSize):
+				selfLatticePoint = self.lattice[x, y, z]
+				newLattice[x, y, z] = otherLUT.ColorAtInterpolatedLatticePoint(selfLatticePoint.r * (cubeSize-1), selfLatticePoint.g * (cubeSize-1), selfLatticePoint.b * (cubeSize-1))
+	return LUT(newLattice)
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.LatticeSize">
+        <p>def <span class="ident">LatticeSize</span>(</p><p>self)</p>
+      </div>
+      
+
+      
+  
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.LatticeSize', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.LatticeSize" class="source">
+      <pre><code>def LatticeSize(self):
+	return self.lattice.shape[0]
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.MultiplyEachPoint">
+        <p>def <span class="ident">MultiplyEachPoint</span>(</p><p>self, color)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Multiply by a Color value or float for every lattice point on the cube.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.MultiplyEachPoint', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.MultiplyEachPoint" class="source">
+      <pre><code>def MultiplyEachPoint(self, color):
+	"""
+	Multiply by a Color value or float for every lattice point on the cube.
+	"""
+	cubeSize = self.LatticeSize()
+	newLattice = EmptyLatticeOfSize(cubeSize)
+	for r in xrange(cubeSize):
+		for g in xrange(cubeSize):
+			for b in xrange(cubeSize):
+				newLattice[r, g, b] = self.lattice[r, g, b] * color
+	return LUT(newLattice)
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.Plot">
+        <p>def <span class="ident">Plot</span>(</p><p>self)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Plot a LUT as a 3D RGB cube using matplotlib. Stolen from https://github.com/mikrosimage/ColorPipe-tools/tree/master/plotThatLut.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.Plot', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.Plot" class="source">
+      <pre><code>def Plot(self):
+	"""
+	Plot a LUT as a 3D RGB cube using matplotlib. Stolen from https://github.com/mikrosimage/ColorPipe-tools/tree/master/plotThatLut.
+	"""
+	
+	try:
+		import matplotlib
+		# matplotlib : general plot
+		from matplotlib.pyplot import title, figure
+		# matplotlib : for 3D plot
+		# mplot3d has to be imported for 3d projection
+		import mpl_toolkits.mplot3d
+		from matplotlib.colors import rgb2hex
+	except ImportError:
+		print "matplotlib not installed. Run: sudo pip install matplotlib"
+		return
+	#for performance reasons lattice size must be 9 or less
+	lut = None
+	if self.LatticeSize() > 9:
+		lut = self.Resize(9)
+	else:
+		lut = self
+	# init vars
+	cubeSize = lut.LatticeSize()
+	input_range = xrange(0, cubeSize)
+	max_value = cubeSize - 1.0
+	red_values = []
+	green_values = []
+	blue_values = []
+	colors = []
+	# process color values
+	for r in input_range:
+		for g in input_range:
+			for b in input_range:
+				# get a value between [0..1]
+				norm_r = r/max_value
+				norm_g = g/max_value
+				norm_b = b/max_value
+				# apply correction
+				res = lut.ColorAtRGB01(norm_r, norm_g, norm_b)
+				# append values
+				red_values.append(res.r)
+				green_values.append(res.g)
+				blue_values.append(res.b)
+				# append corresponding color
+				colors.append(rgb2hex([norm_r, norm_g, norm_b]))
+	# init plot
+	fig = figure()
+	fig.canvas.set_window_title('pylut Plotter')
+	ax = fig.add_subplot(111, projection='3d')
+	ax.set_xlabel('Red')
+	ax.set_ylabel('Green')
+	ax.set_zlabel('Blue')
+	ax.set_xlim(min(red_values), max(red_values))
+	ax.set_ylim(min(green_values), max(green_values))
+	ax.set_zlim(min(blue_values), max(blue_values))
+	title(self.name)
+	# plot 3D values
+	ax.scatter(red_values, green_values, blue_values, c=colors, marker="o")
+	matplotlib.pyplot.show()
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.Resize">
+        <p>def <span class="ident">Resize</span>(</p><p>self, newCubeSize)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Scales the lattice to a new cube size.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.Resize', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.Resize" class="source">
+      <pre><code>def Resize(self, newCubeSize):
+	"""
+	Scales the lattice to a new cube size.
+	"""
+	newLattice = EmptyLatticeOfSize(newCubeSize)
+	ratio = float(self.LatticeSize() - 1.0) / float(newCubeSize-1.0)
+	for x in xrange(newCubeSize):
+		for y in xrange(newCubeSize):
+			for z in xrange(newCubeSize):
+				newLattice[x, y, z] = self.ColorAtInterpolatedLatticePoint(x*ratio, y*ratio, z*ratio)
+	return LUT(newLattice, name = self.name + "_Resized"+str(newCubeSize))
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.SubtractColorFromEachPoint">
+        <p>def <span class="ident">SubtractColorFromEachPoint</span>(</p><p>self, color)</p>
+      </div>
+      
+
+      
+  
+      <div class="desc"><p>Subtract a Color value to every lattice point on the cube.</p></div>
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.SubtractColorFromEachPoint', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.SubtractColorFromEachPoint" class="source">
+      <pre><code>def SubtractColorFromEachPoint(self, color):
+	"""
+	Subtract a Color value to every lattice point on the cube.
+	"""
+	cubeSize = self.LatticeSize()
+	newLattice = EmptyLatticeOfSize(cubeSize)
+	for r in xrange(cubeSize):
+		for g in xrange(cubeSize):
+			for b in xrange(cubeSize):
+				newLattice[r, g, b] = self.lattice[r, g, b] - color
+	return LUT(newLattice)
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.ToCubeFile">
+        <p>def <span class="ident">ToCubeFile</span>(</p><p>self, cubeFileOutPath)</p>
+      </div>
+      
+
+      
+  
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.ToCubeFile', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.ToCubeFile" class="source">
+      <pre><code>def ToCubeFile(self, cubeFileOutPath):
+	cubeSize = self.LatticeSize()
+	cubeFile = open(cubeFileOutPath, 'w')
+	cubeFile.write("LUT_3D_SIZE " + str(cubeSize) + "\n")
+	
+	for currentCubeIndex in range(0, cubeSize**3):
+		redIndex = currentCubeIndex % cubeSize
+		greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
+		blueIndex = currentCubeIndex / (cubeSize*cubeSize)
+		latticePointColor = self.lattice[redIndex, greenIndex, blueIndex]
+		
+		cubeFile.write( latticePointColor.FormattedAsFloat() )
+		
+		if(currentCubeIndex != cubeSize**3 - 1):
+			cubeFile.write("\n")
+	cubeFile.close()
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.ToLustre3DLFile">
+        <p>def <span class="ident">ToLustre3DLFile</span>(</p><p>self, fileOutPath, bitdepth=12)</p>
+      </div>
+      
+
+      
+  
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.ToLustre3DLFile', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.ToLustre3DLFile" class="source">
+      <pre><code>def ToLustre3DLFile(self, fileOutPath, bitdepth = 12):
+	cubeSize = self.LatticeSize()
+	inputDepth = math.log(cubeSize-1, 2)
+	if int(inputDepth) != inputDepth:
+		raise NameError("Invalid cube size for 3DL. Cube size must be 2^x + 1")
+	lutFile = open(fileOutPath, 'w')
+	lutFile.write("3DMESH\n")
+	lutFile.write("Mesh " + str(int(inputDepth)) + " " + str(bitdepth) + "\n")
+	lutFile.write(Indices(10) + "\n\n")
+	
+	lutFile.write(self._LatticeTo3DLString(bitdepth))
+	lutFile.write("\n#Tokens required by applications - do not edit\nLUT8\ngamma 1.0")
+	lutFile.close()
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+                  
+    <div class="item">
+      <div class="name def" id="pylut.LUT.ToNuke3DLFile">
+        <p>def <span class="ident">ToNuke3DLFile</span>(</p><p>self, fileOutPath, bitdepth=16)</p>
+      </div>
+      
+
+      
+  
+    <div class="source_cont">
+    <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pylut.LUT.ToNuke3DLFile', this);">Show source.</a></p>
+    <div id="source-pylut.LUT.ToNuke3DLFile" class="source">
+      <pre><code>def ToNuke3DLFile(self, fileOutPath, bitdepth = 16):
+	cubeSize = self.LatticeSize()
+	lutFile = open(fileOutPath, 'w')
+	lutFile.write(' '.join([str(int(x)) for x in Indices(cubeSize, bitdepth)]) + "\n")
+	lutFile.write(self._LatticeTo3DLString(bitdepth))
+	lutFile.close()
+</code></pre>
+    </div>
+</div>
+
+    </div>
+  
+        </div>
+      </div>
+
+
+
+<hr>
+<p style="text-align: right;">
+  Documentation generated by
+  <code><a href="https://github.com/BurntSushi/pdoc">pdoc</a></code>
+  0.1.8.
+
+  pdoc is in the public domain with the
+  <a href="http://unlicense.org">UNLICENSE</a>.
+</p>
+</div>
+</body>
+</html>
