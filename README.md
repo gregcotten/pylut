@@ -41,7 +41,7 @@ All sorts of great things can happen!
 
 In order to run
 	
-	lut.PlotAsCube()
+	lut.Plot()
 
 You need to either be running OSX or have PyQt4 or PyGTK installed in order to visualize the cube.
 
