@@ -9,7 +9,7 @@ A python module that builds, modifies, visualizes, and converts 3D LUTs from pop
 And to upgrade:
 
 	sudo pip uninstall pylut
-   sudo pip install pylut
+        sudo pip install pylut
 
 ## Documentation
 	
