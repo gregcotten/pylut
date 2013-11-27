@@ -59,3 +59,7 @@ You need to either be running OSX or have PyQt4 or PyGTK installed in order to v
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/gregcotten/pylut/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
