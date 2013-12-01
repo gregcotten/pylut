@@ -139,7 +139,7 @@ class LUT:
 		"""
 		Numpy 3D array representing the 3D LUT.
 		"""
-		self.name = name
+		self.name = str(name)
 		"""
 		Every LUT has a name!
 		"""
