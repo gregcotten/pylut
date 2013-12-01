@@ -1,11 +1,11 @@
-from pylut import LUT
+from pylut import *
 import os
 import timeit
 
 def main():
 	workingDirectory = os.path.dirname(os.path.realpath(__file__))
 
-	lut = LUT.FromIdentity(32).ClampRed(0,.5)
+	lut = LUT.FromIdentity(32).ClampColor(Color(0,0,.3), Color(0,0,.7))
 	lut *= .3
 
 	lut2 = lut.CombineWithLUT(LUT.FromIdentity(lut.LatticeSize()))
