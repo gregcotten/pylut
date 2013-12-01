@@ -560,7 +560,7 @@ class LUT:
 					norm_g = g/max_value
 					norm_b = b/max_value
 					# apply correction
-					res = lut.ColorAtRGB01(norm_r, norm_g, norm_b)
+					res = lut.ColorAtColor(Color(norm_r, norm_g, norm_b))
 					# append values
 					red_values.append(res.r)
 					green_values.append(res.g)
