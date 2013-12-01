@@ -139,20 +139,23 @@ class LUT:
 		"""
 		Numpy 3D array representing the 3D LUT.
 		"""
+
+		self.cubeSize = self.lattice.shape[0]
+		"""
+		LUT is of size (cubeSize, cubeSize, cubeSize) and index positions are from 0 to cubeSize-1
+		"""
+		
 		self.name = str(name)
 		"""
 		Every LUT has a name!
 		"""
-
-	def LatticeSize(self):
-		return self.lattice.shape[0]
 
 	def Resize(self, newCubeSize):
 		"""
 		Scales the lattice to a new cube size.
 		"""
 		newLattice = EmptyLatticeOfSize(newCubeSize)
-		ratio = float(self.LatticeSize() - 1.0) / float(newCubeSize-1.0)
+		ratio = float(self.cubeSize - 1.0) / float(newCubeSize-1.0)
 		for x in xrange(newCubeSize):
 			for y in xrange(newCubeSize):
 				for z in xrange(newCubeSize):
@@ -163,11 +166,11 @@ class LUT:
 		"""
 		Combines LUT with another LUT.
 		"""
-		if self.LatticeSize() is not otherLUT.LatticeSize():
+		if self.cubeSize is not otherLUT.cubeSize:
 			raise NameError("Lattice Sizes not equivalent")
 		
 		
-		cubeSize = self.LatticeSize()
+		cubeSize = self.cubeSize
 		newLattice = EmptyLatticeOfSize(cubeSize)
 		
 		for x in xrange(cubeSize):
@@ -175,13 +178,13 @@ class LUT:
 				for z in xrange(cubeSize):
 					selfColor = self.lattice[x, y, z].Clamped01()
 					newLattice[x, y, z] = otherLUT.ColorFromColor(selfColor)
-		return LUT(newLattice, name = self.name "+" + otherLUT.name)
+		return LUT(newLattice, name = self.name + "+" + otherLUT.name)
 
 	def ClampColor(self, min, max):
 		"""
 		Returns a new RGB clamped LUT.
 		"""
-		cubeSize = self.LatticeSize()
+		cubeSize = self.cubeSize
 		newLattice = EmptyLatticeOfSize(cubeSize)
 		for x in xrange(cubeSize):
 			for y in xrange(cubeSize):
@@ -194,7 +197,7 @@ class LUT:
 		Used for internal creating of 3DL files.
 		"""
 		string = ""
-		cubeSize = self.LatticeSize()
+		cubeSize = self.cubeSize
 		for currentCubeIndex in range(0, cubeSize**3):
 			redIndex = currentCubeIndex / (cubeSize*cubeSize)
 			greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
@@ -208,7 +211,7 @@ class LUT:
 
 	
 	def ToLustre3DLFile(self, fileOutPath, bitdepth = 12):
-		cubeSize = self.LatticeSize()
+		cubeSize = self.cubeSize
 		inputDepth = math.log(cubeSize-1, 2)
 
 		if int(inputDepth) != inputDepth:
@@ -227,7 +230,7 @@ class LUT:
 		lutFile.close()
 
 	def ToNuke3DLFile(self, fileOutPath, bitdepth = 16):
-		cubeSize = self.LatticeSize()
+		cubeSize = self.cubeSize
 
 		lutFile = open(fileOutPath, 'w')
 
@@ -238,7 +241,7 @@ class LUT:
 		lutFile.close()
 	
 	def ToCubeFile(self, cubeFileOutPath):
-		cubeSize = self.LatticeSize()
+		cubeSize = self.cubeSize
 		cubeFile = open(cubeFileOutPath, 'w')
 		cubeFile.write("LUT_3D_SIZE " + str(cubeSize) + "\n")
 		
@@ -262,7 +265,7 @@ class LUT:
 		Returns what a color value should be transformed to when piped through the LUT.
 		"""
 		color = color.Clamped01()
-		cubeSize = self.LatticeSize()
+		cubeSize = self.cubeSize
 		return self.ColorAtInterpolatedLatticePoint(color.r * (cubeSize-1), color.g * (cubeSize-1), color.b * (cubeSize-1))
 
 	#integer input from 0 to cubeSize-1
@@ -270,7 +273,7 @@ class LUT:
 		"""
 		Returns a color at a specified lattice point - this value is pulled from the actual LUT file and is not interpolated.
 		"""
-		cubeSize = self.LatticeSize()
+		cubeSize = self.cubeSize
 		if redPoint > cubeSize-1 or greenPoint > cubeSize-1 or bluePoint > cubeSize-1:
 			raise NameError("Point Out of Bounds: (" + str(redPoint) + ", " + str(greenPoint) + ", " + str(bluePoint) + ")")
 
@@ -281,7 +284,7 @@ class LUT:
 		"""
 		Gets the interpolated color at an interpolated lattice point.
 		"""
-		cubeSize = self.LatticeSize()
+		cubeSize = self.cubeSize
 
 		if 0 < redPoint > cubeSize-1 or 0 < greenPoint > cubeSize-1 or 0 < bluePoint > cubeSize-1:
 			raise NameError("Point Out of Bounds")
@@ -446,7 +449,7 @@ class LUT:
 		"""
 		Add a Color value to every lattice point on the cube.
 		"""
-		cubeSize = self.LatticeSize()
+		cubeSize = self.cubeSize
 		newLattice = EmptyLatticeOfSize(cubeSize)
 		for r in xrange(cubeSize):
 			for g in xrange(cubeSize):
@@ -458,7 +461,7 @@ class LUT:
 		"""
 		Subtract a Color value to every lattice point on the cube.
 		"""
-		cubeSize = self.LatticeSize()
+		cubeSize = self.cubeSize
 		newLattice = EmptyLatticeOfSize(cubeSize)
 		for r in xrange(cubeSize):
 			for g in xrange(cubeSize):
@@ -470,7 +473,7 @@ class LUT:
 		"""
 		Multiply by a Color value or float for every lattice point on the cube.
 		"""
-		cubeSize = self.LatticeSize()
+		cubeSize = self.cubeSize
 		newLattice = EmptyLatticeOfSize(cubeSize)
 		for r in xrange(cubeSize):
 			for g in xrange(cubeSize):
@@ -480,13 +483,13 @@ class LUT:
 
 
 	def __add__(self, other):
-		if self.LatticeSize() is not other.LatticeSize():
+		if self.cubeSize is not other.cubeSize:
 			raise NameError("Lattice Sizes not equivalent")
 
 		return LUT(self.lattice + other.lattice)
 
 	def __sub__(self, other):
-		if self.LatticeSize() is not other.LatticeSize():
+		if self.cubeSize is not other.cubeSize:
 			raise NameError("Lattice Sizes not equivalent")
 
 		return LUT(self.lattice - other.lattice)
@@ -496,7 +499,7 @@ class LUT:
 		if "Color" in className or "float" in className:
 			return self.MultiplyEachPoint(other)
 
-		if self.LatticeSize() is not other.LatticeSize():
+		if self.cubeSize is not other.cubeSize:
 			raise NameError("Lattice Sizes not equivalent")
 
 		return LUT(self.lattice * other.lattice)
@@ -531,14 +534,14 @@ class LUT:
 
 		#for performance reasons lattice size must be 9 or less
 		lut = None
-		if self.LatticeSize() > 9:
+		if self.cubeSize > 9:
 			lut = self.Resize(9)
 		else:
 			lut = self
 
 
 		# init vars
-		cubeSize = lut.LatticeSize()
+		cubeSize = lut.cubeSize
 		input_range = xrange(0, cubeSize)
 		max_value = cubeSize - 1.0
 		red_values = []
