@@ -1,5 +1,8 @@
 # Project
 Testing/
+*.html
+*.htm
+
 
 # ============ #
 # Python #
