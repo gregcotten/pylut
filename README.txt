@@ -6,7 +6,7 @@ Builds, modifies, visualizes, and converts 3D LUTs from popular .cube and .3dl f
 Usage
 -----
 
-All sorts of great things can happen!
+The idea is that the modifications to a LUT object are non-volatile, meaning that every modification method returns a new LUT object rather than changing the existing object. All sorts of great things can happen!
 
 ::
 

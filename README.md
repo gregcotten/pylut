@@ -17,7 +17,7 @@ Very mediocre docs viewable at: http://pythonhosted.org/pylut/
 
 ## Usage
 
-All sorts of great things can happen!
+The idea is that the modifications to a LUT object are non-volatile, meaning that every modification method returns a new LUT object rather than changing the existing object. All sorts of great things can happen!
 
 	from pylut import *
 	lut = LUT.FromLustre3DLFile("/path/to/file.3dl")
