@@ -23,7 +23,7 @@ The idea is that the modifications to a LUT object are non-volatile, meaning tha
     lut3 = lut.CombineWithLUT(lut2)
 
     lut3 *= .5
-    lut3 -= LUT.FromIdentity(lut3.LatticeSize())
+    lut3 -= LUT.FromIdentity(lut3.cubeSize)
 
     lut3 = lut3.ClampColor(Color(0,0,.2),Color(0,0,.4))
 
