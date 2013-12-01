@@ -25,7 +25,7 @@ All sorts of great things can happen!
     lut3 *= .5
     lut3 -= LUT.FromIdentity(lut3.LatticeSize())
 
-    lut3 = lut3.ClampedRGB(.1,.7)
+    lut3 = lut3.ClampColor(Color(0,0,.2),Color(0,0,.4))
 
     lut3 = lut3.Resize(33)
     lut3.ToNuke3DLFile("/path/to/destination.3dl")
