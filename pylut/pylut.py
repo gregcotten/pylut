@@ -175,7 +175,7 @@ class LUT:
 				for z in xrange(cubeSize):
 					selfColor = self.lattice[x, y, z].Clamped01()
 					newLattice[x, y, z] = otherLUT.ColorFromColor(selfColor)
-		return LUT(newLattice)
+		return LUT(newLattice, name = self.name "+" + otherLUT.name)
 
 	def ClampColor(self, min, max):
 		"""
