@@ -55,39 +55,27 @@ def Clamp(value, min, max):
 
 class Color:
 	"""
-	RGB floating point 0-1 representation of a color.
+	RGB floating point representation of a color.
 	Access channel data by color.r, color.g, or color.b. 
 	"""
 	def __init__(self, r, g, b):
-		self.SetRGB(r,g,b)
+		self.r = r
+		self.g = g
+		self.b = b
 
-	"""
-	SetRGB(r, g, b) clamps RGB values to 0-1.
-	"""
-	def SetRGB(self, r, g, b):
-		"""
-		Sets RGB value of the Color - input values are clamped between 0 and 1.
-		"""
-		self.r = Clamp(float(r), 0, 1)
-		self.g = Clamp(float(g), 0, 1)
-		self.b = Clamp(float(b), 0, 1)
-		if 0 > r > 1 or 0 > g > 1 or 0 > b > 1:
-			print "Warning: (" + str(r) + ", " + str(g) + ", " + str(b) + ") out of range and clamped to " + self
 
-	"""
-	Instantiates a floating point color from RGB integers at a bitdepth.
-	"""
+	def Clamped01(self):
+		return Color(Clamp(float(self.r), 0, 1), Clamp(float(self.g), 0, 1), Clamp(float(self.b), 0, 1))
+		
+
 	@staticmethod
 	def FromRGBInteger(r, g, b, bitdepth):
 		"""
-		Creates Color from 3 integer values and a bit depth.
+		Instantiates a floating point color from RGB integers at a bitdepth.
 		"""
 		maxBits = 2**bitdepth - 1
 		return Color(RemapIntTo01(r, maxBits), RemapIntTo01(g, maxBits), RemapIntTo01(b, maxBits))
 
-	"""
-	Instantiates a floating point color from a list of 3 RGB floats.
-	"""
 	@staticmethod
 	def FromFloatArray(array):
 		"""
@@ -95,18 +83,16 @@ class Color:
 		"""
 		return Color(array[0], array[1], array[2])
 
-	"""
-	Creates a list of 3 floating point RGB values from the floating point color.
-	"""
+	
 	def ToFloatArray(self):
 		"""
-		Creates representation of self with a RGB float list.
+		Creates a list of 3 floating point RGB values from the floating point color.
 		"""
 		return [self.r, self.g, self.b]
 
 	def ClampColor(self, min, max):
 		"""
-		Returns RGB clamped color.
+		Returns a clamped color.
 		"""
 		return Color(Clamp(self.r, min.r, max.r), Clamp(self.g, min.g, max.g), Clamp(self.b, min.b, max.b))
 	
@@ -122,6 +108,17 @@ class Color:
 			mult = float(color)
 			return Color(self.r * mult, self.g * mult, self.b * mult)
 		return Color(self.r * color.r, self.g * color.g, self.b * color.b)
+
+	def __eq__(self, color):
+		if isinstance(color, Color):
+			return self.r == color.r and self.g == color.g and self.b == color.b
+		return NotImplemented
+
+	def __ne__(self, color):
+		result = self.__eq__(color)
+		if result is NotImplemented:
+			return result
+		return not result
 	
 	def __str__(self):
 		return "(" + str(self.r) + ", " + str(self.g) + ", " + str(self.b) + ")"
@@ -135,7 +132,7 @@ class Color:
 
 class LUT:
 	"""
-	A class that represents a 3D LUT on a 3D numpy array. The idea is that the modifications are non-volatile, meaning that every modification method returns a new LUT object.
+	A class that represents a 3D LUT with a 3D numpy array. The idea is that the modifications are non-volatile, meaning that every modification method returns a new LUT object.
 	"""
 	def __init__(self, lattice, name = "Untitled LUT"):
 		self.lattice = lattice
@@ -176,8 +173,8 @@ class LUT:
 		for x in xrange(cubeSize):
 			for y in xrange(cubeSize):
 				for z in xrange(cubeSize):
-					selfLatticePoint = self.lattice[x, y, z]
-					newLattice[x, y, z] = otherLUT.ColorAtInterpolatedLatticePoint(selfLatticePoint.r * (cubeSize-1), selfLatticePoint.g * (cubeSize-1), selfLatticePoint.b * (cubeSize-1))
+					selfColor = self.lattice[x, y, z]
+					newLattice[x, y, z] = otherLUT.ColorFromColor(selfColor)
 		return LUT(newLattice)
 
 	def ClampColor(self, min, max):
@@ -203,7 +200,7 @@ class LUT:
 			greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
 			blueIndex = currentCubeIndex % cubeSize
 
-			latticePointColor = self.lattice[redIndex, greenIndex, blueIndex]
+			latticePointColor = self.lattice[redIndex, greenIndex, blueIndex].Clamped01()
 			
 			string += latticePointColor.FormattedAsInteger(bitdepth) + "\n"
 		
@@ -221,7 +218,7 @@ class LUT:
 
 		lutFile.write("3DMESH\n")
 		lutFile.write("Mesh " + str(int(inputDepth)) + " " + str(bitdepth) + "\n")
-		lutFile.write(Indices(10) + "\n\n")
+		lutFile.write(' '.join([str(int(x)) for x in Indices(cubeSize, bitdepth)]) + "\n")
 		
 		lutFile.write(self._LatticeTo3DLString(bitdepth))
 
@@ -250,7 +247,7 @@ class LUT:
 			greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
 			blueIndex = currentCubeIndex / (cubeSize*cubeSize)
 
-			latticePointColor = self.lattice[redIndex, greenIndex, blueIndex]
+			latticePointColor = self.lattice[redIndex, greenIndex, blueIndex].Clamped01()
 			
 			cubeFile.write( latticePointColor.FormattedAsFloat() )
 			
@@ -260,19 +257,12 @@ class LUT:
 		cubeFile.close()
 
 
-	def ColorAtRGB01(self, r, g, b):
+	def ColorFromColor(self, color):
 		"""
-		Returns what a particular float r, g, b value should be transformed to when piped through the LUT.
+		Returns what a color value should be transformed to when piped through the LUT.
 		"""
 		cubeSize = self.LatticeSize()
-		return self.ColorAtInterpolatedLatticePoint(r * (cubeSize-1), g * (cubeSize-1), b * (cubeSize-1))
-
-	def ColorAtRGBInt(self, r, g, b, bitdepth):
-		"""
-		Returns what a particular integer r, g, b value (at a particular bit depth) should be transformed to when piped through the LUT.
-		"""
-		maximumBits = 2**bitdepth - 1
-		return self.ColorAtRGB01(RemapIntTo01(r, maximumBits), RemapIntTo01(g, maximumBits), RemapIntTo01(b, maximumBits))
+		return self.ColorAtInterpolatedLatticePoint(color.Clamped01().r * (cubeSize-1), color.Clamped01().g * (cubeSize-1), color.Clamped01().b * (cubeSize-1))
 
 	#integer input from 0 to cubeSize-1
 	def ColorAtLatticePoint(self, redPoint, greenPoint, bluePoint):
@@ -283,7 +273,7 @@ class LUT:
 		if redPoint > cubeSize-1 or greenPoint > cubeSize-1 or bluePoint > cubeSize-1:
 			raise NameError("Point Out of Bounds: (" + str(redPoint) + ", " + str(greenPoint) + ", " + str(bluePoint) + ")")
 
-		return self.lattice[redPoint, greenPoint, bluePoint]
+		return self.lattice[redPoint, greenPoint, bluePoint].Clamped01()
 
 	#float input from 0 to cubeSize-1
 	def ColorAtInterpolatedLatticePoint(self, redPoint, greenPoint, bluePoint):
@@ -321,7 +311,7 @@ class LUT:
 		C1 = LerpColor(C01, C11, 1.0 - (upperBluePoint - bluePoint))
 		C0 = LerpColor(C00, C10, 1.0 - (upperBluePoint - bluePoint))
 
-		return LerpColor(C0, C1, 1.0 - (upperGreenPoint - greenPoint))
+		return LerpColor(C0, C1, 1.0 - (upperGreenPoint - greenPoint)).Clamped01()
 
 	@staticmethod
 	def FromIdentity(cubeSize):
@@ -356,22 +346,21 @@ class LUT:
 		if cubeSize == -1:
 			raise NameError("Invalid .3dl file.")
 
-		maximumBits = 2**outputDepth - 1
 		lattice = EmptyLatticeOfSize(cubeSize)
 		currentCubeIndex = 0
 		
 		for line in lutFileLines[meshLineIndex+1:]:
 			if len(line) > 0 and len(line.split()) == 3 and "#" not in line:
 				#valid cube line
-				redValue = RemapIntTo01(line.split()[0], maximumBits)
-				greenValue = RemapIntTo01(line.split()[1], maximumBits)
-				blueValue = RemapIntTo01(line.split()[2], maximumBits)
+				redValue = line.split()[0]
+				greenValue = line.split()[1]
+				blueValue = line.split()[2]
 
 				redIndex = currentCubeIndex / (cubeSize*cubeSize)
 				greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
 				blueIndex = currentCubeIndex % cubeSize
 
-				lattice[redIndex, greenIndex, blueIndex] = Color(redValue, greenValue, blueValue)
+				lattice[redIndex, greenIndex, blueIndex] = Color.FromRGBInteger(redValue, greenValue, blueValue, bitdepth = outputDepth)
 				currentCubeIndex += 1
 
 		return LUT(lattice, name = os.path.basename(lutFilePath))
@@ -405,15 +394,15 @@ class LUT:
 			# print line
 			if len(line) > 0 and len(line.split()) == 3 and "#" not in line:
 				#valid cube line
-				redValue = RemapIntTo01(line.split()[0], 2**outputDepth - 1)
-				greenValue = RemapIntTo01(line.split()[1], 2**outputDepth - 1)
-				blueValue = RemapIntTo01(line.split()[2], 2**outputDepth - 1)
+				redValue = line.split()[0]
+				greenValue = line.split()[1]
+				blueValue = line.split()[2]
 
 				redIndex = currentCubeIndex / (cubeSize*cubeSize)
 				greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
 				blueIndex = currentCubeIndex % cubeSize
 
-				lattice[redIndex, greenIndex, blueIndex] = Color(redValue, greenValue, blueValue)
+				lattice[redIndex, greenIndex, blueIndex] = Color.FromRGBInteger(redValue, greenValue, blueValue, bitdepth = outputDepth)
 				currentCubeIndex += 1
 		return LUT(lattice, name = os.path.basename(lutFilePath))
 
@@ -510,6 +499,17 @@ class LUT:
 			raise NameError("Lattice Sizes not equivalent")
 
 		return LUT(self.lattice * other.lattice)
+
+	def __eq__(self, lut):
+		if isinstance(lut, LUT):
+			return (self == lut).all()
+		return NotImplemented
+
+	def __ne__(self, lut):
+		result = self.__eq__(lut)
+		if result is NotImplemented:
+			return result
+		return not result
 
 	def Plot(self):
 		"""

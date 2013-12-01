@@ -13,8 +13,8 @@ def main():
 	print lut.ColorAtLatticePoint(1,1,1)
 	print lut2.ColorAtInterpolatedLatticePoint(1.1,.2,5.5)
 
-	print lut.ColorAtRGB01(.5,.5,.5)
-	print lut2.ColorAtRGBInt(1023, 90, 55, bitdepth = 10)
+	print lut.ColorFromColor(Color(.4,.4,.3))
+	print lut.ColorFromColor(Color.FromRGBInteger(500,1022,40, bitdepth = 10))
 
 	lut.ToNuke3DLFile(workingDirectory+"/test.cube")
 
