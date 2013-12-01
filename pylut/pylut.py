@@ -496,13 +496,16 @@ class LUT:
 
 	def __mul__(self, other):
 		className = other.__class__.__name__
-		if "Color" in className or "float" in className:
+		if "Color" in className or "float" in className or "int" in className:
 			return self.MultiplyEachPoint(other)
 
 		if self.cubeSize is not other.cubeSize:
 			raise NameError("Lattice Sizes not equivalent")
 
 		return LUT(self.lattice * other.lattice)
+
+	def __rmul__(self, other):
+		return self.__mul__(other)
 
 	def __eq__(self, lut):
 		if isinstance(lut, LUT):
