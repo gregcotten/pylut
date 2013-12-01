@@ -104,35 +104,11 @@ class Color:
 		"""
 		return [self.r, self.g, self.b]
 
-	def ClampRGB(self, min, max):
+	def ClampColor(self, min, max):
 		"""
 		Returns RGB clamped color.
 		"""
-		return Color(Clamp(self.r, min, max), Clamp(self.g, min, max), Clamp(self.b, min, max))
-
-	def ClampRed(self, min, max):
-		"""
-		Returns red clamped color.
-		"""
-		if min > max:
-			raise NameError("Invalid Clamp Values")
-		return Color(Clamp(self.r, min, max), self.g, self.b)
-
-	def ClampGreen(self, min, max):
-		"""
-		Returns green clamped color.
-		"""
-		if min > max:
-			raise NameError("Invalid Clamp Values")
-		return Color(self.r, Clamp(self.g, min, max), self.b)
-
-	def ClampBlue(self, min, max):
-		"""
-		Returns blue clamped color.
-		"""
-		if min > max:
-			raise NameError("Invalid Clamp Values")
-		return Color(self.r, self.g, Clamp(self.b, min, max))
+		return Color(Clamp(self.r, min.r, max.r), Clamp(self.g, min.g, max.g), Clamp(self.b, min.b, max.b))
 	
 	def __add__(self, color):
 		return Color(self.r + color.r, self.g + color.g, self.b + color.b)
@@ -204,7 +180,7 @@ class LUT:
 					newLattice[x, y, z] = otherLUT.ColorAtInterpolatedLatticePoint(selfLatticePoint.r * (cubeSize-1), selfLatticePoint.g * (cubeSize-1), selfLatticePoint.b * (cubeSize-1))
 		return LUT(newLattice)
 
-	def ClampRGB(self, min, max):
+	def ClampColor(self, min, max):
 		"""
 		Returns a new RGB clamped LUT.
 		"""
@@ -213,43 +189,7 @@ class LUT:
 		for x in xrange(cubeSize):
 			for y in xrange(cubeSize):
 				for z in xrange(cubeSize):
-					newLattice[x, y, z] = self.ColorAtLatticePoint(x, y, z).ClampRGB(min, max)
-		return LUT(newLattice)
-
-	def ClampRed(self, min, max):
-		"""
-		Returns a red clamped LUT.
-		"""
-		cubeSize = self.LatticeSize()
-		newLattice = EmptyLatticeOfSize(cubeSize)
-		for x in xrange(cubeSize):
-			for y in xrange(cubeSize):
-				for z in xrange(cubeSize):
-					newLattice[x, y, z] = self.ColorAtLatticePoint(x, y, z).ClampRed(min, max)
-		return LUT(newLattice)
-
-	def ClampGreen(self, min, max):
-		"""
-		Returns a green clamped LUT.
-		"""
-		cubeSize = self.LatticeSize()
-		newLattice = EmptyLatticeOfSize(cubeSize)
-		for x in xrange(cubeSize):
-			for y in xrange(cubeSize):
-				for z in xrange(cubeSize):
-					newLattice[x, y, z] = self.ColorAtLatticePoint(x, y, z).ClampGreen(min, max)
-		return LUT(newLattice)
-
-	def ClampBlue(self, min, max):
-		"""
-		Returns a blue clamped LUT.
-		"""
-		cubeSize = self.LatticeSize()
-		newLattice = EmptyLatticeOfSize(cubeSize)
-		for x in xrange(cubeSize):
-			for y in xrange(cubeSize):
-				for z in xrange(cubeSize):
-					newLattice[x, y, z] = self.ColorAtLatticePoint(x, y, z).ClampBlue(min, max)
+					newLattice[x, y, z] = self.ColorAtLatticePoint(x, y, z).ClampColor(min, max)
 		return LUT(newLattice)
 
 	def _LatticeTo3DLString(self, bitdepth):
@@ -556,10 +496,6 @@ class LUT:
 		return LUT(self.lattice + other.lattice)
 
 	def __sub__(self, other):
-		className = other.__class__.__name__
-		if "Color" in className:
-			return self.SubtractColorFromEachPoint(other)
-
 		if self.LatticeSize() is not other.LatticeSize():
 			raise NameError("Lattice Sizes not equivalent")
 
