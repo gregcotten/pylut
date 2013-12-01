@@ -217,7 +217,7 @@ class LUT:
 		if int(inputDepth) != inputDepth:
 			raise NameError("Invalid cube size for 3DL. Cube size must be 2^x + 1")
 
-		lutFile = open(fileOutPath, 'w')
+		lutFile = open(os.path.expanduser(fileOutPath), 'w')
 
 		lutFile.write("3DMESH\n")
 		lutFile.write("Mesh " + str(int(inputDepth)) + " " + str(bitdepth) + "\n")
@@ -232,7 +232,7 @@ class LUT:
 	def ToNuke3DLFile(self, fileOutPath, bitdepth = 16):
 		cubeSize = self.cubeSize
 
-		lutFile = open(fileOutPath, 'w')
+		lutFile = open(os.path.expanduser(fileOutPath), 'w')
 
 		lutFile.write(' '.join([str(int(x)) for x in Indices(cubeSize, bitdepth)]) + "\n")
 
@@ -242,7 +242,7 @@ class LUT:
 	
 	def ToCubeFile(self, cubeFileOutPath):
 		cubeSize = self.cubeSize
-		cubeFile = open(cubeFileOutPath, 'w')
+		cubeFile = open(os.path.expanduser(cubeFileOutPath), 'w')
 		cubeFile.write("LUT_3D_SIZE " + str(cubeSize) + "\n")
 		
 		for currentCubeIndex in range(0, cubeSize**3):
@@ -332,7 +332,7 @@ class LUT:
 
 	@staticmethod
 	def FromLustre3DLFile(lutFilePath):
-		lutFile = open(lutFilePath, 'rU')
+		lutFile = open(os.path.expanduser(lutFilePath), 'rU')
 		lutFileLines = lutFile.readlines()
 		lutFile.close()
 
@@ -371,7 +371,7 @@ class LUT:
 
 	@staticmethod
 	def FromNuke3DLFile(lutFilePath):
-		lutFile = open(lutFilePath, 'rU')
+		lutFile = open(os.path.expanduser(lutFilePath), 'rU')
 		lutFileLines = lutFile.readlines()
 		lutFile.close()
 
@@ -412,7 +412,7 @@ class LUT:
 
 	@staticmethod
 	def FromCubeFile(cubeFilePath):
-		cubeFile = open(cubeFilePath, 'rU')
+		cubeFile = open(os.path.expanduser(cubeFilePath), 'rU')
 		cubeFileLines = cubeFile.readlines()
 		cubeFile.close()
 
