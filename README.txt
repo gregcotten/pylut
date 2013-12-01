@@ -17,8 +17,8 @@ The idea is that the modifications to a LUT object are non-volatile, meaning tha
 
     print lut.ColorAtLatticePoint(1,2,1)
     print lut.ColorAtInterpolatedLatticePoint(1.3,1.5,1.2)
-    print lut.ColorAtColor(Color(.002,.5,.2344))
-    print lut.ColorAtColor(Color.FromRGBInteger(14, 1000, 30, bitdepth = 10))
+    print lut.ColorFromColor(Color(.002,.5,.2344))
+    print lut.ColorFromColor(Color.FromRGBInteger(14, 1000, 30, bitdepth = 10))
 
     lut3 = lut.CombineWithLUT(lut2)
 
