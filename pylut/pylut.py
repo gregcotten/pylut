@@ -55,7 +55,7 @@ def Clamp(value, min, max):
 
 class Color:
 	"""
-	RGB floating point representation of a color.
+	RGB floating point representation of a color. 0 is absolute black, 1 is absolute white.
 	Access channel data by color.r, color.g, or color.b. 
 	"""
 	def __init__(self, r, g, b):
@@ -173,8 +173,8 @@ class LUT:
 		for x in xrange(cubeSize):
 			for y in xrange(cubeSize):
 				for z in xrange(cubeSize):
-					selfColor = self.lattice[x, y, z]
-					newLattice[x, y, z] = otherLUT.ColorFromColor(selfColor)
+					selfColor = self.lattice[x, y, z].Clamped01()
+					newLattice[x, y, z] = otherLUT.ColorFromColor(selfColor).Clamped01()
 		return LUT(newLattice)
 
 	def ClampColor(self, min, max):
@@ -261,8 +261,9 @@ class LUT:
 		"""
 		Returns what a color value should be transformed to when piped through the LUT.
 		"""
+		color = color.Clamped01()
 		cubeSize = self.LatticeSize()
-		return self.ColorAtInterpolatedLatticePoint(color.Clamped01().r * (cubeSize-1), color.Clamped01().g * (cubeSize-1), color.Clamped01().b * (cubeSize-1))
+		return self.ColorAtInterpolatedLatticePoint(color.r * (cubeSize-1), color.g * (cubeSize-1), color.b * (cubeSize-1))
 
 	#integer input from 0 to cubeSize-1
 	def ColorAtLatticePoint(self, redPoint, greenPoint, bluePoint):
@@ -273,7 +274,7 @@ class LUT:
 		if redPoint > cubeSize-1 or greenPoint > cubeSize-1 or bluePoint > cubeSize-1:
 			raise NameError("Point Out of Bounds: (" + str(redPoint) + ", " + str(greenPoint) + ", " + str(bluePoint) + ")")
 
-		return self.lattice[redPoint, greenPoint, bluePoint].Clamped01()
+		return self.lattice[redPoint, greenPoint, bluePoint]
 
 	#float input from 0 to cubeSize-1
 	def ColorAtInterpolatedLatticePoint(self, redPoint, greenPoint, bluePoint):
@@ -311,7 +312,7 @@ class LUT:
 		C1 = LerpColor(C01, C11, 1.0 - (upperBluePoint - bluePoint))
 		C0 = LerpColor(C00, C10, 1.0 - (upperBluePoint - bluePoint))
 
-		return LerpColor(C0, C1, 1.0 - (upperGreenPoint - greenPoint)).Clamped01()
+		return LerpColor(C0, C1, 1.0 - (upperGreenPoint - greenPoint))
 
 	@staticmethod
 	def FromIdentity(cubeSize):
