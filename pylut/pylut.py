@@ -506,7 +506,7 @@ class LUT:
 
 	def __eq__(self, lut):
 		if isinstance(lut, LUT):
-			return (self == lut).all()
+			return (self.lattice == lut.lattice).all()
 		return NotImplemented
 
 	def __ne__(self, lut):
