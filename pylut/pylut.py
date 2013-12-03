@@ -221,7 +221,7 @@ class LUT:
 
 		lutFile.write("3DMESH\n")
 		lutFile.write("Mesh " + str(int(inputDepth)) + " " + str(bitdepth) + "\n")
-		lutFile.write(' '.join([str(int(x)) for x in Indices(cubeSize, bitdepth)]) + "\n")
+		lutFile.write(' '.join([str(int(x)) for x in Indices(cubeSize, 10)]) + "\n")
 		
 		lutFile.write(self._LatticeTo3DLString(bitdepth))
 
