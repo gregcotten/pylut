@@ -38,6 +38,24 @@ The idea is that the modifications to a LUT object are non-volatile, meaning tha
 	lut3 = lut3.Resize(33)
 	lut3.ToNuke3DLFile("/path/to/destination.3dl")
 
+## CLI
+
+I also have a terrible CLI inside bin/pylut-cli.py.
+
+You need to:
+	
+	sudo pip install docopt
+
+And then:
+	
+	chmod a+x pylut-cli.py
+
+And you should be ready to go!
+
+Example:
+	
+	pylut-cli.py some_lut.3dl --resize 17 --convert RCUBE
+
 ## Special Notes
 
 In order to run
