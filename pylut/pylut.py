@@ -217,7 +217,7 @@ class LUT:
 		if int(inputDepth) != inputDepth:
 			raise NameError("Invalid cube size for 3DL. Cube size must be 2^x + 1")
 
-		lutFile = open(os.path.expanduser(fileOutPath), 'w')
+		lutFile = open(fileOutPath, 'w')
 
 		lutFile.write("3DMESH\n")
 		lutFile.write("Mesh " + str(int(inputDepth)) + " " + str(bitdepth) + "\n")
@@ -232,7 +232,7 @@ class LUT:
 	def ToNuke3DLFile(self, fileOutPath, bitdepth = 16):
 		cubeSize = self.cubeSize
 
-		lutFile = open(os.path.expanduser(fileOutPath), 'w')
+		lutFile = open(fileOutPath, 'w')
 
 		lutFile.write(' '.join([str(int(x)) for x in Indices(cubeSize, bitdepth)]) + "\n")
 
@@ -242,7 +242,7 @@ class LUT:
 	
 	def ToCubeFile(self, cubeFileOutPath):
 		cubeSize = self.cubeSize
-		cubeFile = open(os.path.expanduser(cubeFileOutPath), 'w')
+		cubeFile = open(cubeFileOutPath, 'w')
 		cubeFile.write("LUT_3D_SIZE " + str(cubeSize) + "\n")
 		
 		for currentCubeIndex in range(0, cubeSize**3):
@@ -332,7 +332,7 @@ class LUT:
 
 	@staticmethod
 	def FromLustre3DLFile(lutFilePath):
-		lutFile = open(os.path.expanduser(lutFilePath), 'rU')
+		lutFile = open(lutFilePath, 'rU')
 		lutFileLines = lutFile.readlines()
 		lutFile.close()
 
@@ -367,11 +367,11 @@ class LUT:
 				lattice[redIndex, greenIndex, blueIndex] = Color.FromRGBInteger(redValue, greenValue, blueValue, bitdepth = outputDepth)
 				currentCubeIndex += 1
 
-		return LUT(lattice, name = os.path.basename(lutFilePath))
+		return LUT(lattice, name = os.path.splitext(os.path.basename(lutFilePath))[0])
 
 	@staticmethod
 	def FromNuke3DLFile(lutFilePath):
-		lutFile = open(os.path.expanduser(lutFilePath), 'rU')
+		lutFile = open(lutFilePath, 'rU')
 		lutFileLines = lutFile.readlines()
 		lutFile.close()
 
@@ -408,11 +408,11 @@ class LUT:
 
 				lattice[redIndex, greenIndex, blueIndex] = Color.FromRGBInteger(redValue, greenValue, blueValue, bitdepth = outputDepth)
 				currentCubeIndex += 1
-		return LUT(lattice, name = os.path.basename(lutFilePath))
+		return LUT(lattice, name = os.path.splitext(os.path.basename(lutFilePath))[0])
 
 	@staticmethod
 	def FromCubeFile(cubeFilePath):
-		cubeFile = open(os.path.expanduser(cubeFilePath), 'rU')
+		cubeFile = open(cubeFilePath, 'rU')
 		cubeFileLines = cubeFile.readlines()
 		cubeFile.close()
 
@@ -443,7 +443,7 @@ class LUT:
 				lattice[redIndex, greenIndex, blueIndex] = Color(redValue, greenValue, blueValue)
 				currentCubeIndex += 1
 
-		return LUT(lattice, name = os.path.basename(cubeFilePath))
+		return LUT(lattice, name = os.path.splitext(os.path.basename(cubeFilePath))[0])
 
 	def AddColorToEachPoint(self, color):
 		"""
