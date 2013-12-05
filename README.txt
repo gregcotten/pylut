@@ -33,8 +33,7 @@ The idea is that the modifications to a LUT object are non-volatile, meaning tha
 CLI
 ---
 
-I also have a terrible CLI inside bin/pylut-cli.py.
-
+I also have a terrible CLI inside the bin folder.
 Example:
 
 ::

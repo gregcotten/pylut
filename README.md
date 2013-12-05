@@ -42,7 +42,7 @@ lut3.ToNuke3DLFile("/path/to/destination.3dl")
 
 ## CLI
 
-I also have a terrible CLI inside bin/pylut-cli.py.
+I also have a terrible CLI inside the bin folder.
 
 Example:
 	
