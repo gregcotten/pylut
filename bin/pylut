@@ -3,13 +3,13 @@
 """pylut-cli
 
 Usage:
-  pylut [-hvf] [-r=<size>] [-c=<convert>] [-n=<name>] [-o=<output_folder>] <file>
+  pylut [-hf] [--visualize] [-r=<size>] [-c=<convert>] [-n=<name>] [-o=<output_folder>] <file>
   pylut --version
 
 Options:
   -h --help                                     show this help message and exit
   --version                                     show version and exit
-  -v --verbose                                  print status messages
+  --visualize                                   visualize the LUT
   -f, --force                                   overwrite files if necessary
   -r <size>, --resize <size>                    rescale lut
   -c <convert>, --convert <convert>             convert to a different LUT format (L3DL, N3DL, RCUBE)
@@ -63,18 +63,27 @@ if __name__ == "__main__":
   resizeSize = arguments["--resize"]
   convertType = arguments["--convert"]
   overwrite = arguments["--force"]
-
-  if resizeSize is None and convertType is None:
-    exit()
-
-  if convertType is not None and convertType not in ("L3DL", "N3DL", "RCUBE"):
-    raise NameError(str(convertType) + " is not a valid type to convert the LUT to.")
+  visualize = arguments["--visualize"]
 
   if not os.path.isfile(filePath):
     raise NameError("Invalid file path.")
 
 
+
+  if resizeSize is None and convertType is None and not visualize:
+    exit()
+
+  if convertType is not None and convertType not in ("L3DL", "N3DL", "RCUBE"):
+    raise NameError(str(convertType) + " is not a valid type to convert the LUT to.")
+
+  
+
+
   lut, filetype = LUTFromFile(filePath)
+
+  if visualize:
+    lut.Plot()
+    exit()
 
   if resizeSize is not None:
     lut = lut.Resize(int(resizeSize))
