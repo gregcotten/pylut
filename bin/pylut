@@ -3,8 +3,8 @@
 """pylut-cli
 
 Usage:
-  pylut-cli.py [-hvf] [-r=<size>] [-c=<convert>] [-n=<name>] [-o=<output_folder>] <file>
-  pylut-cli.py --version
+  pylut [-hvf] [-r=<size>] [-c=<convert>] [-n=<name>] [-o=<output_folder>] <file>
+  pylut --version
 
 Options:
   -h --help                                     show this help message and exit
@@ -19,11 +19,7 @@ Options:
 """
 
 
-try:
-    from docopt import docopt
-except ImportError:
-    exit('This example requires docopt. Please run: \n    pip install docopt\n')
-
+from docopt import docopt
 from pylut import *
 import os
 
