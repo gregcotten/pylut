@@ -46,7 +46,7 @@ I also have a terrible CLI inside bin/pylut-cli.py.
 
 Example:
 	
-	./pylut-cli.py some_lut.3dl --resize 17 --convert RCUBE
+	pylut some_lut.3dl --resize 17 --convert RCUBE
 
 ## Special Notes
 

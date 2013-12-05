@@ -39,7 +39,7 @@ Example:
 
 ::
 
-    ./pylut-cli some_lut.3dl --resize 17 --convert RCUBE
+    pylut some_lut.3dl --resize 17 --convert RCUBE
 
 The Future
 ----------
