@@ -30,25 +30,22 @@ def LUTFromFile(lutFilePath):
   if ".3dl" in os.path.splitext(lutFilePath)[1].lower():
     try:
       lut = LUT.FromLustre3DLFile(lutFilePath)
-      filetype = "L3DL"
-    except NameError:
+      return lut, "L3DL"
+    except Exception as e:
       pass
     try:
       lut = LUT.FromNuke3DLFile(lutFilePath)
-      filetype = "N3DL"
-    except NameError:
+      return lut, "N3DL"
+    except Exception as e:
       pass
   elif ".cube" in os.path.splitext(lutFilePath)[1].lower():
     try:
       lut = LUT.FromCubeFile(lutFilePath)
-      filetype = "RCUBE"
-    except NameError:
+      return lut, "RCUBE"
+    except Exception as e:
       pass
-  
-  if lut is None:
-    raise NameError("File extension invalid.")
 
-  return lut, filetype
+  return None, None
 
 def FullFilePath(outputFolder, name, extension):
   return outputFolder + "/" + name + extension
@@ -75,10 +72,7 @@ if __name__ == "__main__":
 
   if convertType is not None and convertType not in ("L3DL", "N3DL", "RCUBE"):
     raise NameError(str(convertType) + " is not a valid type to convert the LUT to.")
-
-  
-
-
+    
   lut, filetype = LUTFromFile(filePath)
 
   if visualize:
