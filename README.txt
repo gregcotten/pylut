@@ -8,7 +8,7 @@ Usage
 
 The idea is that the modifications to a LUT object are non-volatile, meaning that every modification method returns a new LUT object rather than changing the existing object. All sorts of great things can happen!
 
-::
+.. code:: python
 
     #!/usr/bin/env python
     from pylut import *
@@ -35,25 +35,11 @@ CLI
 
 I also have a terrible CLI inside bin/pylut-cli.py.
 
-You need to:
-
-::
-
-    sudo pip install docopt
-
-And then:
-
-::
-
-    chmod a+x pylut-cli.py
-
-And you should be ready to go!
-
 Example:
 
 ::
 
-    pylut-cli.py some_lut.3dl --resize 17 --convert RCUBE
+    ./pylut-cli some_lut.3dl --resize 17 --convert RCUBE
 
 The Future
 ----------
