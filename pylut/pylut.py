@@ -532,7 +532,7 @@ class LUT:
 			import mpl_toolkits.mplot3d
 			from matplotlib.colors import rgb2hex
 		except ImportError:
-			print "matplotlib not installed. Run: sudo pip install matplotlib"
+			print "matplotlib not installed. Run: pip install matplotlib"
 			return
 
 		#for performance reasons lattice size must be 9 or less
