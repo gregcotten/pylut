@@ -6,7 +6,7 @@ setup(
     author='Greg Cotten',
     author_email='gcgc90@gmail.com',
     packages=['pylut'],
-    scripts=['bin/basic_example.py'],
+    scripts=['bin/pylut'],
     url='http://pypi.python.org/pypi/PyLUT/',
     license='LICENSE.txt',
     description='Builds, modifies, visualizes, and converts 3D LUTs from popular .cube and .3dl formats.',
