@@ -5,6 +5,7 @@
 import os
 import math
 import numpy as np
+import kdtree
 
 def EmptyLatticeOfSize(cubeSize):
 	return np.zeros((cubeSize, cubeSize, cubeSize), object)
@@ -44,6 +45,9 @@ def Lerp1D(beginning, end, value01):
 	range = float(end) - float(beginning)
 	return float(beginning) + float(range) * float(value01)
 
+def Distance3D(a, b):
+	return math.sqrt((a[0] - b[0])**2 + (a[1] - b[1])**2 + (a[2] - b[2])**2)
+
 def Clamp(value, min, max):
 	if min > max:
 		raise NameError("Invalid Clamp Values")
@@ -79,22 +83,33 @@ class Color:
 	@staticmethod
 	def FromFloatArray(array):
 		"""
-		Creates Color from a list of 3 floats.
+		Creates Color from a list or tuple of 3 floats.
 		"""
 		return Color(array[0], array[1], array[2])
 
 	
 	def ToFloatArray(self):
 		"""
-		Creates a list of 3 floating point RGB values from the floating point color.
+		Creates a tuple of 3 floating point RGB values from the floating point color.
 		"""
-		return [self.r, self.g, self.b]
+		return (self.r, self.g, self.b)
+
+	def ToRGBIntegerArray(self, bitdepth):
+		"""
+		Creates a list of 3 RGB integer values at specified bitdepth from the floating point color.
+		"""
+		return (Remap01ToInt(self.r, bitdepth), Remap01ToInt(self.g, bitdepth), Remap01ToInt(self.b, bitdepth))
 
 	def ClampColor(self, min, max):
 		"""
 		Returns a clamped color.
 		"""
 		return Color(Clamp(self.r, min.r, max.r), Clamp(self.g, min.g, max.g), Clamp(self.b, min.b, max.b))
+
+	def DistanceToColor(color):
+		if isinstance(color, Color):
+			return Distance3D(self.ToFloatArray(), color.ToFloatArray())
+		return NotImplemented
 	
 	def __add__(self, color):
 		return Color(self.r + color.r, self.g + color.g, self.b + color.b)
@@ -154,6 +169,9 @@ class LUT:
 		"""
 		Scales the lattice to a new cube size.
 		"""
+		if newCubeSize == self.cubeSize:
+			return self
+
 		newLattice = EmptyLatticeOfSize(newCubeSize)
 		ratio = float(self.cubeSize - 1.0) / float(newCubeSize-1.0)
 		for x in xrange(newCubeSize):
@@ -161,6 +179,40 @@ class LUT:
 				for z in xrange(newCubeSize):
 					newLattice[x, y, z] = self.ColorAtInterpolatedLatticePoint(x*ratio, y*ratio, z*ratio)
 		return LUT(newLattice, name = self.name + "_Resized"+str(newCubeSize))
+
+	def _ResizeAndAddToData(self, newCubeSize, data):
+		"""
+		Scales the lattice to a new cube size.
+		"""
+		newLattice = EmptyLatticeOfSize(newCubeSize)
+		ratio = float(self.cubeSize - 1.0) / float(newCubeSize-1.0)
+		maxVal = newCubeSize-1
+		for x in xrange(newCubeSize):
+			for y in xrange(newCubeSize):
+				for z in xrange(newCubeSize):
+					data.add(self.ColorAtInterpolatedLatticePoint(x*ratio, y*ratio, z*ratio).ToFloatArray(), (RemapIntTo01(x,maxVal), RemapIntTo01(y,maxVal), RemapIntTo01(z,maxVal)))
+		return data
+
+	def Reverse(self):
+		"""
+		Reverses a LUT. Warning: This can take up to 9 minutes and may suck depending on if the input/output is a bijection.
+		"""
+		tree = self.KDTree()
+		newLattice = EmptyLatticeOfSize(self.cubeSize)
+		maxVal = self.cubeSize - 1
+		for x in xrange(self.cubeSize):
+			for y in xrange(self.cubeSize):
+				for z in xrange(self.cubeSize):
+					newLattice[x, y, z] = Color.FromFloatArray(tree.search_nn((RemapIntTo01(x,maxVal), RemapIntTo01(y,maxVal), RemapIntTo01(z,maxVal))).aux)
+		return LUT(newLattice, name = self.name +"_Reverse")
+	
+	def KDTree(self):
+		tree = kdtree.create(dimensions=3)
+		
+		tree = self._ResizeAndAddToData(self.cubeSize*2, tree)
+	
+		return tree
+
 		
 	def CombineWithLUT(self, otherLUT):
 		"""
