@@ -3,7 +3,7 @@
 """pylut
 
 Usage:
-  pylut [-hf] [--reverse] [--visualize] [--resize=<size>] [-convert=<type>] [--rename=<name>] [--output=<output_folder>] <file>
+  pylut [-hf] [--reverse] [--visualize] [--resize=<size>] [--convert=<type>] [--rename=<name>] [--output=<output_folder>] <file>
   pylut --version
 
 Options:
@@ -14,8 +14,8 @@ Options:
   -f, --force                                   overwrite files if necessary
   --resize <size>                               rescale lut
   --convert <convert>                           convert to a different LUT format (L3DL, N3DL, RCUBE)
-  --rename <name>                         name to use for saved LUT
-  -o <output_folder>, --output <output_folder>  set output folder [default: ./]
+  --rename <name>                               name to use for saved LUT
+  --output <output_folder>                      set output folder [default: ./]
 
 """
 
@@ -53,7 +53,6 @@ def FullFilePath(outputFolder, name, extension):
 
 if __name__ == "__main__":
   arguments = docopt(__doc__, version='1.0')
-
 
   filePath = os.path.expanduser(arguments["<file>"])
   outputFolder = os.path.abspath(arguments["--output"])
