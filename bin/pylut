@@ -1,19 +1,20 @@
 #!/usr/bin/env python
 
-"""pylut-cli
+"""pylut
 
 Usage:
-  pylut [-hf] [--visualize] [-r=<size>] [-c=<convert>] [-n=<name>] [-o=<output_folder>] <file>
+  pylut [-hf] [--reverse] [--visualize] [--resize=<size>] [-convert=<type>] [--rename=<name>] [--output=<output_folder>] <file>
   pylut --version
 
 Options:
   -h --help                                     show this help message and exit
   --version                                     show version and exit
   --visualize                                   visualize the LUT
+  --reverse                                     reverse the LUT
   -f, --force                                   overwrite files if necessary
-  -r <size>, --resize <size>                    rescale lut
-  -c <convert>, --convert <convert>             convert to a different LUT format (L3DL, N3DL, RCUBE)
-  -n <name>, --name <name>                         name to use for saved LUT
+  --resize <size>                               rescale lut
+  --convert <convert>                           convert to a different LUT format (L3DL, N3DL, RCUBE)
+  --rename <name>                         name to use for saved LUT
   -o <output_folder>, --output <output_folder>  set output folder [default: ./]
 
 """
@@ -56,24 +57,28 @@ if __name__ == "__main__":
 
   filePath = os.path.expanduser(arguments["<file>"])
   outputFolder = os.path.abspath(arguments["--output"])
-  name = arguments["--name"]
+  name = arguments["--rename"]
   resizeSize = arguments["--resize"]
   convertType = arguments["--convert"]
   overwrite = arguments["--force"]
   visualize = arguments["--visualize"]
+  reverse = arguments["--reverse"]
 
   if not os.path.isfile(filePath):
     raise NameError("Invalid file path.")
 
 
 
-  if resizeSize is None and convertType is None and not visualize:
+  if resizeSize is None and convertType is None and not visualize and not reverse:
     exit()
 
   if convertType is not None and convertType not in ("L3DL", "N3DL", "RCUBE"):
     raise NameError(str(convertType) + " is not a valid type to convert the LUT to.")
     
   lut, filetype = LUTFromFile(filePath)
+  if reverse:
+    print "Warning: reverse can take up to 9 minutes"
+    lut = lut.Reverse()
 
   if visualize:
     lut.Plot()
