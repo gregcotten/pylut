@@ -22,6 +22,7 @@ Options:
 
 from docopt import docopt
 from pylut import *
+
 import os
 
 def LUTFromFile(lutFilePath):
@@ -77,7 +78,7 @@ if __name__ == "__main__":
   lut, filetype = LUTFromFile(filePath)
   if reverse:
     print "Warning: reverse can take up to 9 minutes"
-    lut = lut.Reverse()
+    lut = lut.Reverse(True)
 
   if visualize:
     lut.Plot()
