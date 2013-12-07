@@ -6,6 +6,7 @@ import os
 import math
 import numpy as np
 import kdtree
+from progress.bar import Bar
 
 def EmptyLatticeOfSize(cubeSize):
 	return np.zeros((cubeSize, cubeSize, cubeSize), object)
@@ -180,36 +181,53 @@ class LUT:
 					newLattice[x, y, z] = self.ColorAtInterpolatedLatticePoint(x*ratio, y*ratio, z*ratio)
 		return LUT(newLattice, name = self.name + "_Resized"+str(newCubeSize))
 
-	def _ResizeAndAddToData(self, newCubeSize, data):
+	def _ResizeAndAddToData(self, newCubeSize, data, progress = False):
 		"""
 		Scales the lattice to a new cube size.
 		"""
 		newLattice = EmptyLatticeOfSize(newCubeSize)
 		ratio = float(self.cubeSize - 1.0) / float(newCubeSize-1.0)
 		maxVal = newCubeSize-1
-		for x in xrange(newCubeSize):
-			for y in xrange(newCubeSize):
-				for z in xrange(newCubeSize):
-					data.add(self.ColorAtInterpolatedLatticePoint(x*ratio, y*ratio, z*ratio).ToFloatArray(), (RemapIntTo01(x,maxVal), RemapIntTo01(y,maxVal), RemapIntTo01(z,maxVal)))
+
+		bar = Bar("Building search tree", max = maxVal, suffix='%(percent)d%% - %(eta)ds remain')
+		try:
+			for x in xrange(newCubeSize):
+				if progress:
+					bar.next()
+				for y in xrange(newCubeSize):
+					for z in xrange(newCubeSize):
+						data.add(self.ColorAtInterpolatedLatticePoint(x*ratio, y*ratio, z*ratio).ToFloatArray(), (RemapIntTo01(x,maxVal), RemapIntTo01(y,maxVal), RemapIntTo01(z,maxVal)))
+		except KeyboardInterrupt:
+			bar.finish()
+			raise KeyboardInterrupt
+		bar.finish()
 		return data
 
-	def Reverse(self):
+	def Reverse(self, progress = False):
 		"""
 		Reverses a LUT. Warning: This can take up to 9 minutes and may suck depending on if the input/output is a bijection.
 		"""
-		tree = self.KDTree()
+		tree = self.KDTree(progress)
 		newLattice = EmptyLatticeOfSize(self.cubeSize)
 		maxVal = self.cubeSize - 1
-		for x in xrange(self.cubeSize):
-			for y in xrange(self.cubeSize):
-				for z in xrange(self.cubeSize):
-					newLattice[x, y, z] = Color.FromFloatArray(tree.search_nn((RemapIntTo01(x,maxVal), RemapIntTo01(y,maxVal), RemapIntTo01(z,maxVal))).aux)
+		bar = Bar("Searching for matches", max = maxVal, suffix='%(percent)d%% - %(eta)ds remain')
+		try:
+			for x in xrange(self.cubeSize):
+				if progress:
+					bar.next()
+				for y in xrange(self.cubeSize):
+					for z in xrange(self.cubeSize):
+						newLattice[x, y, z] = Color.FromFloatArray(tree.search_nn((RemapIntTo01(x,maxVal), RemapIntTo01(y,maxVal), RemapIntTo01(z,maxVal))).aux)
+		except KeyboardInterrupt:
+			bar.finish()
+			raise KeyboardInterrupt
+		bar.finish()
 		return LUT(newLattice, name = self.name +"_Reverse")
 	
-	def KDTree(self):
+	def KDTree(self, progress = False):
 		tree = kdtree.create(dimensions=3)
 		
-		tree = self._ResizeAndAddToData(self.cubeSize*2, tree)
+		tree = self._ResizeAndAddToData(self.cubeSize*2, tree, progress)
 	
 		return tree
 
