@@ -5,7 +5,7 @@ setup(
     version='1.4.7',
     author='Greg Cotten',
     author_email='gcgc90@gmail.com',
-    packages=['pylut'],
+    packages=['pylut', 'pylut.progress'],
     scripts=['bin/pylut'],
     url='http://pypi.python.org/pypi/PyLUT/',
     license='LICENSE.txt',
