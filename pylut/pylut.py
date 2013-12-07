@@ -91,7 +91,7 @@ class Color:
 	@staticmethod
 	def FromRGBIntegerArray(array, bitdepth):
 		"""
-		Creates Color from a list or tuple of 3 floats.
+		Creates Color from a list or tuple of 3 RGB integers at a specified bitdepth.
 		"""
 		maxBits = 2**bitdepth - 1
 		return Color(RemapIntTo01(array[0], maxBits), RemapIntTo01(array[1], maxBits), RemapIntTo01(array[2], maxBits))
