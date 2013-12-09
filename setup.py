@@ -7,7 +7,7 @@ setup(
     author_email='gcgc90@gmail.com',
     packages=['pylut', 'pylut.progress'],
     scripts=['bin/pylut'],
-    url='http://pypi.python.org/pypi/PyLUT/',
+    url='https://github.com/gregcotten/pylut',
     license='LICENSE.txt',
     description='Builds, modifies, visualizes, and converts 3D LUTs from popular .cube and .3dl formats.',
     long_description=open('README.txt').read(),
