@@ -32,7 +32,9 @@ def Remap01ToInt(val, bitdepth):
 	return int(val * (2**bitdepth - 1))
 
 def LerpColor(beginning, end, value01):
-	return Color.FromFloatArray(Lerp3D(beginning.ToFloatArray(), end.ToFloatArray(), value01))
+	if value01 < 0 or value01 > 1:
+		raise NameError("Improper Lerp")
+	return Color(Lerp1D(beginning.r, end.r, value01), Lerp1D(beginning.g, end.g, value01), Lerp1D(beginning.b, end.b, value01))
 
 def Lerp3D(beginning, end, value01):
 	if value01 < 0 or value01 > 1:
@@ -68,10 +70,8 @@ class Color:
 		self.g = g
 		self.b = b
 
-
 	def Clamped01(self):
 		return Color(Clamp(float(self.r), 0, 1), Clamp(float(self.g), 0, 1), Clamp(float(self.b), 0, 1))
-		
 
 	@staticmethod
 	def FromRGBInteger(r, g, b, bitdepth):
@@ -128,7 +128,7 @@ class Color:
 		return Color(self.r - color.r, self.g - color.g, self.b - color.b)
 	
 	def __mul__(self, color):
-		if "Color" not in color.__class__.__name__:
+		if not isinstance(color, Color):
 			mult = float(color)
 			return Color(self.r * mult, self.g * mult, self.b * mult)
 		return Color(self.r * color.r, self.g * color.g, self.b * color.b)
@@ -173,7 +173,7 @@ class LUT:
 		"""
 		Every LUT has a name!
 		"""
-
+		
 	def Resize(self, newCubeSize):
 		"""
 		Scales the lattice to a new cube size.
@@ -213,7 +213,7 @@ class LUT:
 
 	def Reverse(self, progress = False):
 		"""
-		Reverses a LUT. Warning: This can take up to 9 minutes and may suck depending on if the input/output is a bijection.
+		Reverses a LUT. Warning: This can take a long time depending on if the input/output is a bijection.
 		"""
 		tree = self.KDTree(progress)
 		newLattice = EmptyLatticeOfSize(self.cubeSize)
@@ -235,7 +235,7 @@ class LUT:
 	def KDTree(self, progress = False):
 		tree = kdtree.create(dimensions=3)
 		
-		tree = self._ResizeAndAddToData(self.cubeSize*2, tree, progress)
+		tree = self._ResizeAndAddToData(self.cubeSize*3, tree, progress)
 	
 		return tree
 
