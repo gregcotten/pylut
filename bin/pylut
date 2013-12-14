@@ -77,7 +77,7 @@ if __name__ == "__main__":
     
   lut, filetype = LUTFromFile(filePath)
   if reverse:
-    print "Warning: reverse can take up to 9 minutes"
+    print "Warning: reverse can take a long time."
     lut = lut.Reverse(True)
 
   if visualize:
