@@ -1,3 +1,5 @@
+from transformer import LUTTransformer
+
 class LUTCombiner(LUTTransformer):
 
 	def CombineWithLUT(self, otherLUT):
@@ -6,11 +8,11 @@ class LUTCombiner(LUTTransformer):
 		"""
 		if self.lut.cubeSize is not otherLUT.cubeSize:
 			raise NameError("Lattice Sizes not equivalent")
-		
-		
+
+
 		cubeSize = self.lut.cubeSize
 		newLattice = EmptyLatticeOfSize(cubeSize)
-		
+
 		for x in xrange(cubeSize):
 			for y in xrange(cubeSize):
 				for z in xrange(cubeSize):

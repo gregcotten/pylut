@@ -1,8 +1,8 @@
-from color 		import Color
-from reverser import LUTReverser
-from resizer 	import LUTResizer
-from plotter 	import LUTPlotter
-from combiner import LUTCombiner
+from color        import Color
+from reverser     import LUTReverser
+from resizer      import LUTResizer
+from plotter      import LUTPlotter
+from combiner     import LUTCombiner
 
 from formatters.LUTFormatterCube import LUTFormatterCube
 from formatters.LUTFormatterLustre3DL import LUTFormatterLustre3DL
@@ -30,7 +30,7 @@ class LUT:
 
 	# Transformers
 
-	def Reverse(self, progress = false):
+	def Reverse(self, progress = False):
 		"""
 		Returns a new LUT that represents the reverse of this LUT. Warning: This can take a long time depending on if the input/output is a bijection.
 		"""
@@ -209,13 +209,13 @@ class LUT:
 
 	def ToFile(toType, path):
 		if os.path.isfile(path) and not overwrite:
-		  exit("File already exists!")
+			exit("File already exists!")
 		if toType in "L3DL":
-		  LUTFormatterLustre3DL.ToFile(self, path)
+			LUTFormatterLustre3DL.ToFile(self, path)
 		elif toType in "N3DL":
-		  LUTFormatterNuke3DL.ToFile(self, path)
+			LUTFormatterNuke3DL.ToFile(self, path)
 		elif toType in "RCUBE":
-		  LUTFormatterCube.ToFile(self, path)
+			LUTFormatterCube.ToFile(self, path)
 
 	@staticmethod
 	def FromFilePath(lutFilePath):

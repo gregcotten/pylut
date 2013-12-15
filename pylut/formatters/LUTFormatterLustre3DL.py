@@ -40,7 +40,7 @@ class LUTFormatterLustre3DL(LUTFormatter):
 
 	@staticmethod
 	def ToFileString(lut, options = {}):
-		depth = options['bitdepth'] || 16
+		depth = options.get('bitdepth', 16)
 		string = StringIO()
 
 		cubeSize = lut.cubeSize

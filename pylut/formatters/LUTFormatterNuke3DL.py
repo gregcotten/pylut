@@ -43,7 +43,7 @@ class LUTFormatterNuke3DL(LUTFormatter):
 
 	@staticmethod
 	def ToFileString(lut, options = {}):
-		depth = options['bitdepth'] || 16
+		depth = options.get('bitdepth', 16)
 		string = ' '.join([str(int(x)) for x in Indices(cubeSize, depth)]) + "\n"
 		string += LatticeTo3DLString(lut, depth)
 		return string
