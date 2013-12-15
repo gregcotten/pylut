@@ -43,6 +43,9 @@ lut = lut.ClampColor(Color(0, 0, 0.2), Color(0, 0, 0.4))
 # Resize
 resizedLut = lut.Resize(33)
 
+# Reverse (complicated, can take a while)
+resizedLut = lut.Reverse()
+
 # Save and Convert
 lut.ToFile("CUBE", "mylut.cube")
 
