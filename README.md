@@ -26,25 +26,25 @@ from pylut import *
 
 lut = LUT.FromFile("mylut.3dl")
 
-# Query the LUT
+# Query
 print lut.ColorAtLatticePoint(1, 2, 1)
 print lut.ColorAtInterpolatedLatticePoint(1.3, 1.5, 1.2)
 print lut.ColorFromColor(Color(0.002, 0.5, 0.2344))
 print lut.ColorFromColor(Color.FromRGBInteger(14, 1000, 30, bitdepth = 10))
 
-# Or convert it
-lut.ToFile("CUBE", "mylut.cube")
-
-# Or combine it with another lut
+# Combine
 combinedLut = lut.CombineWithLUT(LUT.FromFile("otherlut.3dl"))
 
-# Or modify it
+# Modify
 lut *= .5
 lut -= LUT.FromIdentity(lut.cubeSize)
 lut = lut.ClampColor(Color(0, 0, 0.2), Color(0, 0, 0.4))
 
-# Or resize it
+# Resize
 resizedLut = lut.Resize(33)
+
+# Save and Convert
+lut.ToFile("CUBE", "mylut.cube")
 
 ```
 

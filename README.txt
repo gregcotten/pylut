@@ -1,7 +1,7 @@
 pylut
 =====
 
-Builds, modifies, visualizes, and converts 3D LUTs from popular .cube and .3dl formats. Source available at https://github.com/gregcotten/pylut. 
+Builds, modifies, visualizes, and converts 3D LUTs from popular .cube and .3dl formats. Source available at https://github.com/gregcotten/pylut.
 
 Usage
 -----
@@ -10,40 +10,40 @@ The idea is that the modifications to a LUT object are non-volatile, meaning tha
 
 .. code:: python
 
-    #!/usr/bin/env python
     from pylut import *
-    lut = LUT.FromLustre3DLFile("/path/to/file.3dl")
-    lut2 = LUT.FromLustre3DLFile("/path/to/file2.3dl")
 
-    print lut.ColorAtLatticePoint(1,2,1)
-    print lut.ColorAtInterpolatedLatticePoint(1.3,1.5,1.2)
-    print lut.ColorFromColor(Color(.002,.5,.2344))
+    lut = LUT.FromFile("mylut.3dl")
+
+    # Query
+    print lut.ColorAtLatticePoint(1, 2, 1)
+    print lut.ColorAtInterpolatedLatticePoint(1.3, 1.5, 1.2)
+    print lut.ColorFromColor(Color(0.002, 0.5, 0.2344))
     print lut.ColorFromColor(Color.FromRGBInteger(14, 1000, 30, bitdepth = 10))
 
-    lut3 = lut.CombineWithLUT(lut2)
+    # Combine
+    combinedLut = lut.CombineWithLUT(LUT.FromFile("otherlut.3dl"))
 
-    lut3 *= .5
-    lut3 -= LUT.FromIdentity(lut3.cubeSize)
+    # Modify
+    lut *= .5
+    lut -= LUT.FromIdentity(lut.cubeSize)
+    lut = lut.ClampColor(Color(0, 0, 0.2), Color(0, 0, 0.4))
 
-    lut3 = lut3.ClampColor(Color(0,0,.2),Color(0,0,.4))
+    # Resize
+    resizedLut = lut.Resize(33)
 
-    lut3 = lut3.Resize(33)
-    lut3.ToNuke3DLFile("/path/to/destination.3dl")
+    # Save and Convert
+    lut.ToFile("CUBE", "mylut.cube")
 
 CLI
 ---
 
-I also have a terrible CLI inside the bin folder.
+There's also a CLI available.
+
 Example:
 
 ::
 
     pylut some_lut.3dl --resize 17 --convert RCUBE
-
-The Future
-----------
-
-1. No clue.
 
 Contributing
 ------------
