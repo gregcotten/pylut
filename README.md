@@ -14,7 +14,7 @@ And to upgrade:
 	pip install pylut
 
 ## Documentation
-	
+
 Very mediocre docs viewable at: http://pythonhosted.org/pylut/
 
 ## Usage
@@ -23,46 +23,50 @@ The idea is that the modifications to a LUT object are non-volatile, meaning tha
 
 ```python
 from pylut import *
-lut = LUT.FromLustre3DLFile("/path/to/file.3dl")
-lut2 = LUT.FromLustre3DLFile("/path/to/file2.3dl")
 
-print lut.ColorAtLatticePoint(1,2,1)
-print lut.ColorAtInterpolatedLatticePoint(1.3,1.5,1.2)
-print lut.ColorFromColor(Color(.002,.5,.2344))
+lut = LUT.FromFile("mylut.3dl")
+
+# Query the LUT
+print lut.ColorAtLatticePoint(1, 2, 1)
+print lut.ColorAtInterpolatedLatticePoint(1.3, 1.5, 1.2)
+print lut.ColorFromColor(Color(0.002, 0.5, 0.2344))
 print lut.ColorFromColor(Color.FromRGBInteger(14, 1000, 30, bitdepth = 10))
 
-lut3 = lut.CombineWithLUT(lut2)
+# Or convert it
+lut.ToFile("CUBE", "mylut.cube")
 
-lut3 *= .5
-lut3 -= LUT.FromIdentity(lut3.cubeSize)
+# Or combine it with another lut
+combinedLut = lut.CombineWithLUT(LUT.FromFile("otherlut.3dl"))
 
-lut3 = lut3.ClampColor(Color(0,0,.2),Color(0,0,.4))
+# Or modify it
+lut *= .5
+lut -= LUT.FromIdentity(lut.cubeSize)
+lut = lut.ClampColor(Color(0, 0, 0.2), Color(0, 0, 0.4))
 
-lut3 = lut3.Resize(33)
-lut3.ToNuke3DLFile("/path/to/destination.3dl")
+# Or resize it
+resizedLut = lut.Resize(33)
+
 ```
 
 ## CLI
 
-I also have a terrible CLI inside the bin folder.
+There's also a CLI available.
 
 Example:
-	
-	pylut some_lut.3dl --resize 17 --convert RCUBE
+
+	pylut lut.3dl --resize 17 --convert RCUBE
+
+This will resize the LUT to 17×17×17 and convert it from a `.3dl` to a `.cube` file.
 
 ## Special Notes
 
 In order to run
-	
-	lut.Plot()
+
+```python
+lut.Plot()
+```
 
 You need to either be running OSX or have PyQt4 or PyGTK installed in order to visualize the cube.
-
-
-## The Future
-
-1. No clue.
-
 
 ## Contributing
 

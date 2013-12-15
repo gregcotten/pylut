@@ -218,7 +218,7 @@ class LUT:
 			LUTFormatterCube.ToFile(self, path)
 
 	@staticmethod
-	def FromFilePath(lutFilePath):
+	def FromFile(lutFilePath):
 		lut = None
 		filetype = None
 
@@ -226,18 +226,18 @@ class LUT:
 
 		if ".3dl" in extension:
 			try:
-				lut = LUTFormatterLustre3DL.FromFilePath(lutFilePath)
+				lut = LUTFormatterLustre3DL.FromFile(lutFilePath)
 				return lut, "L3DL"
 			except Exception as e:
 				pass
 			try:
-				lut = LUTFormatterNuke3DL.FromFilePath(lutFilePath)
+				lut = LUTFormatterNuke3DL.FromFile(lutFilePath)
 				return lut, "N3DL"
 			except Exception as e:
 				pass
 		elif ".cube" in extension:
 			try:
-				lut = LUTFormatterCube.FromFilePath(lutFilePath)
+				lut = LUTFormatterCube.FromFile(lutFilePath)
 				return lut, "RCUBE"
 			except Exception as e:
 				pass

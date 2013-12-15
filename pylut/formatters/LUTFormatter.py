@@ -1,7 +1,7 @@
 class LUTFormatter:
 
 	@staticmethod
-	def FromFilePath(filePath):
+	def FromFile(filePath):
 		f = open(filePath, 'rU')
 		lines = f.readlines()
 		f.close()
