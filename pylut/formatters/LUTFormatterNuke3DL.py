@@ -1,6 +1,6 @@
 from LUTFormatter import LUTFormatter
 
-class LUTFormatterNuke(LUTFormatter):
+class LUTFormatterNuke3DL(LUTFormatter):
 
 	@staticmethod
 	def FromLines(lutFileLines, name = None):
@@ -12,11 +12,11 @@ class LUTFormatterNuke(LUTFormatter):
 		for line in lutFileLines:
 			if "#" in line or line == "\n":
 				meshLineIndex += 1
-	
+
 		outputDepth = int(math.log(int(lutFileLines[meshLineIndex].split()[-1])+1,2))
 		cubeSize = len(lutFileLines[meshLineIndex].split())
-		
-	
+
+
 		if cubeSize == -1:
 			raise NameError("Invalid .3dl file.")
 
@@ -58,7 +58,7 @@ class LUTFormatterNuke(LUTFormatter):
 			blueIndex = currentCubeIndex % cubeSize
 
 			latticePointColor = lut.lattice[redIndex, greenIndex, blueIndex].Clamped01()
-			
+
 			string += latticePointColor.FormattedAsInteger(bitdepth) + "\n"
 		return string
 

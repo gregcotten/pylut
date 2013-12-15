@@ -8,7 +8,6 @@ class LUTFormatter:
 		name = os.path.splitext(os.path.basename(filePath))[0]
 		return FromLines(lines, name)
 
-
 	@staticmethod
 	def FromLines(lines, name = None):
 		# Stub, subclass

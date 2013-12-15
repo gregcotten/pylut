@@ -1,5 +1,12 @@
-from color import Color
+from color 		import Color
 from reverser import LUTReverser
+from resizer 	import LUTResizer
+from plotter 	import LUTPlotter
+from combiner import LUTCombiner
+
+from formatters.LUTFormatterCube import LUTFormatterCube
+from formatters.LUTFormatterLustre3DL import LUTFormatterLustre3DL
+from formatters.LUTFormatterNuke3DL import LUTFormatterNuke3DL
 
 class LUT:
 	"""
@@ -15,12 +22,12 @@ class LUT:
 		"""
 		LUT is of size (cubeSize, cubeSize, cubeSize) and index positions are from 0 to cubeSize-1
 		"""
-		
+
 		self.name = str(name)
 		"""
 		Every LUT has a name!
 		"""
-	
+
 	# Transformers
 
 	def Reverse(self, progress = false):
@@ -34,7 +41,7 @@ class LUT:
 		Returns a new lut with the lattice resized to newCubeSize.
 		"""
 		return LUTResizer(self.lut).Resize(newCubeSize)
-		
+
 	def Combine(self, otherLUT):
 		"""
 		Returns a new lut combining self with otherLUT.
@@ -52,46 +59,6 @@ class LUT:
 				for z in xrange(cubeSize):
 					newLattice[x, y, z] = self.ColorAtLatticePoint(x, y, z).ClampColor(min, max)
 		return LUT(newLattice)
-
-	
-	def ToLustre3DLFile(self, fileOutPath, bitdepth = 12):
-		cubeSize = self.cubeSize
-		inputDepth = math.log(cubeSize-1, 2)
-
-		if int(inputDepth) != inputDepth:
-			raise NameError("Invalid cube size for 3DL. Cube size must be 2^x + 1")
-
-		lutFile = open(fileOutPath, 'w')
-
-		lutFile.write("3DMESH\n")
-		lutFile.write("Mesh " + str(int(inputDepth)) + " " + str(bitdepth) + "\n")
-		lutFile.write(' '.join([str(int(x)) for x in Indices(cubeSize, 10)]) + "\n")
-		
-		lutFile.write(self._LatticeTo3DLString(bitdepth))
-
-		lutFile.write("\n#Tokens required by applications - do not edit\nLUT8\ngamma 1.0")
-
-		lutFile.close()
-
-	def ToCubeFile(self, cubeFileOutPath):
-		cubeSize = self.cubeSize
-		cubeFile = open(cubeFileOutPath, 'w')
-		cubeFile.write("LUT_3D_SIZE " + str(cubeSize) + "\n")
-		
-		for currentCubeIndex in range(0, cubeSize**3):
-			redIndex = currentCubeIndex % cubeSize
-			greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
-			blueIndex = currentCubeIndex / (cubeSize*cubeSize)
-
-			latticePointColor = self.lattice[redIndex, greenIndex, blueIndex].Clamped01()
-			
-			cubeFile.write( latticePointColor.FormattedAsFloat() )
-			
-			if(currentCubeIndex != cubeSize**3 - 1):
-				cubeFile.write("\n")
-
-		cubeFile.close()
-
 
 	def ColorFromColor(self, color):
 		"""
@@ -163,80 +130,6 @@ class LUT:
 					identityLattice[r, g, b] = Color(indices01[r], indices01[g], indices01[b])
 		return LUT(identityLattice, name = "Identity"+str(cubeSize))
 
-	@staticmethod
-	def FromLustre3DLFile(lutFilePath):
-		lutFile = open(lutFilePath, 'rU')
-		lutFileLines = lutFile.readlines()
-		lutFile.close()
-
-		meshLineIndex = 0
-		cubeSize = -1
-
-		for line in lutFileLines:
-			if "Mesh" in line:
-				inputDepth = int(line.split()[1])
-				outputDepth = int(line.split()[2])
-				cubeSize = 2**inputDepth + 1
-				break
-			meshLineIndex += 1
-
-		if cubeSize == -1:
-			raise NameError("Invalid .3dl file.")
-
-		lattice = EmptyLatticeOfSize(cubeSize)
-		currentCubeIndex = 0
-		
-		for line in lutFileLines[meshLineIndex+1:]:
-			if len(line) > 0 and len(line.split()) == 3 and "#" not in line:
-				#valid cube line
-				redValue = line.split()[0]
-				greenValue = line.split()[1]
-				blueValue = line.split()[2]
-
-				redIndex = currentCubeIndex / (cubeSize*cubeSize)
-				greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
-				blueIndex = currentCubeIndex % cubeSize
-
-				lattice[redIndex, greenIndex, blueIndex] = Color.FromRGBInteger(redValue, greenValue, blueValue, bitdepth = outputDepth)
-				currentCubeIndex += 1
-
-		return LUT(lattice, name = os.path.splitext(os.path.basename(lutFilePath))[0])
-
-
-	@staticmethod
-	def FromCubeFile(cubeFilePath):
-		cubeFile = open(cubeFilePath, 'rU')
-		cubeFileLines = cubeFile.readlines()
-		cubeFile.close()
-
-		cubeSizeLineIndex = 0
-		cubeSize = -1
-
-		for line in cubeFileLines:
-			if "LUT_3D_SIZE" in line:
-				cubeSize = int(line.split()[1])
-				break
-			cubeSizeLineIndex += 1
-		if cubeSize == -1:
-			raise NameError("Invalid .cube file.")
-
-		lattice = EmptyLatticeOfSize(cubeSize)
-		currentCubeIndex = 0
-		for line in cubeFileLines[cubeSizeLineIndex+1:]:
-			if len(line) > 0 and len(line.split()) == 3 and "#" not in line:
-				#valid cube line
-				redValue = float(line.split()[0])
-				greenValue = float(line.split()[1])
-				blueValue = float(line.split()[2])
-
-				redIndex = currentCubeIndex % cubeSize
-				greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
-				blueIndex = currentCubeIndex / (cubeSize*cubeSize)
-
-				lattice[redIndex, greenIndex, blueIndex] = Color(redValue, greenValue, blueValue)
-				currentCubeIndex += 1
-
-		return LUT(lattice, name = os.path.splitext(os.path.basename(cubeFilePath))[0])
 
 	def AddColorToEachPoint(self, color):
 		"""
@@ -312,65 +205,43 @@ class LUT:
 		return not result
 
 	def Plot(self):
-		"""
-		Plot a LUT as a 3D RGB cube using matplotlib. Stolen from https://github.com/mikrosimage/ColorPipe-tools/tree/master/plotThatLut.
-		"""
-		
-		try:
-			import matplotlib
-			# matplotlib : general plot
-			from matplotlib.pyplot import title, figure
-			# matplotlib : for 3D plot
-			# mplot3d has to be imported for 3d projection
-			import mpl_toolkits.mplot3d
-			from matplotlib.colors import rgb2hex
-		except ImportError:
-			print "matplotlib not installed. Run: pip install matplotlib"
-			return
+		LUTPlotter.Plot(self)
 
-		#for performance reasons lattice size must be 9 or less
+	def ToFile(toType, path):
+		if os.path.isfile(path) and not overwrite:
+		  exit("File already exists!")
+		if toType in "L3DL":
+		  LUTFormatterLustre3DL.ToFile(self, path)
+		elif toType in "N3DL":
+		  LUTFormatterNuke3DL.ToFile(self, path)
+		elif toType in "RCUBE":
+		  LUTFormatterCube.ToFile(self, path)
+
+	@staticmethod
+	def FromFilePath(lutFilePath):
 		lut = None
-		if self.cubeSize > 9:
-			lut = self.Resize(9)
-		else:
-			lut = self
+		filetype = None
+
+		extension = os.path.splitext(lutFilePath)[1].lower()
+
+		if ".3dl" in extension:
+			try:
+				lut = LUTFormatterLustre3DL.FromFilePath(lutFilePath)
+				return lut, "L3DL"
+			except Exception as e:
+				pass
+			try:
+				lut = LUTFormatterNuke3DL.FromFilePath(lutFilePath)
+				return lut, "N3DL"
+			except Exception as e:
+				pass
+		elif ".cube" in extension:
+			try:
+				lut = LUTFormatterCube.FromFilePath(lutFilePath)
+				return lut, "RCUBE"
+			except Exception as e:
+				pass
+
+		return None, None
 
 
-		# init vars
-		cubeSize = lut.cubeSize
-		input_range = xrange(0, cubeSize)
-		max_value = cubeSize - 1.0
-		red_values = []
-		green_values = []
-		blue_values = []
-		colors = []
-		# process color values
-		for r in input_range:
-			for g in input_range:
-				for b in input_range:
-					# get a value between [0..1]
-					norm_r = r/max_value
-					norm_g = g/max_value
-					norm_b = b/max_value
-					# apply correction
-					res = lut.ColorFromColor(Color(norm_r, norm_g, norm_b))
-					# append values
-					red_values.append(res.r)
-					green_values.append(res.g)
-					blue_values.append(res.b)
-					# append corresponding color
-					colors.append(rgb2hex([norm_r, norm_g, norm_b]))
-		# init plot
-		fig = figure()
-		fig.canvas.set_window_title('pylut Plotter')
-		ax = fig.add_subplot(111, projection='3d')
-		ax.set_xlabel('Red')
-		ax.set_ylabel('Green')
-		ax.set_zlabel('Blue')
-		ax.set_xlim(min(red_values), max(red_values))
-		ax.set_ylim(min(green_values), max(green_values))
-		ax.set_zlim(min(blue_values), max(blue_values))
-		title(self.name)
-		# plot 3D values
-		ax.scatter(red_values, green_values, blue_values, c=colors, marker="o")
-		matplotlib.pyplot.show()

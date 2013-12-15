@@ -25,36 +25,14 @@ from pylut import *
 
 import os
 
-def LUTFromFile(lutFilePath):
-  lut = None
-  filetype = None
-
-  if ".3dl" in os.path.splitext(lutFilePath)[1].lower():
-    try:
-      lut = LUT.FromLustre3DLFile(lutFilePath)
-      return lut, "L3DL"
-    except Exception as e:
-      pass
-    try:
-      lut = LUT.FromNuke3DLFile(lutFilePath)
-      return lut, "N3DL"
-    except Exception as e:
-      pass
-  elif ".cube" in os.path.splitext(lutFilePath)[1].lower():
-    try:
-      lut = LUT.FromCubeFile(lutFilePath)
-      return lut, "RCUBE"
-    except Exception as e:
-      pass
-
-  return None, None
 
 def FullFilePath(outputFolder, name, extension):
   return outputFolder + "/" + name + extension
 
 if __name__ == "__main__":
-  arguments = docopt(__doc__, version='1.0')
 
+  # Get arguments
+  arguments = docopt(__doc__, version='1.0')
   filePath = os.path.expanduser(arguments["<file>"])
   outputFolder = os.path.abspath(os.path.expanduser(arguments["--output"]))
   name = arguments["--rename"]
@@ -64,28 +42,36 @@ if __name__ == "__main__":
   visualize = arguments["--visualize"]
   reverse = arguments["--reverse"]
 
+  # Make sure it's a valid file path
   if not os.path.isfile(filePath):
     raise NameError("Invalid file path.")
 
-
-
+  # Make sure we actually have to do something
   if resizeSize is None and convertType is None and not visualize and not reverse:
     exit()
 
+  # Make sure a valid file type is provided
   if convertType is not None and convertType not in ("L3DL", "N3DL", "RCUBE"):
     raise NameError(str(convertType) + " is not a valid type to convert the LUT to.")
-    
-  lut, filetype = LUTFromFile(filePath)
+
+  # Read the input file
+  lut, filetype = LUT.FromFilePath(filePath)
+
+  # Reverse
   if reverse:
     print "Warning: reverse can take a long time."
     lut = lut.Reverse(True)
 
+  # Visualize
   if visualize:
     lut.Plot()
     exit()
 
+  # Resize
   if resizeSize is not None:
     lut = lut.Resize(int(resizeSize))
+
+  # Convert
 
   if name is None:
     name = lut.name
@@ -100,23 +86,12 @@ if __name__ == "__main__":
   if toType in "L3DL":
     if os.path.isfile(FullFilePath(outputFolder, name, ".3dl")) and not overwrite:
       exit("File already exists!")
-    
-    lut.ToLustre3DLFile(FullFilePath(outputFolder, name, ".3dl"))
+    lut.ToFile(toType, FullFilePath(outputFolder, name, ".3dl"))
   elif toType in "N3DL":
     if os.path.isfile(FullFilePath(outputFolder, name, ".3dl")) and not overwrite:
       exit("File already exists!")
-    
-    lut.ToNuke3DLFile(FullFilePath(outputFolder, name, ".3dl"))
+    lut.ToFile(toType, FullFilePath(outputFolder, name, ".3dl"))
   elif toType in "RCUBE":
     if os.path.isfile(FullFilePath(outputFolder, name, ".cube")) and not overwrite:
       exit("File already exists!")
-    
-    lut.ToCubeFile(FullFilePath(outputFolder, name, ".cube"))
-
-
-
-
-
-
-
-  
+    lut.ToFile(toType, FullFilePath(outputFolder, name, ".cube"))
