@@ -1,7 +1,9 @@
+from helper import Helper
+
 class Color:
 	"""
 	RGB floating point representation of a color. 0 is absolute black, 1 is absolute white.
-	Access channel data by color.r, color.g, or color.b. 
+	Access channel data by color.r, color.g, or color.b.
 	"""
 	def __init__(self, r, g, b):
 		self.r = r
@@ -9,7 +11,7 @@ class Color:
 		self.b = b
 
 	def Clamped01(self):
-		return Color(Clamp(float(self.r), 0, 1), Clamp(float(self.g), 0, 1), Clamp(float(self.b), 0, 1))
+		return Color(Helper.Clamp(float(self.r), 0, 1), Helper.Clamp(float(self.g), 0, 1), Helper.Clamp(float(self.b), 0, 1))
 
 	@staticmethod
 	def FromRGBInteger(r, g, b, bitdepth):
@@ -17,7 +19,7 @@ class Color:
 		Instantiates a floating point color from RGB integers at a bitdepth.
 		"""
 		maxBits = 2**bitdepth - 1
-		return Color(RemapIntTo01(r, maxBits), RemapIntTo01(g, maxBits), RemapIntTo01(b, maxBits))
+		return Color(Helper.RemapIntTo01(r, maxBits), Helper.RemapIntTo01(g, maxBits), Helper.RemapIntTo01(b, maxBits))
 
 	@staticmethod
 	def FromFloatArray(array):
@@ -32,9 +34,9 @@ class Color:
 		Creates Color from a list or tuple of 3 RGB integers at a specified bitdepth.
 		"""
 		maxBits = 2**bitdepth - 1
-		return Color(RemapIntTo01(array[0], maxBits), RemapIntTo01(array[1], maxBits), RemapIntTo01(array[2], maxBits))
+		return Color(Helper.RemapIntTo01(array[0], maxBits), Helper.RemapIntTo01(array[1], maxBits), Helper.RemapIntTo01(array[2], maxBits))
 
-	
+
 	def ToFloatArray(self):
 		"""
 		Creates a tuple of 3 floating point RGB values from the floating point color.
@@ -45,7 +47,7 @@ class Color:
 		"""
 		Creates a list of 3 RGB integer values at specified bitdepth from the floating point color.
 		"""
-		return (Remap01ToInt(self.r, bitdepth), Remap01ToInt(self.g, bitdepth), Remap01ToInt(self.b, bitdepth))
+		return (Helper.Remap01ToInt(self.r, bitdepth), Helper.Remap01ToInt(self.g, bitdepth), Helper.Remap01ToInt(self.b, bitdepth))
 
 	def ClampColor(self, min, max):
 		"""
@@ -55,16 +57,16 @@ class Color:
 
 	def DistanceToColor(color):
 		if isinstance(color, Color):
-			return Distance3D(self.ToFloatArray(), color.ToFloatArray())
+			return Helper.Distance3D(self.ToFloatArray(), color.ToFloatArray())
 		return NotImplemented
-	
+
 	def __add__(self, color):
 		return Color(self.r + color.r, self.g + color.g, self.b + color.b)
 
 
 	def __sub__(self, color):
 		return Color(self.r - color.r, self.g - color.g, self.b - color.b)
-	
+
 	def __mul__(self, color):
 		if not isinstance(color, Color):
 			mult = float(color)
@@ -81,13 +83,13 @@ class Color:
 		if result is NotImplemented:
 			return result
 		return not result
-	
+
 	def __str__(self):
 		return "(" + str(self.r) + ", " + str(self.g) + ", " + str(self.b) + ")"
-	
+
 	def FormattedAsFloat(self, format = '{:1.6f}'):
 		return format.format(self.r) + " " + format.format(self.g) + " " + format.format(self.b)
-	
+
 	def FormattedAsInteger(self, bitdepth):
 		rjustValue = len(str(2**bitdepth - 1)) + 1
-		return str(Remap01ToInt(self.r, bitdepth)).rjust(rjustValue) + " " + str(Remap01ToInt(self.g, bitdepth)).rjust(rjustValue) + " " + str(Remap01ToInt(self.b, bitdepth)).rjust(rjustValue)
+		return str(Helper.Remap01ToInt(self.r, bitdepth)).rjust(rjustValue) + " " + str(Helper.Remap01ToInt(self.g, bitdepth)).rjust(rjustValue) + " " + str(Helper.Remap01ToInt(self.b, bitdepth)).rjust(rjustValue)

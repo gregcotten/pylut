@@ -1,4 +1,5 @@
 from transformer import LUTTransformer
+from helper import Helper
 
 class LUTCombiner(LUTTransformer):
 
@@ -11,7 +12,7 @@ class LUTCombiner(LUTTransformer):
 
 
 		cubeSize = self.lut.cubeSize
-		newLattice = EmptyLatticeOfSize(cubeSize)
+		newLattice = Helper.EmptyLatticeOfSize(cubeSize)
 
 		for x in xrange(cubeSize):
 			for y in xrange(cubeSize):

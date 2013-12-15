@@ -1,3 +1,4 @@
+from helper 			import Helper
 from color        import Color
 from reverser     import LUTReverser
 from resizer      import LUTResizer
@@ -53,7 +54,7 @@ class LUT:
 		Returns a new RGB clamped LUT.
 		"""
 		cubeSize = self.cubeSize
-		newLattice = EmptyLatticeOfSize(cubeSize)
+		newLattice = Helper.EmptyLatticeOfSize(cubeSize)
 		for x in xrange(cubeSize):
 			for y in xrange(cubeSize):
 				for z in xrange(cubeSize):
@@ -107,23 +108,23 @@ class LUT:
 		C101 = self.ColorAtLatticePoint(upperRedPoint, upperGreenPoint, lowerBluePoint)
 		C011 = self.ColorAtLatticePoint(lowerRedPoint, upperGreenPoint, upperBluePoint)
 
-		C00  = LerpColor(C000, C100, 1.0 - (upperRedPoint - redPoint))
-		C10  = LerpColor(C010, C110, 1.0 - (upperRedPoint - redPoint))
-		C01  = LerpColor(C001, C101, 1.0 - (upperRedPoint - redPoint))
-		C11  = LerpColor(C011, C111, 1.0 - (upperRedPoint - redPoint))
+		C00  = Helper.LerpColor(C000, C100, 1.0 - (upperRedPoint - redPoint))
+		C10  = Helper.LerpColor(C010, C110, 1.0 - (upperRedPoint - redPoint))
+		C01  = Helper.LerpColor(C001, C101, 1.0 - (upperRedPoint - redPoint))
+		C11  = Helper.LerpColor(C011, C111, 1.0 - (upperRedPoint - redPoint))
 
-		C1 = LerpColor(C01, C11, 1.0 - (upperBluePoint - bluePoint))
-		C0 = LerpColor(C00, C10, 1.0 - (upperBluePoint - bluePoint))
+		C1 = Helper.LerpColor(C01, C11, 1.0 - (upperBluePoint - bluePoint))
+		C0 = Helper.LerpColor(C00, C10, 1.0 - (upperBluePoint - bluePoint))
 
-		return LerpColor(C0, C1, 1.0 - (upperGreenPoint - greenPoint))
+		return Helper.LerpColor(C0, C1, 1.0 - (upperGreenPoint - greenPoint))
 
 	@staticmethod
 	def FromIdentity(cubeSize):
 		"""
 		Creates an indentity LUT of specified size.
 		"""
-		identityLattice = EmptyLatticeOfSize(cubeSize)
-		indices01 = Indices01(cubeSize)
+		identityLattice = Helper.EmptyLatticeOfSize(cubeSize)
+		indices01 = Helper.Indices01(cubeSize)
 		for r in xrange(cubeSize):
 			for g in xrange(cubeSize):
 				for b in xrange(cubeSize):
@@ -136,7 +137,7 @@ class LUT:
 		Add a Color value to every lattice point on the cube.
 		"""
 		cubeSize = self.cubeSize
-		newLattice = EmptyLatticeOfSize(cubeSize)
+		newLattice = Helper.EmptyLatticeOfSize(cubeSize)
 		for r in xrange(cubeSize):
 			for g in xrange(cubeSize):
 				for b in xrange(cubeSize):
@@ -148,7 +149,7 @@ class LUT:
 		Subtract a Color value to every lattice point on the cube.
 		"""
 		cubeSize = self.cubeSize
-		newLattice = EmptyLatticeOfSize(cubeSize)
+		newLattice = Helper.EmptyLatticeOfSize(cubeSize)
 		for r in xrange(cubeSize):
 			for g in xrange(cubeSize):
 				for b in xrange(cubeSize):
@@ -160,7 +161,7 @@ class LUT:
 		Multiply by a Color value or float for every lattice point on the cube.
 		"""
 		cubeSize = self.cubeSize
-		newLattice = EmptyLatticeOfSize(cubeSize)
+		newLattice = Helper.EmptyLatticeOfSize(cubeSize)
 		for r in xrange(cubeSize):
 			for g in xrange(cubeSize):
 				for b in xrange(cubeSize):
