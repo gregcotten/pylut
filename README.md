@@ -48,6 +48,12 @@ lut.ToFile("CUBE", "mylut.cube")
 
 ```
 
+#### Supported LUT Formats
+
+- `.cube`
+- `.3dl` from Autodesk Lustre
+- `.3dl` from NUKE
+
 ## CLI
 
 There's also a CLI available.
