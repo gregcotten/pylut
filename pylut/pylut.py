@@ -28,8 +28,8 @@ def Indices(cubeSize, bitdepth):
 def RemapIntTo01(val, maxVal):
 	return (float(val)/float(maxVal))
 
-def Remap01ToInt(val, bitdepth):
-	return int(val * (2**bitdepth - 1))
+def Remap01ToInt(val, maxVal):
+	return int(float(val) * float(maxVal))
 
 def LerpColor(beginning, end, value01):
 	if value01 < 0 or value01 > 1:
@@ -107,7 +107,8 @@ class Color:
 		"""
 		Creates a list of 3 RGB integer values at specified bitdepth from the floating point color.
 		"""
-		return (Remap01ToInt(self.r, bitdepth), Remap01ToInt(self.g, bitdepth), Remap01ToInt(self.b, bitdepth))
+		maxVal = (2**bitdepth - 1)
+		return (Remap01ToInt(self.r, maxVal), Remap01ToInt(self.g, maxVal), Remap01ToInt(self.b, maxVal))
 
 	def ClampColor(self, min, max):
 		"""
@@ -152,7 +153,8 @@ class Color:
 	
 	def FormattedAsInteger(self, bitdepth):
 		rjustValue = len(str(2**bitdepth - 1)) + 1
-		return str(Remap01ToInt(self.r, bitdepth)).rjust(rjustValue) + " " + str(Remap01ToInt(self.g, bitdepth)).rjust(rjustValue) + " " + str(Remap01ToInt(self.b, bitdepth)).rjust(rjustValue)
+		maxVal = (2**bitdepth - 1)
+		return str(Remap01ToInt(self.r, maxVal)).rjust(rjustValue) + " " + str(Remap01ToInt(self.g, maxVal)).rjust(rjustValue) + " " + str(Remap01ToInt(self.b, maxVal)).rjust(rjustValue)
 
 class LUT:
 	"""
