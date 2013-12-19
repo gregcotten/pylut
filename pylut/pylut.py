@@ -18,10 +18,10 @@ def Indices01(cubeSize):
 		indices.append(float(i) * ratio)
 	return indices
 
-def Indices(cubeSize, bitdepth):
+def Indices(cubeSize, maxVal):
 	indices = []
 	for i in Indices01(cubeSize):
-		indices.append(i * (2**bitdepth - 1))
+		indices.append(int(i * (maxVal)))
 	return indices
 
 
@@ -151,9 +151,8 @@ class Color:
 	def FormattedAsFloat(self, format = '{:1.6f}'):
 		return format.format(self.r) + " " + format.format(self.g) + " " + format.format(self.b)
 	
-	def FormattedAsInteger(self, bitdepth):
-		rjustValue = len(str(2**bitdepth - 1)) + 1
-		maxVal = (2**bitdepth - 1)
+	def FormattedAsInteger(self, maxVal):
+		rjustValue = len(str(maxVal)) + 1
 		return str(Remap01ToInt(self.r, maxVal)).rjust(rjustValue) + " " + str(Remap01ToInt(self.g, maxVal)).rjust(rjustValue) + " " + str(Remap01ToInt(self.b, maxVal)).rjust(rjustValue)
 
 class LUT:
@@ -285,7 +284,7 @@ class LUT:
 
 			latticePointColor = self.lattice[redIndex, greenIndex, blueIndex].Clamped01()
 			
-			string += latticePointColor.FormattedAsInteger(bitdepth) + "\n"
+			string += latticePointColor.FormattedAsInteger(2**bitdepth-1) + "\n"
 		
 		return string
 
@@ -301,7 +300,7 @@ class LUT:
 
 		lutFile.write("3DMESH\n")
 		lutFile.write("Mesh " + str(int(inputDepth)) + " " + str(bitdepth) + "\n")
-		lutFile.write(' '.join([str(int(x)) for x in Indices(cubeSize, 10)]) + "\n")
+		lutFile.write(' '.join([str(int(x)) for x in Indices(cubeSize, 2**10 - 1)]) + "\n")
 		
 		lutFile.write(self._LatticeTo3DLString(bitdepth))
 
@@ -314,7 +313,7 @@ class LUT:
 
 		lutFile = open(fileOutPath, 'w')
 
-		lutFile.write(' '.join([str(int(x)) for x in Indices(cubeSize, bitdepth)]) + "\n")
+		lutFile.write(' '.join([str(int(x)) for x in Indices(cubeSize, 2**bitdepth - 1)]) + "\n")
 
 		lutFile.write(self._LatticeTo3DLString(bitdepth))
 
@@ -524,6 +523,31 @@ class LUT:
 				currentCubeIndex += 1
 
 		return LUT(lattice, name = os.path.splitext(os.path.basename(cubeFilePath))[0])
+
+	@staticmethod
+	def FromFSIDatFile(datFilePath):
+		import struct
+		datBytes = bytearray(open(datFilePath, 'r').read())
+		cubeSize = 64
+		lattice = EmptyLatticeOfSize(cubeSize)
+		lutBytes = datBytes[128:]
+		for currentCubeIndex in xrange(len(lutBytes)/4):
+			rgb_packed = np.uint32(struct.unpack("<L", lutBytes[currentCubeIndex*4:(currentCubeIndex*4)+4])[0])
+
+			redValue = RemapIntTo01(rgb_packed & 1023, 1008)
+			greenValue = RemapIntTo01(rgb_packed >> 10 & 1023, 1008)
+			blueValue = RemapIntTo01(rgb_packed >> 20 & 1023, 1008)
+
+			redIndex = currentCubeIndex % cubeSize
+			greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
+			blueIndex = currentCubeIndex / (cubeSize*cubeSize)
+
+			lattice[redIndex, greenIndex, blueIndex] = Color(redValue, greenValue, blueValue)
+
+		return LUT(lattice, name = os.path.splitext(os.path.basename(datFilePath))[0])
+
+
+
 
 	def AddColorToEachPoint(self, color):
 		"""
