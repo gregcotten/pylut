@@ -7,6 +7,7 @@ import math
 import numpy as np
 import kdtree
 from progress.bar import Bar
+import struct
 
 def EmptyLatticeOfSize(cubeSize):
 	return np.zeros((cubeSize, cubeSize, cubeSize), object)
@@ -29,7 +30,13 @@ def RemapIntTo01(val, maxVal):
 	return (float(val)/float(maxVal))
 
 def Remap01ToInt(val, maxVal):
-	return int(float(val) * float(maxVal))
+	return int(iround(float(val) * float(maxVal)))
+
+def iround(num):
+	if (num > 0):
+		return int(num+.5)
+	else:
+		return int(num-.5)
 
 def LerpColor(beginning, end, value01):
 	if value01 < 0 or value01 > 1:
@@ -59,6 +66,19 @@ def Clamp(value, min, max):
 	if value > max:
 		return float(max)
 	return value
+
+def Checksum(data):
+	sum = 0
+	for x in data:
+		sum = sum + struct.unpack("<B",x)
+	return sum
+
+def ToIntArray(string):
+	array = []
+	for x in string:
+		array.append(ord(x))
+	return array
+
 
 class Color:
 	"""
@@ -338,6 +358,56 @@ class LUT:
 
 		cubeFile.close()
 
+	def ToFSIDatFile(self, datFileOutPath):
+		import tempfile
+		cubeSize = 64
+		datFile = open(datFileOutPath, 'w+b')
+		if self.cubeSize is not 64:
+			lut = self.Resize(64)
+		else:
+			lut = self
+		lut_checksum = 0
+		lut_bytes = []
+		for currentCubeIndex in range(0, cubeSize**3):
+			redIndex = currentCubeIndex % cubeSize
+			greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
+			blueIndex = currentCubeIndex / (cubeSize*cubeSize)
+
+			latticePointColor = self.lattice[redIndex, greenIndex, blueIndex].Clamped01()
+			
+			rgb_packed =( Remap01ToInt(latticePointColor.r, 1008) | Remap01ToInt(latticePointColor.g, 1008) << 10 | Remap01ToInt(latticePointColor.g, 1008) << 20 )
+			rgb_packed_binary = struct.pack("<L", rgb_packed)
+			lut_checksum = (lut_checksum + rgb_packed) % 4294967296
+			lut_bytes.append(rgb_packed_binary)
+
+		header_bytes = []
+		header_bytes.append(struct.pack("<L",0x42340299))#magic number
+		header_bytes.append(struct.pack("<L",0x01000002))#spec version number?
+		header_bytes.append(bytearray("None".ljust(16)))#monitor ID (real ID not required if dit.dat file)
+		header_bytes.append(bytearray("V1.0".ljust(16)))#lut version number
+		header_bytes.append(struct.pack("<L", lut_checksum))
+		header_bytes.append(struct.pack("<L",1048576))#number of bytes in LUT (always the same)
+		header_bytes.append(bytearray("pylut generated".ljust(16)))#author
+		header_bytes.append(bytearray(" ".ljust(63)))#reserved
+
+		header_checksum = 0
+
+		for item in header_bytes:
+			if isinstance(item, str):
+				itemSum = sum(map(ord,item)) 
+			else:
+				itemSum = sum(item)
+			header_checksum = (header_checksum + itemSum) % 256
+
+		header_bytes.append(struct.pack("<B",header_checksum))
+
+
+		[datFile.write(x) for x in header_bytes]
+		[datFile.write(x) for x in lut_bytes]
+
+		datFile.close()
+
+
 
 	def ColorFromColor(self, color):
 		"""
@@ -526,7 +596,6 @@ class LUT:
 
 	@staticmethod
 	def FromFSIDatFile(datFilePath):
-		import struct
 		datBytes = bytearray(open(datFilePath, 'r').read())
 		cubeSize = 64
 		lattice = EmptyLatticeOfSize(cubeSize)
