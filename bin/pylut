@@ -3,7 +3,7 @@
 """pylut
 
 Usage:
-  pylut [-hf] [--reverse] [--visualize] [--resize=<size>] [--convert=<type>] [--rename=<name>] [--output=<output_folder>] <file>
+  pylut [-hf] [--reverse] [--visualize] [--resize=<size>] [--convert=<type>] [--rename=<name>] [--folder=<output_folder>] <file>
   pylut --version
 
 Options:
@@ -13,9 +13,9 @@ Options:
   --reverse                                     reverse the LUT
   -f, --force                                   overwrite files if necessary
   --resize <size>                               rescale lut
-  --convert <convert>                           convert to a different LUT format (L3DL, N3DL, RCUBE)
-  --rename <name>                               name to use for saved LUT
-  --output <output_folder>                      set output folder [default: ./]
+  --convert <convert>                           convert to a different LUT format (L3DL, N3DL, RCUBE, FSIDAT)
+  --name <name>                                 name to use for saved LUT
+  --folder <output_folder>                      set output folder [default: current directory]
 
 """
 
@@ -29,7 +29,9 @@ def LUTFromFile(lutFilePath):
   lut = None
   filetype = None
 
-  if ".3dl" in os.path.splitext(lutFilePath)[1].lower():
+  fileExt = os.path.splitext(lutFilePath)[1].lower()
+
+  if ".3dl" in fileExt:
     try:
       lut = LUT.FromLustre3DLFile(lutFilePath)
       return lut, "L3DL"
@@ -40,12 +42,12 @@ def LUTFromFile(lutFilePath):
       return lut, "N3DL"
     except Exception as e:
       pass
-  elif ".cube" in os.path.splitext(lutFilePath)[1].lower():
-    try:
-      lut = LUT.FromCubeFile(lutFilePath)
-      return lut, "RCUBE"
-    except Exception as e:
-      pass
+  elif ".cube" in fileExt:
+    lut = LUT.FromCubeFile(lutFilePath)
+    return lut, "RCUBE"
+  elif ".dat" in fileExt:
+    lut = LUT.FromFSIDatFile(lutFilePath)
+    return lut, "FSIDAT"
 
   return None, None
 
@@ -56,8 +58,8 @@ if __name__ == "__main__":
   arguments = docopt(__doc__, version='1.0')
 
   filePath = os.path.expanduser(arguments["<file>"])
-  outputFolder = os.path.abspath(os.path.expanduser(arguments["--output"]))
-  name = arguments["--rename"]
+  outputFolder = os.path.abspath(os.path.expanduser(arguments["--folder"]))
+  name = arguments["--name"]
   resizeSize = arguments["--resize"]
   convertType = arguments["--convert"]
   overwrite = arguments["--force"]
@@ -112,6 +114,10 @@ if __name__ == "__main__":
       exit("File already exists!")
     
     lut.ToCubeFile(FullFilePath(outputFolder, name, ".cube"))
+  elif toType in "FSIDAT":
+    if os.path.isfile(FullFilePath(outputFolder, name, ".dat")) and not overwrite:
+      exit("File already exists!")
+    lut.ToFSIDatFile(FullFilePath(outputFolder, name, ".dat"))
 
 
 
