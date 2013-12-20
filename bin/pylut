@@ -74,7 +74,7 @@ if __name__ == "__main__":
   if resizeSize is None and convertType is None and not visualize and not reverse:
     exit()
 
-  if convertType is not None and convertType not in ("L3DL", "N3DL", "RCUBE"):
+  if convertType is not None and convertType not in ("L3DL", "N3DL", "RCUBE", "FSIDAT"):
     raise NameError(str(convertType) + " is not a valid type to convert the LUT to.")
     
   lut, filetype = LUTFromFile(filePath)
