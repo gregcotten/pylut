@@ -373,7 +373,7 @@ class LUT:
 			greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
 			blueIndex = currentCubeIndex / (cubeSize*cubeSize)
 
-			latticePointColor = self.lattice[redIndex, greenIndex, blueIndex].Clamped01()
+			latticePointColor = lut.lattice[redIndex, greenIndex, blueIndex].Clamped01()
 			
 			rgb_packed =( Remap01ToInt(latticePointColor.r, 1008) | Remap01ToInt(latticePointColor.g, 1008) << 10 | Remap01ToInt(latticePointColor.g, 1008) << 20 )
 			rgb_packed_binary = struct.pack("<L", rgb_packed)
