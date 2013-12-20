@@ -3,7 +3,7 @@
 """pylut
 
 Usage:
-  pylut [-hf] [--reverse] [--visualize] [--resize=<size>] [--convert=<type>] [--rename=<name>] [--folder=<output_folder>] <file>
+  pylut [-hf] [--reverse] [--visualize] [--resize=<size>] [--convert=<type>] [--name=<name>] [--folder=<output_folder>] <file>
   pylut --version
 
 Options:
