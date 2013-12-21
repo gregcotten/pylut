@@ -22,6 +22,7 @@ Options:
 
 from docopt import docopt
 from pylut import *
+import sys
 
 import os
 
@@ -101,22 +102,22 @@ if __name__ == "__main__":
 
   if toType in "L3DL":
     if os.path.isfile(FullFilePath(outputFolder, name, ".3dl")) and not overwrite:
-      exit("File already exists!")
+      sys.exit("File already exists!")
     
     lut.ToLustre3DLFile(FullFilePath(outputFolder, name, ".3dl"))
   elif toType in "N3DL":
     if os.path.isfile(FullFilePath(outputFolder, name, ".3dl")) and not overwrite:
-      exit("File already exists!")
+      sys.exit("File already exists!")
     
     lut.ToNuke3DLFile(FullFilePath(outputFolder, name, ".3dl"))
   elif toType in "RCUBE":
     if os.path.isfile(FullFilePath(outputFolder, name, ".cube")) and not overwrite:
-      exit("File already exists!")
+      sys.exit("File already exists!")
     
     lut.ToCubeFile(FullFilePath(outputFolder, name, ".cube"))
   elif toType in "FSIDAT":
     if os.path.isfile(FullFilePath(outputFolder, name, ".dat")) and not overwrite:
-      exit("File already exists!")
+      sys.exit("File already exists!")
     lut.ToFSIDatFile(FullFilePath(outputFolder, name, ".dat"))
 
 
