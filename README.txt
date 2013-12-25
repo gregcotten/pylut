@@ -1,12 +1,40 @@
 pylut
 =====
 
-Builds, modifies, visualizes, and converts 3D LUTs from popular .cube and .3dl formats. Source available at https://github.com/gregcotten/pylut.
+.. figure:: http://www.gregcotten.com/files/plot.jpg
+   :alt: pylut
+
+   pylut
+A python module that builds, modifies, visualizes, and converts 3D LUTs
+from popular .cube and .3dl formats. The end goal for this module is to
+remove the obfuscation from proprietary LUT formats and provide a way to
+programmatically manipulate LUTs.
+
+Installation
+------------
+
+::
+
+    pip install pylut
+
+And to upgrade:
+
+::
+
+    pip uninstall pylut
+    pip install pylut
+
+Documentation
+-------------
+
+Very mediocre docs viewable at: http://pythonhosted.org/pylut/
 
 Usage
 -----
 
-The idea is that the modifications to a LUT object are non-volatile, meaning that every modification method returns a new LUT object rather than changing the existing object. All sorts of great things can happen!
+The idea is that the modifications to a LUT object are non-volatile,
+meaning that every modification method returns a new LUT object rather
+than changing the existing object. All sorts of great things can happen!
 
 .. code:: python
 
@@ -31,8 +59,18 @@ The idea is that the modifications to a LUT object are non-volatile, meaning tha
     # Resize
     resizedLut = lut.Resize(33)
 
+    # Reverse (complicated, can take a while)
+    reversedLut = lut.Reverse()
+
     # Save and Convert
-    lut.ToFile("CUBE", "mylut.cube")
+    lut.ToFile("RCUBE", "mylut.cube")
+
+Supported LUT Formats
+^^^^^^^^^^^^^^^^^^^^^
+
+-  ``.cube``
+-  ``.3dl`` from Autodesk Lustre
+-  ``.3dl`` from NUKE
 
 CLI
 ---
@@ -43,7 +81,22 @@ Example:
 
 ::
 
-    pylut some_lut.3dl --resize 17 --convert RCUBE
+    pylut lut.3dl --resize 17 --convert RCUBE
+
+This will resize the LUT to 17×17×17 and convert it from a ``.3dl`` to a
+``.cube`` file.
+
+Special Notes
+-------------
+
+In order to run
+
+.. code:: python
+
+    lut.Plot()
+
+You need to either be running OSX or have PyQt4 or PyGTK installed in
+order to visualize the cube.
 
 Contributing
 ------------

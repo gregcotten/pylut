@@ -47,7 +47,7 @@ resizedLut = lut.Resize(33)
 reversedLut = lut.Reverse()
 
 # Save and Convert
-lut.ToFile("CUBE", "mylut.cube")
+lut.ToFile("RCUBE", "mylut.cube")
 
 ```
 
