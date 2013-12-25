@@ -15,7 +15,7 @@ Options:
   --resize <size>                               rescale lut
   --convert <convert>                           convert to a different LUT format (L3DL, N3DL, RCUBE, FSIDAT)
   --name <name>                                 name to use for saved LUT
-  --folder <output_folder>                      set output folder [default: current directory]
+  --folder <output_folder>                      set output folder [default: ./]
 
 """
 
