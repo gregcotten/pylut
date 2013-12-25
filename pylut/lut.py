@@ -1,9 +1,9 @@
-from helper 			import Helper
-from color        import Color
-from reverser     import LUTReverser
-from resizer      import LUTResizer
-from plotter      import LUTPlotter
-from combiner     import LUTCombiner
+from helper import Helper
+from color import Color
+from reverser import LUTReverser
+from resizer import LUTResizer
+from plotter import LUTPlotter
+from combiner import LUTCombiner
 
 from formatters.LUTFormatterCube import LUTFormatterCube
 from formatters.LUTFormatterLustre3DL import LUTFormatterLustre3DL
