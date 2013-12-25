@@ -1,7 +1,22 @@
 from LUTFormatter import LUTFormatter
 from cStringIO import StringIO
+import os
+from helper import Helper
 
 class LUTFormatterCube(LUTFormatter):
+
+	@staticmethod
+	def FromFile(filePath):
+		f = open(filePath, 'rU')
+		lines = f.readlines()
+		f.close()
+		name = os.path.splitext(os.path.basename(filePath))[0]
+		return LUTFormatterCube.FromLines(lines, name)
+	@staticmethod
+	def ToFile(lut, fileOutPath, options = {}):
+		lutFile = open(fileOutPath, 'w')
+		lutFile.write(LUTFormatterCube.ToFileString(lut, options))
+		lutFile.close()
 
 	@staticmethod
 	def FromLines(cubeFileLines, name = None):
@@ -16,7 +31,7 @@ class LUTFormatterCube(LUTFormatter):
 		if cubeSize == -1:
 			raise NameError("Invalid .cube file.")
 
-		lattice = EmptyLatticeOfSize(cubeSize)
+		lattice = Helper.EmptyLatticeOfSize(cubeSize)
 		currentCubeIndex = 0
 		for line in cubeFileLines[cubeSizeLineIndex+1:]:
 			if len(line) > 0 and len(line.split()) == 3 and "#" not in line:

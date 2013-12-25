@@ -1,3 +1,4 @@
+import os
 from helper import Helper
 from color import Color
 from reverser import LUTReverser
@@ -239,11 +240,8 @@ class LUT:
 			except Exception as e:
 				pass
 		elif ".cube" in extension:
-			try:
-				lut = LUTFormatterCube.FromFile(lutFilePath)
-				return lut, "RCUBE"
-			except Exception as e:
-				pass
+			lut = LUTFormatterCube.FromFile(lutFilePath)
+			return lut, "RCUBE"
 		elif ".dat" in extension:
 			try:
 				lut = LUTFormatterFSIDat.FromFile(lutFilePath)

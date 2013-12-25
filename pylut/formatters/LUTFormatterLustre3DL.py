@@ -4,6 +4,20 @@ from cStringIO import StringIO
 class LUTFormatterLustre3DL(LUTFormatter):
 
 	@staticmethod
+	def FromFile(filePath):
+		f = open(filePath, 'rU')
+		lines = f.readlines()
+		f.close()
+		name = os.path.splitext(os.path.basename(filePath))[0]
+		return LUTFormatterLustre3DL.FromLines(lines, name)
+		
+	@staticmethod
+	def ToFile(lut, fileOutPath, options = {}):
+		lutFile = open(fileOutPath, 'w')
+		lutFile.write(LUTFormatterLustre3DL.ToFileString(lut, options))
+		lutFile.close()
+
+	@staticmethod
 	def FromLines(lutFileLines, name = None):
 		meshLineIndex = 0
 		cubeSize = -1
