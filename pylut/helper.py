@@ -15,10 +15,10 @@ class Helper:
 		return indices
 
 	@staticmethod
-	def Indices(cubeSize, bitdepth):
+	def Indices(cubeSize, maxVal):
 		indices = []
 		for i in Indices01(cubeSize):
-			indices.append(i * (2**bitdepth - 1))
+			indices.append(int(i * (maxVal)))
 		return indices
 
 	@staticmethod
@@ -26,8 +26,15 @@ class Helper:
 		return (float(val)/float(maxVal))
 
 	@staticmethod
-	def Remap01ToInt(val, bitdepth):
-		return int(val * (2**bitdepth - 1))
+	def Remap01ToInt(val, maxVal):
+		return int(iround(float(val) * float(maxVal)))
+
+	@staticmethod
+	def iround(num):
+		if (num > 0):
+			return int(num+.5)
+		else:
+			return int(num-.5)
 
 	@staticmethod
 	def LerpColor(beginning, end, value01):

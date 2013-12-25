@@ -44,21 +44,23 @@ class LUTFormatterNuke3DL(LUTFormatter):
 	@staticmethod
 	def ToFileString(lut, options = {}):
 		depth = options.get('bitdepth', 16)
-		string = ' '.join([str(int(x)) for x in Indices(cubeSize, depth)]) + "\n"
+		string = ' '.join([str(int(x)) for x in Indices(cubeSize, 2**depth - 1)]) + "\n"
 		string += LatticeTo3DLString(lut, depth)
 		return string
 
 	@staticmethod
 	def LatticeTo3DLString(lut, bitdepth):
 		string = ""
-		cubeSize = lut.cubeSize
+		cubeSize = self.cubeSize
+		maxVal = 2**bitdepth-1
 		for currentCubeIndex in range(0, cubeSize**3):
 			redIndex = currentCubeIndex / (cubeSize*cubeSize)
 			greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
 			blueIndex = currentCubeIndex % cubeSize
 
-			latticePointColor = lut.lattice[redIndex, greenIndex, blueIndex].Clamped01()
-
-			string += latticePointColor.FormattedAsInteger(bitdepth) + "\n"
+			latticePointColor = self.lattice[redIndex, greenIndex, blueIndex].Clamped01()
+			
+			string += latticePointColor.FormattedAsInteger(maxVal) + "\n"
+		
 		return string
 

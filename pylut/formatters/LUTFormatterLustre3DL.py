@@ -51,7 +51,7 @@ class LUTFormatterLustre3DL(LUTFormatter):
 
 		string.write("3DMESH\n")
 		string.write("Mesh " + str(int(inputDepth)) + " " + str(depth) + "\n")
-		string.write(' '.join([str(int(x)) for x in Indices(cubeSize, 10)]) + "\n")
+		string.write(' '.join([str(int(x)) for x in Indices(cubeSize, 2**10 - 1)]) + "\n")
 
 		string.write(LUTFormatterNuke3DL.LatticeTo3DLString(depth))
 

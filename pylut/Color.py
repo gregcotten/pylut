@@ -47,7 +47,8 @@ class Color:
 		"""
 		Creates a list of 3 RGB integer values at specified bitdepth from the floating point color.
 		"""
-		return (Helper.Remap01ToInt(self.r, bitdepth), Helper.Remap01ToInt(self.g, bitdepth), Helper.Remap01ToInt(self.b, bitdepth))
+		maxVal = (2**bitdepth - 1)
+		return (Remap01ToInt(self.r, maxVal), Remap01ToInt(self.g, maxVal), Remap01ToInt(self.b, maxVal))
 
 	def ClampColor(self, min, max):
 		"""
@@ -90,6 +91,6 @@ class Color:
 	def FormattedAsFloat(self, format = '{:1.6f}'):
 		return format.format(self.r) + " " + format.format(self.g) + " " + format.format(self.b)
 
-	def FormattedAsInteger(self, bitdepth):
-		rjustValue = len(str(2**bitdepth - 1)) + 1
-		return str(Helper.Remap01ToInt(self.r, bitdepth)).rjust(rjustValue) + " " + str(Helper.Remap01ToInt(self.g, bitdepth)).rjust(rjustValue) + " " + str(Helper.Remap01ToInt(self.b, bitdepth)).rjust(rjustValue)
+	def FormattedAsInteger(self, maxVal):
+		rjustValue = len(str(maxVal)) + 1
+		return str(Remap01ToInt(self.r, maxVal)).rjust(rjustValue) + " " + str(Remap01ToInt(self.g, maxVal)).rjust(rjustValue) + " " + str(Remap01ToInt(self.b, maxVal)).rjust(rjustValue)

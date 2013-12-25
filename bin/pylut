@@ -3,7 +3,7 @@
 """pylut
 
 Usage:
-  pylut [-hf] [--reverse] [--visualize] [--resize=<size>] [--convert=<type>] [--rename=<name>] [--output=<output_folder>] <file>
+  pylut [-hf] [--reverse] [--visualize] [--resize=<size>] [--convert=<type>] [--name=<name>] [--folder=<output_folder>] <file>
   pylut --version
 
 Options:
@@ -14,8 +14,8 @@ Options:
   -f, --force                                   overwrite files if necessary
   --resize <size>                               rescale lut
   --convert <convert>                           convert to a different LUT format (L3DL, N3DL, RCUBE)
-  --rename <name>                               name to use for saved LUT
-  --output <output_folder>                      set output folder [default: ./]
+  --name <name>                               name to use for saved LUT
+  --folder <output_folder>                      set output folder [default: ./]
 
 """
 
@@ -34,8 +34,8 @@ if __name__ == "__main__":
   # Get arguments
   arguments = docopt(__doc__, version='1.0')
   filePath = os.path.expanduser(arguments["<file>"])
-  outputFolder = os.path.abspath(os.path.expanduser(arguments["--output"]))
-  name = arguments["--rename"]
+  outputFolder = os.path.abspath(os.path.expanduser(arguments["--folder"]))
+  name = arguments["--name"]
   resizeSize = arguments["--resize"]
   convertType = arguments["--convert"]
   overwrite = arguments["--force"]
@@ -51,11 +51,11 @@ if __name__ == "__main__":
     exit()
 
   # Make sure a valid file type is provided
-  if convertType is not None and convertType not in ("L3DL", "N3DL", "RCUBE"):
+  if convertType is not None and convertType not in ("L3DL", "N3DL", "RCUBE", "FSIDAT"):
     raise NameError(str(convertType) + " is not a valid type to convert the LUT to.")
 
   # Read the input file
-  lut, filetype = LUT.FromFilePath(filePath)
+  lut, filetype = LUT.FromFile(filePath)
 
   # Reverse
   if reverse:
@@ -95,3 +95,7 @@ if __name__ == "__main__":
     if os.path.isfile(FullFilePath(outputFolder, name, ".cube")) and not overwrite:
       exit("File already exists!")
     lut.ToFile(toType, FullFilePath(outputFolder, name, ".cube"))
+  elif toType in "FSIDAT":
+    if os.path.isfile(FullFilePath(outputFolder, name, ".dat")) and not overwrite:
+      exit("File already exists!")
+    lut.ToFile(toType, FullFilePath(outputFolder, name, ".dat"))

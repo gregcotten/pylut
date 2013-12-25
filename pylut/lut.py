@@ -217,6 +217,8 @@ class LUT:
 			LUTFormatterNuke3DL.ToFile(self, path)
 		elif toType in "RCUBE":
 			LUTFormatterCube.ToFile(self, path)
+		elif toType in "FSIDAT":
+			LUTFormatterFSIDat.ToFile(self, path)
 
 	@staticmethod
 	def FromFile(lutFilePath):
@@ -240,6 +242,12 @@ class LUT:
 			try:
 				lut = LUTFormatterCube.FromFile(lutFilePath)
 				return lut, "RCUBE"
+			except Exception as e:
+				pass
+		elif ".dat" in extension:
+			try:
+				lut = LUTFormatterFSIDat.FromFile(lutFilePath)
+				return lut, "FSIDAT"
 			except Exception as e:
 				pass
 
