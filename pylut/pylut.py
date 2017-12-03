@@ -426,7 +426,7 @@ class LUT:
 		if redPoint > cubeSize-1 or greenPoint > cubeSize-1 or bluePoint > cubeSize-1:
 			raise NameError("Point Out of Bounds: (" + str(redPoint) + ", " + str(greenPoint) + ", " + str(bluePoint) + ")")
 
-		return self.lattice[redPoint, greenPoint, bluePoint]
+		return self.lattice[int(redPoint), int(greenPoint), int(bluePoint)]
 
 	#float input from 0 to cubeSize-1
 	def ColorAtInterpolatedLatticePoint(self, redPoint, greenPoint, bluePoint):
