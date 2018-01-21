@@ -1,10 +1,6 @@
 # pylut
 
-![pylut](http://www.gregcotten.com/files/plot.jpg)
-
 A python module that builds, modifies, visualizes, and converts 3D LUTs from popular .cube and .3dl formats. The end goal for this module is to remove the obfuscation from proprietary LUT formats and provide a way to programmatically manipulate LUTs.
-
-There's also a great LUT manipulator written in Cocoa for Mac and iOS called [CocoaLUT](https://github.com/wilg/CocoaLUT).
 
 ## Installation
 
