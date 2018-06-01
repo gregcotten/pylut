@@ -453,7 +453,7 @@ class LUT:
 		lowerGreenPoint = int(lowerGreenPoint)
 		upperGreenPoint = int(upperGreenPoint)
 		
-		lowerBluePoint = int(lowerBluePoint)
+		lowerBluePoint =int(lowerBluePoint)
 		upperBluePoint = int(upperBluePoint)
 
 		C000 = self.ColorAtLatticePoint(lowerRedPoint, lowerGreenPoint, lowerBluePoint)
