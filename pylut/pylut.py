@@ -447,14 +447,14 @@ class LUT:
 		lowerBluePoint = Clamp(int(math.floor(bluePoint)), 0, cubeSize-1)
 		upperBluePoint = Clamp(lowerBluePoint + 1, 0, cubeSize-1)
 		
-		lowerRedPoint=int (lowerRedPoint)
-		upperRedPoint=int (upperRedPoint)
+		lowerRedPoint = int(lowerRedPoint)
+		upperRedPoint = int(upperRedPoint)
 		
-		lowerGreenPoint=int (lowerGreenPoint)
-		upperGreenPoint=int (upperGreenPoint)
+		lowerGreenPoint = int(lowerGreenPoint)
+		upperGreenPoint = int(upperGreenPoint)
 		
-		lowerBluePoint=int (lowerBluePoint)
-		upperBluePoint=int (upperBluePoint)
+		lowerBluePoint = int(lowerBluePoint)
+		upperBluePoint = int(upperBluePoint)
 
 		C000 = self.ColorAtLatticePoint(lowerRedPoint, lowerGreenPoint, lowerBluePoint)
 		C010 = self.ColorAtLatticePoint(lowerRedPoint, lowerGreenPoint, upperBluePoint)
