@@ -6,7 +6,7 @@ import os
 import math
 import numpy as np
 import kdtree
-from progress.bar import Bar
+import progressbar
 import struct
 
 def EmptyLatticeOfSize(cubeSize):
@@ -15,7 +15,7 @@ def EmptyLatticeOfSize(cubeSize):
 def Indices01(cubeSize):
 	indices = []
 	ratio = 1.0/float(cubeSize-1)
-	for i in xrange(cubeSize):
+	for i in range(cubeSize):
 		indices.append(float(i) * ratio)
 	return indices
 
@@ -80,6 +80,20 @@ def ToIntArray(string):
 	return array
 
 
+class ColorNode(object):
+    def __init__(self, x, y, z, data):
+        self.coords = (x, y, z)
+        self.data = data
+
+    def __len__(self):
+        return len(self.coords)
+
+    def __getitem__(self, i):
+        return self.coords[i]
+
+    def __repr__(self):
+        return 'ColorNode({}, {}, {}, {})'.format(self.coords[0], self.coords[1], self.coords[2], self.data)	
+	
 class Color:
 	"""
 	RGB floating point representation of a color. 0 is absolute black, 1 is absolute white.
@@ -195,18 +209,18 @@ class LUT:
 		Every LUT has a name!
 		"""
 		
-	def Resize(self, newCubeSize):
+	def Resize(self, newCubeSize, forceResize = False):
 		"""
 		Scales the lattice to a new cube size.
 		"""
-		if newCubeSize == self.cubeSize:
+		if not forceResize and newCubeSize == self.cubeSize:
 			return self
 
 		newLattice = EmptyLatticeOfSize(newCubeSize)
 		ratio = float(self.cubeSize - 1.0) / float(newCubeSize-1.0)
-		for x in xrange(newCubeSize):
-			for y in xrange(newCubeSize):
-				for z in xrange(newCubeSize):
+		for x in range(newCubeSize):
+			for y in range(newCubeSize):
+				for z in range(newCubeSize):
 					newLattice[x, y, z] = self.ColorAtInterpolatedLatticePoint(x*ratio, y*ratio, z*ratio)
 		return LUT(newLattice, name = self.name + "_Resized"+str(newCubeSize))
 
@@ -218,18 +232,25 @@ class LUT:
 		ratio = float(self.cubeSize - 1.0) / float(newCubeSize-1.0)
 		maxVal = newCubeSize-1
 
-		bar = Bar("Building search tree", max = maxVal, suffix='%(percent)d%% - %(eta)ds remain')
+		if progress:
+			bar = progressbar.ProgressBar(max_value=newCubeSize**3, prefix='Building search tree: ').start()
+			barProgress = 0			
 		try:
-			for x in xrange(newCubeSize):
-				if progress:
-					bar.next()
-				for y in xrange(newCubeSize):
-					for z in xrange(newCubeSize):
-						data.add(self.ColorAtInterpolatedLatticePoint(x*ratio, y*ratio, z*ratio).ToFloatArray(), (RemapIntTo01(x,maxVal), RemapIntTo01(y,maxVal), RemapIntTo01(z,maxVal)))
+			for x in range(newCubeSize):
+				for y in range(newCubeSize):
+					for z in range(newCubeSize):
+						newColor = self.ColorAtInterpolatedLatticePoint(x*ratio, y*ratio, z*ratio).ToFloatArray()
+						data.add(ColorNode(newColor[0],newColor[1],newColor[2], (RemapIntTo01(x,maxVal), RemapIntTo01(y,maxVal), RemapIntTo01(z,maxVal))))
+						if progress:
+							barProgress += 1
+							bar.update(barProgress)	
 		except KeyboardInterrupt:
-			bar.finish()
+			if progress: bar.finish()
 			raise KeyboardInterrupt
-		bar.finish()
+		if progress:
+			bar.finish()
+			print('Balancing final search tree...')
+		data = data.rebalance()
 		return data
 
 	def Reverse(self, progress = False):
@@ -239,18 +260,24 @@ class LUT:
 		tree = self.KDTree(progress)
 		newLattice = EmptyLatticeOfSize(self.cubeSize)
 		maxVal = self.cubeSize - 1
-		bar = Bar("Searching for matches", max = maxVal, suffix='%(percent)d%% - %(eta)ds remain')
+
+		if progress:
+			bar = progressbar.ProgressBar(max_value=self.cubeSize**3, prefix='Searching for matches: ').start()
+			barProgress = 0
 		try:
-			for x in xrange(self.cubeSize):
-				if progress:
-					bar.next()
-				for y in xrange(self.cubeSize):
-					for z in xrange(self.cubeSize):
-						newLattice[x, y, z] = Color.FromFloatArray(tree.search_nn((RemapIntTo01(x,maxVal), RemapIntTo01(y,maxVal), RemapIntTo01(z,maxVal))).aux)
+			for x in range(self.cubeSize):
+				for y in range(self.cubeSize):
+					for z in range(self.cubeSize):
+						nn_result = tree.search_nn((RemapIntTo01(x,maxVal), RemapIntTo01(y,maxVal), RemapIntTo01(z,maxVal)))
+						newLattice[x, y, z] = Color.FromFloatArray(nn_result[0].data.data)
+						if progress:
+							barProgress += 1
+							bar.update(barProgress)						
+						
 		except KeyboardInterrupt:
-			bar.finish()
+			if progress: bar.finish()
 			raise KeyboardInterrupt
-		bar.finish()
+		if progress: bar.finish()
 		return LUT(newLattice, name = self.name +"_Reverse")
 	
 	def KDTree(self, progress = False):
@@ -272,9 +299,9 @@ class LUT:
 		cubeSize = self.cubeSize
 		newLattice = EmptyLatticeOfSize(cubeSize)
 		
-		for x in xrange(cubeSize):
-			for y in xrange(cubeSize):
-				for z in xrange(cubeSize):
+		for x in range(cubeSize):
+			for y in range(cubeSize):
+				for z in range(cubeSize):
 					selfColor = self.lattice[x, y, z].Clamped01()
 					newLattice[x, y, z] = otherLUT.ColorFromColor(selfColor)
 		return LUT(newLattice, name = self.name + "+" + otherLUT.name)
@@ -285,9 +312,9 @@ class LUT:
 		"""
 		cubeSize = self.cubeSize
 		newLattice = EmptyLatticeOfSize(cubeSize)
-		for x in xrange(cubeSize):
-			for y in xrange(cubeSize):
-				for z in xrange(cubeSize):
+		for x in range(cubeSize):
+			for y in range(cubeSize):
+				for z in range(cubeSize):
 					newLattice[x, y, z] = self.ColorAtLatticePoint(x, y, z).ClampColor(min, max)
 		return LUT(newLattice)
 
@@ -297,10 +324,10 @@ class LUT:
 		"""
 		string = ""
 		cubeSize = self.cubeSize
-		for currentCubeIndex in range(0, cubeSize**3):
-			redIndex = currentCubeIndex / (cubeSize*cubeSize)
-			greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
-			blueIndex = currentCubeIndex % cubeSize
+		for currentCubeIndex in range(0, cubeSize**3):		
+			redIndex = currentCubeIndex % cubeSize
+			greenIndex = int((currentCubeIndex % (cubeSize*cubeSize)) / cubeSize)
+			blueIndex = int(currentCubeIndex / (cubeSize*cubeSize))
 
 			latticePointColor = self.lattice[redIndex, greenIndex, blueIndex].Clamped01()
 			
@@ -346,8 +373,8 @@ class LUT:
 		
 		for currentCubeIndex in range(0, cubeSize**3):
 			redIndex = currentCubeIndex % cubeSize
-			greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
-			blueIndex = currentCubeIndex / (cubeSize*cubeSize)
+			greenIndex = int((currentCubeIndex % (cubeSize*cubeSize)) / cubeSize)
+			blueIndex = int(currentCubeIndex / (cubeSize*cubeSize))
 
 			latticePointColor = self.lattice[redIndex, greenIndex, blueIndex].Clamped01()
 			
@@ -370,8 +397,8 @@ class LUT:
 		lut_bytes = []
 		for currentCubeIndex in range(0, cubeSize**3):
 			redIndex = currentCubeIndex % cubeSize
-			greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
-			blueIndex = currentCubeIndex / (cubeSize*cubeSize)
+			greenIndex = int((currentCubeIndex % (cubeSize*cubeSize)) / cubeSize)
+			blueIndex = int(currentCubeIndex / (cubeSize*cubeSize))
 
 			latticePointColor = lut.lattice[redIndex, greenIndex, blueIndex].Clamped01()
 			
@@ -423,10 +450,13 @@ class LUT:
 		Returns a color at a specified lattice point - this value is pulled from the actual LUT file and is not interpolated.
 		"""
 		cubeSize = self.cubeSize
+		redPoint = int(redPoint)
+		greenPoint = int(greenPoint)
+		bluePoint = int(bluePoint)
 		if redPoint > cubeSize-1 or greenPoint > cubeSize-1 or bluePoint > cubeSize-1:
 			raise NameError("Point Out of Bounds: (" + str(redPoint) + ", " + str(greenPoint) + ", " + str(bluePoint) + ")")
 
-		return self.lattice[int(redPoint), int(greenPoint), int(bluePoint)]
+		return self.lattice[redPoint, greenPoint, bluePoint]
 
 	#float input from 0 to cubeSize-1
 	def ColorAtInterpolatedLatticePoint(self, redPoint, greenPoint, bluePoint):
@@ -446,15 +476,6 @@ class LUT:
 
 		lowerBluePoint = Clamp(int(math.floor(bluePoint)), 0, cubeSize-1)
 		upperBluePoint = Clamp(lowerBluePoint + 1, 0, cubeSize-1)
-		
-		lowerRedPoint = int(lowerRedPoint)
-		upperRedPoint = int(upperRedPoint)
-		
-		lowerGreenPoint = int(lowerGreenPoint)
-		upperGreenPoint = int(upperGreenPoint)
-		
-		lowerBluePoint = int(lowerBluePoint)
-		upperBluePoint = int(upperBluePoint)
 
 		C000 = self.ColorAtLatticePoint(lowerRedPoint, lowerGreenPoint, lowerBluePoint)
 		C010 = self.ColorAtLatticePoint(lowerRedPoint, lowerGreenPoint, upperBluePoint)
@@ -478,19 +499,19 @@ class LUT:
 	@staticmethod
 	def FromIdentity(cubeSize):
 		"""
-		Creates an indentity LUT of specified size.
+		Creates an identity LUT of specified size.
 		"""
 		identityLattice = EmptyLatticeOfSize(cubeSize)
 		indices01 = Indices01(cubeSize)
-		for r in xrange(cubeSize):
-			for g in xrange(cubeSize):
-				for b in xrange(cubeSize):
+		for r in range(cubeSize):
+			for g in range(cubeSize):
+				for b in range(cubeSize):
 					identityLattice[r, g, b] = Color(indices01[r], indices01[g], indices01[b])
 		return LUT(identityLattice, name = "Identity"+str(cubeSize))
 
 	@staticmethod
 	def FromLustre3DLFile(lutFilePath):
-		lutFile = open(lutFilePath, 'rU')
+		lutFile = open(lutFilePath, 'r')
 		lutFileLines = lutFile.readlines()
 		lutFile.close()
 
@@ -517,10 +538,10 @@ class LUT:
 				redValue = line.split()[0]
 				greenValue = line.split()[1]
 				blueValue = line.split()[2]
-
-				redIndex = currentCubeIndex / (cubeSize*cubeSize)
-				greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
-				blueIndex = currentCubeIndex % cubeSize
+				
+				redIndex = currentCubeIndex % cubeSize
+				greenIndex = int((currentCubeIndex % (cubeSize*cubeSize)) / cubeSize)
+				blueIndex = int(currentCubeIndex / (cubeSize*cubeSize))
 
 				lattice[redIndex, greenIndex, blueIndex] = Color.FromRGBInteger(redValue, greenValue, blueValue, bitdepth = outputDepth)
 				currentCubeIndex += 1
@@ -529,7 +550,7 @@ class LUT:
 
 	@staticmethod
 	def FromNuke3DLFile(lutFilePath):
-		lutFile = open(lutFilePath, 'rU')
+		lutFile = open(lutFilePath, 'r')
 		lutFileLines = lutFile.readlines()
 		lutFile.close()
 
@@ -560,9 +581,9 @@ class LUT:
 				greenValue = line.split()[1]
 				blueValue = line.split()[2]
 
-				redIndex = currentCubeIndex / (cubeSize*cubeSize)
-				greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
-				blueIndex = currentCubeIndex % cubeSize
+				redIndex = currentCubeIndex % cubeSize
+				greenIndex = int((currentCubeIndex % (cubeSize*cubeSize)) / cubeSize)
+				blueIndex = int(currentCubeIndex / (cubeSize*cubeSize))
 
 				lattice[redIndex, greenIndex, blueIndex] = Color.FromRGBInteger(redValue, greenValue, blueValue, bitdepth = outputDepth)
 				currentCubeIndex += 1
@@ -570,7 +591,7 @@ class LUT:
 
 	@staticmethod
 	def FromCubeFile(cubeFilePath):
-		cubeFile = open(cubeFilePath, 'rU')
+		cubeFile = open(cubeFilePath, 'r')
 		cubeFileLines = cubeFile.readlines()
 		cubeFile.close()
 
@@ -595,12 +616,21 @@ class LUT:
 				blueValue = float(line.split()[2])
 
 				redIndex = currentCubeIndex % cubeSize
-				greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
-				blueIndex = currentCubeIndex / (cubeSize*cubeSize)
+				greenIndex = int(math.floor(( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )))
+				blueIndex = int(math.floor(currentCubeIndex / (cubeSize*cubeSize)))
 
 				lattice[redIndex, greenIndex, blueIndex] = Color(redValue, greenValue, blueValue)
 				currentCubeIndex += 1
 
+		# if there are insufficient lines then fill with the last point
+		while currentCubeIndex < cubeSize**3:
+			redIndex = currentCubeIndex % cubeSize
+			greenIndex = int((currentCubeIndex % (cubeSize*cubeSize)) / cubeSize)
+			blueIndex = int(currentCubeIndex / (cubeSize*cubeSize))
+
+			lattice[redIndex, greenIndex, blueIndex] = lattice[redIndex-1, greenIndex-1, blueIndex-1]
+			currentCubeIndex += 1
+		
 		return LUT(lattice, name = os.path.splitext(os.path.basename(cubeFilePath))[0])
 
 	@staticmethod
@@ -609,7 +639,7 @@ class LUT:
 		cubeSize = 64
 		lattice = EmptyLatticeOfSize(cubeSize)
 		lutBytes = datBytes[128:]
-		for currentCubeIndex in xrange(len(lutBytes)/4):
+		for currentCubeIndex in range(len(lutBytes)/4):
 			rgb_packed = np.uint32(struct.unpack("<L", lutBytes[currentCubeIndex*4:(currentCubeIndex*4)+4])[0])
 
 			redValue = RemapIntTo01(rgb_packed & 1023, 1008)
@@ -617,8 +647,8 @@ class LUT:
 			blueValue = RemapIntTo01(rgb_packed >> 20 & 1023, 1008)
 
 			redIndex = currentCubeIndex % cubeSize
-			greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
-			blueIndex = currentCubeIndex / (cubeSize*cubeSize)
+			greenIndex = int((currentCubeIndex % (cubeSize*cubeSize)) / cubeSize)
+			blueIndex = int(currentCubeIndex / (cubeSize*cubeSize))
 
 			lattice[redIndex, greenIndex, blueIndex] = Color(redValue, greenValue, blueValue)
 
@@ -633,9 +663,9 @@ class LUT:
 		"""
 		cubeSize = self.cubeSize
 		newLattice = EmptyLatticeOfSize(cubeSize)
-		for r in xrange(cubeSize):
-			for g in xrange(cubeSize):
-				for b in xrange(cubeSize):
+		for r in range(cubeSize):
+			for g in range(cubeSize):
+				for b in range(cubeSize):
 					newLattice[r, g, b] = self.lattice[r, g, b] + color
 		return LUT(newLattice)
 
@@ -645,9 +675,9 @@ class LUT:
 		"""
 		cubeSize = self.cubeSize
 		newLattice = EmptyLatticeOfSize(cubeSize)
-		for r in xrange(cubeSize):
-			for g in xrange(cubeSize):
-				for b in xrange(cubeSize):
+		for r in range(cubeSize):
+			for g in range(cubeSize):
+				for b in range(cubeSize):
 					newLattice[r, g, b] = self.lattice[r, g, b] - color
 		return LUT(newLattice)
 
@@ -657,9 +687,9 @@ class LUT:
 		"""
 		cubeSize = self.cubeSize
 		newLattice = EmptyLatticeOfSize(cubeSize)
-		for r in xrange(cubeSize):
-			for g in xrange(cubeSize):
-				for b in xrange(cubeSize):
+		for r in range(cubeSize):
+			for g in range(cubeSize):
+				for b in range(cubeSize):
 					newLattice[r, g, b] = self.lattice[r, g, b] * color
 		return LUT(newLattice)
 
@@ -714,7 +744,7 @@ class LUT:
 			import mpl_toolkits.mplot3d
 			from matplotlib.colors import rgb2hex
 		except ImportError:
-			print "matplotlib not installed. Run: pip install matplotlib"
+			print("matplotlib not installed. Run: pip install matplotlib")
 			return
 
 		#for performance reasons lattice size must be 9 or less
@@ -727,7 +757,7 @@ class LUT:
 
 		# init vars
 		cubeSize = lut.cubeSize
-		input_range = xrange(0, cubeSize)
+		input_range = range(0, cubeSize)
 		max_value = cubeSize - 1.0
 		red_values = []
 		green_values = []
