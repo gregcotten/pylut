@@ -627,8 +627,12 @@ class LUT:
 			redIndex = currentCubeIndex % cubeSize
 			greenIndex = int((currentCubeIndex % (cubeSize*cubeSize)) / cubeSize)
 			blueIndex = int(currentCubeIndex / (cubeSize*cubeSize))
+			
+			redIndexOld = (currentCubeIndex-1) % cubeSize
+			greenIndexOld = int(((currentCubeIndex-1) % (cubeSize*cubeSize)) / cubeSize)
+			blueIndexOld = int((currentCubeIndex-1) / (cubeSize*cubeSize))
 
-			lattice[redIndex, greenIndex, blueIndex] = lattice[redIndex-1, greenIndex-1, blueIndex-1]
+			lattice[redIndex, greenIndex, blueIndex] = lattice[redIndexOld, greenIndexOld, blueIndexOld]
 			currentCubeIndex += 1
 		
 		return LUT(lattice, name = os.path.splitext(os.path.basename(cubeFilePath))[0])
