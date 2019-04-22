@@ -195,11 +195,11 @@ class LUT:
 		Every LUT has a name!
 		"""
 		
-	def Resize(self, newCubeSize):
+	def Resize(self, newCubeSize, forceResize = False):
 		"""
 		Scales the lattice to a new cube size.
 		"""
-		if newCubeSize == self.cubeSize:
+		if not forceResize and newCubeSize == self.cubeSize:
 			return self
 
 		newLattice = EmptyLatticeOfSize(newCubeSize)
@@ -478,7 +478,7 @@ class LUT:
 	@staticmethod
 	def FromIdentity(cubeSize):
 		"""
-		Creates an indentity LUT of specified size.
+		Creates an identity LUT of specified size.
 		"""
 		identityLattice = EmptyLatticeOfSize(cubeSize)
 		indices01 = Indices01(cubeSize)
@@ -600,6 +600,19 @@ class LUT:
 
 				lattice[redIndex, greenIndex, blueIndex] = Color(redValue, greenValue, blueValue)
 				currentCubeIndex += 1
+
+		# if there are insufficient lines then fill with the last point
+		while currentCubeIndex < cubeSize**3:
+			redIndex = currentCubeIndex % cubeSize
+			greenIndex = ( (currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize) )
+			blueIndex = currentCubeIndex / (cubeSize*cubeSize)
+			
+			redIndexOld = (currentCubeIndex-1) % cubeSize
+			greenIndexOld = ( ((currentCubeIndex-1) % (cubeSize*cubeSize)) / (cubeSize) )
+			blueIndexOld = (currentCubeIndex-1) / (cubeSize*cubeSize)
+
+			lattice[redIndex, greenIndex, blueIndex] = lattice[redIndexOld, greenIndexOld, blueIndexOld]
+			currentCubeIndex += 1
 
 		return LUT(lattice, name = os.path.splitext(os.path.basename(cubeFilePath))[0])
 
