@@ -325,9 +325,9 @@ class LUT:
 		string = ""
 		cubeSize = self.cubeSize
 		for currentCubeIndex in range(0, cubeSize**3):		
-			redIndex = currentCubeIndex % cubeSize
-			greenIndex = int((currentCubeIndex % (cubeSize*cubeSize)) / cubeSize)
-			blueIndex = int(currentCubeIndex / (cubeSize*cubeSize))
+			redIndex = int(currentCubeIndex / (cubeSize*cubeSize))
+			greenIndex = int((currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize))
+			blueIndex = currentCubeIndex % cubeSize
 
 			latticePointColor = self.lattice[redIndex, greenIndex, blueIndex].Clamped01()
 			
@@ -539,9 +539,9 @@ class LUT:
 				greenValue = line.split()[1]
 				blueValue = line.split()[2]
 				
-				redIndex = currentCubeIndex % cubeSize
-				greenIndex = int((currentCubeIndex % (cubeSize*cubeSize)) / cubeSize)
-				blueIndex = int(currentCubeIndex / (cubeSize*cubeSize))
+				redIndex = int(currentCubeIndex / (cubeSize*cubeSize))
+				greenIndex = int((currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize))
+				blueIndex = currentCubeIndex % cubeSize
 
 				lattice[redIndex, greenIndex, blueIndex] = Color.FromRGBInteger(redValue, greenValue, blueValue, bitdepth = outputDepth)
 				currentCubeIndex += 1
@@ -581,9 +581,9 @@ class LUT:
 				greenValue = line.split()[1]
 				blueValue = line.split()[2]
 
-				redIndex = currentCubeIndex % cubeSize
-				greenIndex = int((currentCubeIndex % (cubeSize*cubeSize)) / cubeSize)
-				blueIndex = int(currentCubeIndex / (cubeSize*cubeSize))
+				redIndex = int(currentCubeIndex / (cubeSize*cubeSize))
+				greenIndex = int((currentCubeIndex % (cubeSize*cubeSize)) / (cubeSize))
+				blueIndex = currentCubeIndex % cubeSize
 
 				lattice[redIndex, greenIndex, blueIndex] = Color.FromRGBInteger(redValue, greenValue, blueValue, bitdepth = outputDepth)
 				currentCubeIndex += 1
@@ -627,8 +627,12 @@ class LUT:
 			redIndex = currentCubeIndex % cubeSize
 			greenIndex = int((currentCubeIndex % (cubeSize*cubeSize)) / cubeSize)
 			blueIndex = int(currentCubeIndex / (cubeSize*cubeSize))
+			
+			redIndexOld = (currentCubeIndex-1) % cubeSize
+			greenIndexOld = int(((currentCubeIndex-1) % (cubeSize*cubeSize)) / cubeSize)
+			blueIndexOld = int((currentCubeIndex-1) / (cubeSize*cubeSize))
 
-			lattice[redIndex, greenIndex, blueIndex] = lattice[redIndex-1, greenIndex-1, blueIndex-1]
+			lattice[redIndex, greenIndex, blueIndex] = lattice[redIndexOld, greenIndexOld, blueIndexOld]
 			currentCubeIndex += 1
 		
 		return LUT(lattice, name = os.path.splitext(os.path.basename(cubeFilePath))[0])
